@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.hdw</groupId>
+	<artifactId>hdw-dubbo</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>hdw-dubbo-common</module>
+		<module>hdw-dubbo-upms-rpc-api</module>
+		<module>hdw-dubbo-upms-rpc-service</module>
+		<module>hdw-dubbo-upms-server</module>
+	</modules>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.9.RELEASE</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
+		<mybatisplus.version>2.1.4</mybatisplus.version>
+		<fastjson.version>1.2.38</fastjson.version>
+		<!-- druid -->
+		<druid.version>1.1.5</druid.version>
+		<!-- jackson -->
+		<jackson.version>2.8.6</jackson.version>
+		<!-- commons-io -->
+		<commons-lang3.version>3.1</commons-lang3.version>
+		<commons-fileupload.version>1.3</commons-fileupload.version>
+		<!-- pinyin4j -->
+		<pinyin4j.version>2.5.1</pinyin4j.version>
+		<!-- thumbnailator -->
+		<thumbnailator.version>0.4.8</thumbnailator.version>
+		<!-- zxing -->
+		<zxing.core.version>3.3.1</zxing.core.version>
+		<poi.version>3.17</poi.version>
+		<jxl.version>2.6.12</jxl.version>
+		<xfire.version>1.2.6</xfire.version>
+		<!-- mail -->
+		<mail.version>1.4.7</mail.version>
+		<!-- pdfbox -->
+		<pdfbox.version>2.0.7</pdfbox.version>
+		<!-- guava -->
+		<guava.version>20.0</guava.version>
+		<!-- fastjson -->
+		<fastjson.version>1.2.24</fastjson.version>
+		<dubbo.version>2.6.0</dubbo.version>
+		<zkclient.version>0.1</zkclient.version>
+	</properties>
+
+	<build>
+		<finalName>hdw-dubbo</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+
