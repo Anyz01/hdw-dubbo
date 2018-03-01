@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.hdw</groupId>
 		<artifactId>hdw-dubbo</artifactId>
-		<version>1.0</version>
+		<version>1.0.0</version>
 	</parent>
 	<artifactId>hdw-dubbo-upms-server</artifactId>
 	<packaging>jar</packaging>
@@ -29,7 +29,6 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo</artifactId>
-			<version>${dubbo.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework</groupId>
@@ -40,8 +39,7 @@
 		<dependency>
 			<groupId>com.github.sgroschupf</groupId>
 			<artifactId>zkclient</artifactId>
-			<version>${zkclient.version}</version>
-		</dependency>
+			</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

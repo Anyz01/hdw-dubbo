@@ -5,7 +5,7 @@
 
 	<groupId>com.hdw</groupId>
 	<artifactId>hdw-dubbo</artifactId>
-	<version>1.0</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -27,14 +27,18 @@
 		<java.version>1.8</java.version>
 		<mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
 		<mybatisplus.version>2.1.4</mybatisplus.version>
+		<httpclient.version>4.5.3</httpclient.version>
+		<joda-time.version>2.8.4</joda-time.version>
 		<fastjson.version>1.2.38</fastjson.version>
 		<!-- druid -->
 		<druid.version>1.1.5</druid.version>
 		<!-- jackson -->
-		<jackson.version>2.8.6</jackson.version>
+		<jackson.version>2.8.7</jackson.version>
 		<!-- commons-io -->
 		<commons-lang3.version>3.1</commons-lang3.version>
 		<commons-fileupload.version>1.3</commons-fileupload.version>
+		<commons-collections.version>3.2.2</commons-collections.version>
+		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<!-- pinyin4j -->
 		<pinyin4j.version>2.5.1</pinyin4j.version>
 		<!-- thumbnailator -->
@@ -54,7 +58,242 @@
 		<fastjson.version>1.2.24</fastjson.version>
 		<dubbo.version>2.6.0</dubbo.version>
 		<zkclient.version>0.1</zkclient.version>
+		<solrj.version>6.6.0</solrj.version>
+		<fast.version>1.24</fast.version>
+		<springfox.swagger2.version>2.8.0</springfox.swagger2.version>
+		<lombok.version>1.16.16</lombok.version>
+		<shiro.version>1.3.2</shiro.version>
+		<ehcache.version>2.6.11</ehcache.version>
 	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- 时间操作组件 begin -->
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>${joda-time.version}</version>
+			</dependency>
+			<!-- 时间操作组件 end -->
+			<!-- httpclient begin -->
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${httpclient.version}</version>
+			</dependency>
+			<!-- httpclient end -->
+			<!-- jackson begin -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.jaxrs</groupId>
+				<artifactId>jackson-jaxrs-json-provider</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<!-- jackson end -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-fileupload</groupId>
+				<artifactId>commons-fileupload</artifactId>
+				<version>${commons-fileupload.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>${commons-beanutils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>${commons-collections.version}</version>
+			</dependency>
+			<!-- druid begin -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>${druid.version}</version>
+			</dependency>
+			<!-- druid end -->
+			<!-- mybatis-plus begin -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatisplus-spring-boot-starter</artifactId>
+				<version>${mybatisplus-spring-boot-starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus</artifactId>
+				<version>${mybatisplus.version}</version>
+			</dependency>
+			<!-- mybatis-plus end -->
+			<!-- pinyin4j begin -->
+			<dependency>
+				<groupId>com.belerweb</groupId>
+				<artifactId>pinyin4j</artifactId>
+				<version>${pinyin4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.xfire</groupId>
+				<artifactId>xfire-core</artifactId>
+				<version>${xfire.version}</version>
+			</dependency>
+			<!-- pinyin4j end -->
+			<!-- javamail begin -->
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>${mail.version}</version>
+			</dependency>
+			<!-- javamail end -->
+			<!-- excel begin -->
+			<dependency>
+				<groupId>net.sourceforge.jexcelapi</groupId>
+				<artifactId>jxl</artifactId>
+				<version>${jxl.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-examples</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-excelant</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-ooxml-schemas</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.poi</groupId>
+				<artifactId>poi-scratchpad</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+			<!-- excel end -->
+			<!-- pdfbox begin -->
+			<dependency>
+				<groupId>org.apache.pdfbox</groupId>
+				<artifactId>pdfbox</artifactId>
+				<version>${pdfbox.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.pdfbox</groupId>
+				<artifactId>fontbox</artifactId>
+				<version>${pdfbox.version}</version>
+			</dependency>
+			<!-- pdfbox end -->
+			<!-- thumbnailator begin -->
+			<dependency>
+				<groupId>net.coobird</groupId>
+				<artifactId>thumbnailator</artifactId>
+				<version>${thumbnailator.version}</version>
+			</dependency>
+			<!-- thumbnailator end -->
+			<!-- zxing begin -->
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>core</artifactId>
+				<version>${zxing.core.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>javase</artifactId>
+				<version>${zxing.core.version}</version>
+			</dependency>
+			<!-- zxing end -->
+
+			<!-- dubbo begin -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+				<version>${dubbo.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>com.github.sgroschupf</groupId>
+				<artifactId>zkclient</artifactId>
+				<version>${zkclient.version}</version>
+			</dependency>
+			<!-- dubbo end -->
+
+			<!-- solr客户端 -->
+			<dependency>
+				<groupId>org.apache.solr</groupId>
+				<artifactId>solr-solrj</artifactId>
+				<version>${solrj.version}</version>
+			</dependency>
+
+			<!-- fastdfs -->
+			<dependency>
+				<groupId>org.csource</groupId>
+				<artifactId>fastdfs</artifactId>
+				<version>${fast.version}</version>
+			</dependency>
+
+			<!-- swagger2 -->
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>${springfox.swagger2.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger-ui</artifactId>
+				<version>${springfox.swagger2.version}</version>
+			</dependency>
+
+			<!-- lombok -->
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- shiro begin -->
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-spring</artifactId>
+				<version>${shiro.version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>slf4j-api</artifactId>
+						<groupId>org.slf4j</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.ehcache</groupId>
+				<artifactId>ehcache-core</artifactId>
+				<version>${ehcache.version}</version>
+			</dependency>
+			<!-- shiro end -->
+		</dependencies>
+	</dependencyManagement>
 
 
 	<repositories>
