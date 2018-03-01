@@ -3,7 +3,6 @@ package com.hdw.dubbo.upms.rpc.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -20,7 +19,7 @@ import com.hdw.dubbo.upms.rpc.api.ICompanyService;
 * @Version 1.0V
 * 类说明  企业信息服务实现类
 */
-@Service
+
 public class CompanyServiceImpl extends ServiceImpl<CompanyMapper, Company> implements ICompanyService {
 
 	@Autowired

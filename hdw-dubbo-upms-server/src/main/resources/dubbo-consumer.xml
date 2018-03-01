@@ -12,5 +12,23 @@
     
     <dubbo:reference id="testService" interface="com.hdw.dubbo.upms.rpc.api.ITestService"/>
     
+    <dubbo:reference id="companyService" interface="com.hdw.dubbo.upms.rpc.api.ICompanyService"/>
+    
+    <dubbo:reference id="OrganizationService" interface="com.hdw.dubbo.upms.rpc.api.IOrganizationService"/>
+    
+    <dubbo:reference id="resourceService" interface="com.hdw.dubbo.upms.rpc.api.IResourceService"/>
+  
+    <dubbo:reference id="roleResourceService" interface="com.hdw.dubbo.upms.rpc.api.IRoleResourceService"/>
+    
+    <dubbo:reference id="roleService" interface="com.hdw.dubbo.upms.rpc.api.IRoleService"/>
+    
+    <dubbo:reference id="sysDicService" interface="com.hdw.dubbo.upms.rpc.api.ISysDicService"/>
+    
+    <dubbo:reference id="sysLogService" interface="com.hdw.dubbo.upms.rpc.api.ISysLogService"/>
+    
+    <dubbo:reference id="userRoleService" interface="com.hdw.dubbo.upms.rpc.api.IUserRoleService"/>
+    
+    <dubbo:reference  id="userService" interface="com.hdw.dubbo.upms.rpc.api.IUserService"/>
+    
     
 </beans>

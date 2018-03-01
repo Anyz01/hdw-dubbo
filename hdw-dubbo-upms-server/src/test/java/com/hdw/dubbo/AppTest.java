@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.hdw.dubbo.upms.entity.vo.UserVo;
 import com.hdw.dubbo.upms.rpc.api.ITestService;
+import com.hdw.dubbo.upms.rpc.api.IUserService;
 
 
 
@@ -26,11 +28,20 @@ public class AppTest {
 	
 	@Autowired
 	private ITestService testService;
+	
+	@Autowired
+	private IUserService userService;
 
 	@Test
 	public void testDobbo(){
 		String msg=testService.print();
 		System.out.println("dubbo消息："+msg);
+	}
+	
+	@Test
+	public void testDobboByUser(){
+		UserVo user=userService.selectVoById(1l);
+		System.out.println("dubbo消息："+user.getLoginName());
 	}
 	    
     @Test  

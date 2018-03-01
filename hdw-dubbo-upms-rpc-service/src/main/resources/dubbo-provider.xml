@@ -6,6 +6,35 @@
     <dubbo:application name="${dubbo.appname}"/>
     <dubbo:registry address="${dubbo.registry}"/>
     <dubbo:protocol name="dubbo" port="${dubbo.protocol}"/>
+    
     <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.ITestService" ref="testService"/>
     <bean id="testService" class="com.hdw.dubbo.upms.rpc.service.impl.TestServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.ICompanyService" ref="companyService"/>
+    <bean id="companyService" class="com.hdw.dubbo.upms.rpc.service.impl.CompanyServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.IOrganizationService" ref="OrganizationService"/>
+    <bean id="OrganizationService" class="com.hdw.dubbo.upms.rpc.service.impl.OrganizationServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.IResourceService" ref="resourceService"/>
+    <bean id="resourceService" class="com.hdw.dubbo.upms.rpc.service.impl.ResourceServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.IRoleResourceService" ref="roleResourceService"/>
+    <bean id="roleResourceService" class="com.hdw.dubbo.upms.rpc.service.impl.RoleResourceServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.IRoleService" ref="roleService"/>
+    <bean id="roleService" class="com.hdw.dubbo.upms.rpc.service.impl.RoleServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.ISysDicService" ref="sysDicService"/>
+    <bean id="sysDicService" class="com.hdw.dubbo.upms.rpc.service.impl.SysDicServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.ISysLogService" ref="sysLogService"/>
+    <bean id="sysLogService" class="com.hdw.dubbo.upms.rpc.service.impl.SysLogServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.IUserRoleService" ref="userRoleService"/>
+    <bean id="userRoleService" class="com.hdw.dubbo.upms.rpc.service.impl.UserRoleServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.IUserService" ref="userService"/>
+    <bean id="userService" class="com.hdw.dubbo.upms.rpc.service.impl.UserServiceImpl"/>
+    
 </beans>

@@ -29,7 +29,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.hdw.dubbo.common.result.PageInfo;
 import com.hdw.dubbo.common.result.Result;
 import com.hdw.dubbo.common.util.Charsets;
-import com.hdw.dubbo.common.util.DateUtils;
+import com.hdw.dubbo.common.util.DateUtil;
 import com.hdw.dubbo.common.util.StringEscapeEditor;
 import com.hdw.dubbo.common.util.URLUtils;
 
@@ -237,7 +237,7 @@ public abstract class BaseController {
 			File dirFile = null;
 			if (StringUtils.isNotBlank(dir)) {
 				dirFile = new File(fileUploadRootURL + File.separator + dir + File.separator
-						+ DateUtils.format(new Date(), "yyyyMMdd") + File.separator);
+						+ DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
 				if (!dirFile.exists()) {
 					dirFile.mkdirs();
 				}
@@ -257,7 +257,7 @@ public abstract class BaseController {
 						tagetFile.createNewFile();	
 					}
 					file.transferTo(tagetFile);
-					fileNames.add("/" + fileUploadServer + "/" + dir + "/" + DateUtils.format(new Date(), "yyyyMMdd")
+					fileNames.add("/" + fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")
 							+ "/" + fileName);
 				}
 			}
@@ -286,7 +286,7 @@ public abstract class BaseController {
 			File dirFile = null;
 			if (StringUtils.isNotBlank(dir)) {
 				dirFile = new File(fileUploadRootURL + File.separator + dir + File.separator
-						+ DateUtils.format(new Date(), "yyyyMMdd") + File.separator);
+						+ DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
 				if (!dirFile.exists()) {
 					dirFile.mkdirs();
 				}
@@ -300,7 +300,7 @@ public abstract class BaseController {
 				tagetFile.createNewFile();
 			}
 			file.transferTo(tagetFile);
-			return "/" + fileUploadServer + "/" + dir + "/" + DateUtils.format(new Date(), "yyyyMMdd") + "/" + fileName;
+			return "/" + fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName;
 		} catch (Exception e) {
 			new RuntimeException("程序运行异常！");
 		}
