@@ -2,8 +2,10 @@ package com.hdw.dubbo.common.util;
 
 
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
@@ -18,10 +20,10 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
  * @author ShenHuJie
  */
 public final class PinyinUtil {
+	protected static final  Logger logger = LoggerFactory.getLogger(PinyinUtil.class);
+
 	private PinyinUtil() {
 	}
-
-	static Logger logger = LogManager.getLogger(PinyinUtil.class);
 
 	/**
 	 * 将汉字转换为全拼

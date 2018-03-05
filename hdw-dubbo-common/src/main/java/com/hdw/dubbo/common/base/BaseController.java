@@ -9,8 +9,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.core.io.FileSystemResource;
@@ -43,8 +43,7 @@ import com.hdw.dubbo.common.util.URLUtils;
  *
  */
 public abstract class BaseController {
-	// 控制器本来就是单例，这样似乎更加合理
-	protected Logger logger = LogManager.getLogger(getClass());
+	protected static final  Logger logger = LoggerFactory.getLogger(BaseController.class);
 
 	/**
 	 * 文件上传根目录

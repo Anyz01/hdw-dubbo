@@ -64,6 +64,10 @@
 		<lombok.version>1.16.16</lombok.version>
 		<shiro.version>1.3.2</shiro.version>
 		<ehcache.version>2.6.11</ehcache.version>
+		<!-- thymeleaf -->
+		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
+        <thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
+		<thymeleaf-extras-shiro.version>2.0.0</thymeleaf-extras-shiro.version>
 	</properties>
 
 	<dependencyManagement>
@@ -157,6 +161,12 @@
 				<groupId>net.sourceforge.jexcelapi</groupId>
 				<artifactId>jxl</artifactId>
 				<version>${jxl.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.poi</groupId>
@@ -292,6 +302,13 @@
 				<version>${ehcache.version}</version>
 			</dependency>
 			<!-- shiro end -->
+			<!-- thymeleaf模板中shiro标签 begin -->
+			<dependency>
+				<groupId>com.github.theborakompanioni</groupId>
+				<artifactId>thymeleaf-extras-shiro</artifactId>
+				<version>${thymeleaf-extras-shiro.version}</version>
+			</dependency>
+			<!-- thymeleaf模板中shiro标签 end -->
 		</dependencies>
 	</dependencyManagement>
 

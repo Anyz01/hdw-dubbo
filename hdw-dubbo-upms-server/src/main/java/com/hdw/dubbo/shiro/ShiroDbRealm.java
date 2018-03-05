@@ -42,7 +42,11 @@ public class ShiroDbRealm extends AuthorizingRealm {
         super(cacheManager, matcher);
     }
     
-    /**
+    public ShiroDbRealm() {
+		super();
+	}
+
+	/**
      * Shiro登录认证(原理：用户提交 用户名和密码  --- shiro 封装令牌 ---- realm 通过用户名将密码查询返回 ---- shiro 自动去比较查询出密码和用户输入密码是否一致---- 进行登陆控制 )
      */
     @Override

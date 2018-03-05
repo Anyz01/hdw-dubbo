@@ -10,7 +10,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-    <artifactId>hdw-dubbo-common</artifactId>
+	<artifactId>hdw-dubbo-common</artifactId>
 	<packaging>jar</packaging>
 
 	<name>hdw-dubbo-common</name>
@@ -79,11 +79,11 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
-			</dependency>
+		</dependency>
 		<!-- druid end -->
 		<!-- mybatis-plus begin -->
 		<dependency>
@@ -109,88 +109,94 @@
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatisplus-spring-boot-starter</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus</artifactId>
-			</dependency>
+		</dependency>
 		<!-- mybatis-plus end -->
 
 		<!-- pinyin4j begin -->
 		<dependency>
 			<groupId>com.belerweb</groupId>
 			<artifactId>pinyin4j</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.codehaus.xfire</groupId>
 			<artifactId>xfire-core</artifactId>
-			</dependency>
+		</dependency>
 		<!-- pinyin4j end -->
 		<!-- javamail begin -->
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
-			</dependency>
+		</dependency>
 		<!-- javamail end -->
 
 		<!-- excel begin -->
 		<dependency>
 			<groupId>net.sourceforge.jexcelapi</groupId>
 			<artifactId>jxl</artifactId>
-			</dependency>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-examples</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-excelant</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-scratchpad</artifactId>
-			</dependency>
+		</dependency>
 		<!-- excel end -->
 
 		<!-- pdfbox begin -->
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>fontbox</artifactId>
-			</dependency>
+		</dependency>
 		<!-- pdfbox end -->
 
 		<!-- thumbnailator begin -->
 		<dependency>
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
-			</dependency>
+		</dependency>
 		<!-- thumbnailator end -->
 
 		<!-- zxing begin -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>javase</artifactId>
-			</dependency>
+		</dependency>
 		<!-- zxing end -->
 
 	</dependencies>

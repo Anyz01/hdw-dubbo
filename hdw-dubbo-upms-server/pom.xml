@@ -53,11 +53,27 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-core</artifactId>
-			</dependency>
 		<!-- shiro end -->
+		
+		<!-- thymeleaf begin -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- thymeleaf end -->
+
+		<!-- thymeleaf模板中shiro标签 begin -->
+		<dependency>
+			<groupId>com.github.theborakompanioni</groupId>
+			<artifactId>thymeleaf-extras-shiro</artifactId>
+		</dependency>
+		<!-- thymeleaf模板中shiro标签 end -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
