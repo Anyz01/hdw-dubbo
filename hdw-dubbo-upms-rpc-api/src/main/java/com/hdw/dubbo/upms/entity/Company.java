@@ -9,12 +9,17 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /** 
 * @Author ChenShi 
 * @Date 2017年12月26日
 * @Version 1.0V
 * 类说明 企业信息表
 */
+@ApiModel(value="企业信息对象",description="企业信息对象")
+
 @TableName("t_base_company")
 public class Company extends Model<Company> {
 
@@ -34,6 +39,7 @@ public class Company extends Model<Company> {
 	private String name;
 	
 	/** 企业简称*/
+	@ApiModelProperty(name="simpleName",value="企业简称",dataType="string",hidden=false,required=false)
 	@TableField("simple_name")
 	private String simpleName;
 	

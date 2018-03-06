@@ -124,18 +124,15 @@ public class ShiroConfig {
 		shiroFilterFactoryBean.setUnauthorizedUrl("/unauth");
 		// 拦截器
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-		// 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
-		filterChainDefinitionMap.put("/logout", "logout");
+
 		// 配置记住我或认证通过可以访问的地址
 		filterChainDefinitionMap.put("/index", "user");
 		filterChainDefinitionMap.put("/", "user");
 		filterChainDefinitionMap.put("/login", "anon");
 
 		/**
-		 * 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边 。
-		 * anon 不需要认证
-		 * authc 需要认证
-		 * user 验证通过或RememberMe登录的都可以
+		 * 过滤链定义，从上向下顺序执行，一般将 /**放在最为下边 。 anon 不需要认证 authc 需要认证 user
+		 * 验证通过或RememberMe登录的都可以
 		 */
 		// 开放的静态资源
 		filterChainDefinitionMap.put("/favicon.ico", "anon");// 网站图标

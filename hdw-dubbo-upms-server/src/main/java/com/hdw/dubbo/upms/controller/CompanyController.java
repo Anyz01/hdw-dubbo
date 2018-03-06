@@ -25,11 +25,19 @@ import com.hdw.dubbo.upms.entity.User;
 import com.hdw.dubbo.upms.rpc.api.ICompanyService;
 import com.hdw.dubbo.upms.rpc.api.IUserService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
+
 /**
- * @Author ChenShi
- * @Date 2017年12月26日
- * @Version 1.0V 类说明 企业信息控制层
+ * 
+ * @description 企业信息控制层
+ * @author TuMinglong
+ * @date 2018年3月6日 上午10:53:25
  */
+@Api(value="企业信息业务接口类",tags= {"企业信息接口"})
 @Controller
 @RequestMapping("/company")
 public class CompanyController extends CommonsController {
@@ -41,9 +49,17 @@ public class CompanyController extends CommonsController {
 
 	@GetMapping("/manager")
 	public String manager() {
-		return "admin/company/company";
+		return "company/company";
 	}
 
+	@ApiOperation(value="查询企业信息接口",notes="查询企业信息")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="page",value="页数",dataType="int", required=true),
+		@ApiImplicitParam(name="rows",value="行数",dataType="int", required=true),
+		@ApiImplicitParam(name="sort",value="根据某属性排序",dataType="string"),
+		@ApiImplicitParam(name="order",value="升降序",dataType="string"),
+		@ApiImplicitParam(name="name",value="企业名称",dataType="string")})
+	
 	@PostMapping("/dataGrid")
 	@ResponseBody
 	public PageInfo dataGrid(Integer page, Integer rows, String sort, String order, String name) {
@@ -63,6 +79,8 @@ public class CompanyController extends CommonsController {
 	 * @param
 	 * @return
 	 */
+	@ApiOperation(value="添加企业信息",notes="添加企业信息")
+	
 	@PostMapping("/add")
 	@ResponseBody
 	public Object add(@Valid Company company) {
@@ -84,6 +102,8 @@ public class CompanyController extends CommonsController {
 	 * @param
 	 * @return
 	 */
+	@ApiOperation(value="编辑企业信息",notes="编辑企业信息")
+	
 	@PostMapping("/edit")
 	@ResponseBody
 	public Object edit(@Valid Company company) {
@@ -105,7 +125,10 @@ public class CompanyController extends CommonsController {
 	 * @param
 	 * @return
 	 */
-	@PostMapping("/delete")
+	@ApiOperation(value="删除企业信息",notes="删除企业信息")
+	@ApiImplicitParam(name="ids",value="企业ID数组", paramType="ids" ,required=true)
+	
+	@GetMapping("/delete")
 	@ResponseBody
 	public Object delete(@RequestParam String[] ids) {
 		List<String> idList = new ArrayList<String>();

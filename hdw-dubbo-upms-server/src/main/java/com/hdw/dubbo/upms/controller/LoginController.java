@@ -18,12 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 import com.hdw.dubbo.common.csrf.CsrfToken;
 import com.hdw.dubbo.upms.shiro.captcha.DreamCaptcha;
 
-
-
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 
@@ -31,10 +30,21 @@ import com.hdw.dubbo.upms.shiro.captcha.DreamCaptcha;
  * @author TuMinglong
  * @date 2018年3月6日 上午9:55:46
  */
+
+@Api(value = "登录接口类", tags = { "登录接口" })
 @Controller
 public class LoginController extends CommonsController {
 	@Autowired
 	private DreamCaptcha dreamCaptcha;
+
+	/**
+	 * 图形验证码
+	 */
+	@ApiOperation(value = "图形验证码", notes = "图形验证码")
+	@GetMapping("captcha.jpg")
+	public void captcha(HttpServletRequest request, HttpServletResponse response) {
+		dreamCaptcha.generate(request, response);
+	}
 
 	/**
 	 * 首页
@@ -62,6 +72,8 @@ public class LoginController extends CommonsController {
 	 * 
 	 * @return {String}
 	 */
+	@ApiOperation(value = "GET 登录", notes = "GET 登录")
+
 	@GetMapping("/login")
 	@CsrfToken(create = true)
 	public String login() {
@@ -81,6 +93,8 @@ public class LoginController extends CommonsController {
 	 *            密码
 	 * @return {Object}
 	 */
+	@ApiOperation(value = "POST 登录 ", notes = "POST 登录 ")
+
 	@PostMapping("/login")
 	@CsrfToken(remove = true)
 	@ResponseBody
@@ -123,6 +137,8 @@ public class LoginController extends CommonsController {
 	 * 
 	 * @return {String}
 	 */
+	@ApiOperation(value = "未授权 ", notes = "未授权 ")
+
 	@GetMapping("/unauth")
 	public String unauth() {
 		if (SecurityUtils.getSubject().isAuthenticated() == false) {
@@ -136,6 +152,8 @@ public class LoginController extends CommonsController {
 	 * 
 	 * @return {Result}
 	 */
+	@ApiOperation(value = "退出 ", notes = "退出")
+
 	@PostMapping("/logout")
 	@ResponseBody
 	public Object logout() {
