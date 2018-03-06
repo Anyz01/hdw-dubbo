@@ -1,4 +1,4 @@
-package com.hdw.dubbo.shiro;
+package com.hdw.dubbo.upms.shiro;
 
 import java.util.List;
 import java.util.Map;

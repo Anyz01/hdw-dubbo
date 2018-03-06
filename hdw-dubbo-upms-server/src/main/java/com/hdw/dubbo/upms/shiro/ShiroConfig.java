@@ -1,4 +1,4 @@
-package com.hdw.dubbo.shiro;
+package com.hdw.dubbo.upms.shiro;
 
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 
@@ -16,8 +16,8 @@ import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.hdw.dubbo.shiro.cache.ShiroSpringCacheManager;
-import com.hdw.dubbo.shiro.captcha.DreamCaptcha;
+import com.hdw.dubbo.upms.shiro.cache.ShiroSpringCacheManager;
+import com.hdw.dubbo.upms.shiro.captcha.DreamCaptcha;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 

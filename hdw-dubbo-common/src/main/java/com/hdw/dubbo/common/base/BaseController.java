@@ -33,8 +33,6 @@ import com.hdw.dubbo.common.util.DateUtil;
 import com.hdw.dubbo.common.util.StringEscapeEditor;
 import com.hdw.dubbo.common.util.URLUtils;
 
-
-
 /**
  * 
  * @description BaseController 公用Controller
@@ -43,18 +41,18 @@ import com.hdw.dubbo.common.util.URLUtils;
  *
  */
 public abstract class BaseController {
-	protected static final  Logger logger = LoggerFactory.getLogger(BaseController.class);
+	protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
 	/**
 	 * 文件上传根目录
 	 */
-	@Value("#{application.fileUploadRootURL}")
+	@Value("${fileUploadRootURL}")
 	private String fileUploadRootURL;
 
 	/**
 	 * 文件上传服务器名称
 	 */
-	@Value("#{application.fileUploadServer}")
+	@Value("${fileUploadServer}")
 	private String fileUploadServer;
 
 	@InitBinder
@@ -70,33 +68,6 @@ public abstract class BaseController {
 		 */
 		binder.registerCustomEditor(String.class, new StringEscapeEditor());
 	}
-
-//	/**
-//	 * 获取当前登录用户对象
-//	 * 
-//	 * @return {ShiroUser}
-//	 */
-//	public ShiroUser getShiroUser() {
-//		return (ShiroUser) SecurityUtils.getSubject().getPrincipal();
-//	}
-//
-//	/**
-//	 * 获取当前登录用户id
-//	 * 
-//	 * @return {Long}
-//	 */
-//	public Long getUserId() {
-//		return this.getShiroUser().getId();
-//	}
-//
-//	/**
-//	 * 获取当前登录用户名
-//	 * 
-//	 * @return {String}
-//	 */
-//	public String getStaffName() {
-//		return this.getShiroUser().getName();
-//	}
 
 	/**
 	 * ajax失败
@@ -253,7 +224,7 @@ public abstract class BaseController {
 					String fileName = file.getOriginalFilename();
 					File tagetFile = new File(dirFile.getAbsoluteFile() + File.separator + fileName);
 					if (!tagetFile.exists()) {// 文件名不存在 则新建文件，并将文件复制到新建文件中
-						tagetFile.createNewFile();	
+						tagetFile.createNewFile();
 					}
 					file.transferTo(tagetFile);
 					fileNames.add("/" + fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")

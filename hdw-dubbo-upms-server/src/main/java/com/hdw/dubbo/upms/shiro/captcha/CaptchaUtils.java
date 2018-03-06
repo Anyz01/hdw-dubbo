@@ -1,4 +1,4 @@
-package com.hdw.dubbo.shiro.captcha;
+package com.hdw.dubbo.upms.shiro.captcha;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

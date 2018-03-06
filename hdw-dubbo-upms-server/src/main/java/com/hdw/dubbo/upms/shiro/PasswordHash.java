@@ -1,4 +1,4 @@
-package com.hdw.dubbo.shiro;
+package com.hdw.dubbo.upms.shiro;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
