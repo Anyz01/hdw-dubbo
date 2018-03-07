@@ -34,4 +34,7 @@
     <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.IUserService" ref="userService"/>
     <bean id="userService" class="com.hdw.dubbo.upms.rpc.service.impl.UserServiceImpl"/>
     
+    <dubbo:service interface="com.hdw.dubbo.upms.rpc.api.IUpmsApiService" ref="upmsApiService"/>
+    <bean id="upmsApiService" class="com.hdw.dubbo.upms.rpc.service.impl.UpmsApiServiceImpl"/>
+    
 </beans>

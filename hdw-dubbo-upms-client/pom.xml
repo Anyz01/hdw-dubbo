@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.hdw</groupId>
+		<artifactId>hdw-dubbo</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>hdw-dubbo-upms-client</artifactId>
+	<packaging>jar</packaging>
+
+	<name>hdw-dubbo-upms-client</name>
+	<url>http://maven.apache.org</url>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>com.hdw</groupId>
+			<artifactId>hdw-dubbo-upms-rpc-api</artifactId>
+			<version>1.0.0</version>
+			<type>jar</type>
+		</dependency>
+		
+		<!-- shiro begin -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- shiro end -->
+		<!-- thymeleaf模板中shiro标签 begin -->
+		<dependency>
+			<groupId>com.github.theborakompanioni</groupId>
+			<artifactId>thymeleaf-extras-shiro</artifactId>
+		</dependency>
+		<!-- thymeleaf模板中shiro标签 end -->
+		
+	</dependencies>
+
+</project>

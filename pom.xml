@@ -19,6 +19,7 @@
 		<module>hdw-dubbo-mapper</module>
 		<module>hdw-dubbo-upms-rpc-api</module>
 		<module>hdw-dubbo-upms-rpc-service</module>
+		<module>hdw-dubbo-upms-client</module>
 		<module>hdw-dubbo-upms-server</module>
 	</modules>
 

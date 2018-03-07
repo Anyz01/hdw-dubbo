@@ -28,6 +28,14 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!-- thymeleaf begin -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<!-- thymeleaf end -->
+		
 		<!-- 引入log4j2依赖 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -2,7 +2,6 @@ package com.hdw.dubbo.upms.scan;
 
 import java.util.Date;
 import java.util.Enumeration;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +21,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.hdw.dubbo.upms.entity.SysLog;
-import com.hdw.dubbo.upms.rpc.api.ISysLogService;
+import com.hdw.dubbo.upms.rpc.api.IUpmsApiService;
 
 
 /**
@@ -38,7 +37,7 @@ public class SysLogAspect {
 	private static final Logger LOGGER = LogManager.getLogger(SysLogAspect.class);
 
 	@Autowired
-	private ISysLogService sysLogService;
+	private IUpmsApiService upmsApiService;
 
 	@Pointcut("within(@org.springframework.stereotype.Controller *)")
 	public void cutController() {
@@ -84,7 +83,7 @@ public class SysLogAspect {
 						sysLog.setClientIp(request.getRemoteAddr());
 					}
 					LOGGER.info(sysLog.toString());
-					sysLogService.insert(sysLog);
+					upmsApiService.insertSysLog(sysLog);
 				}
 			} catch (Exception e) {
 				LOGGER.error(e.getMessage(), e);

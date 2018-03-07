@@ -12,6 +12,7 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,16 @@ import javax.servlet.Filter;
  */
 @Configuration
 public class ShiroConfig {
-
+	
+	@Value("${hdw.upms.loginUrl}")
+	private String loginUrl;
+	
+	@Value("${hdw.upms.successUrl}")
+	private String successUrl;
+	
+	@Value("${hdw.upms.unauthorizedUrl}")
+	private String unauthorizedUrl;
+	
 	@Autowired
 	private CacheManager cacheManager;
 
@@ -117,11 +127,11 @@ public class ShiroConfig {
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
-		shiroFilterFactoryBean.setLoginUrl("/login");
+		shiroFilterFactoryBean.setLoginUrl(loginUrl);
 		// 登录成功后要跳转的链接
-		shiroFilterFactoryBean.setSuccessUrl("/index");
+		shiroFilterFactoryBean.setSuccessUrl(successUrl);
 		// 未授权界面
-		shiroFilterFactoryBean.setUnauthorizedUrl("/unauth");
+		shiroFilterFactoryBean.setUnauthorizedUrl(unauthorizedUrl);
 		// 拦截器
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 
