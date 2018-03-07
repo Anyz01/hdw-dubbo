@@ -16,7 +16,6 @@ import org.apache.shiro.web.util.WebUtils;
 /**
  * ajax shiro session超时统一处理
  * 
- * 参考：http://looooj.github.io/blog/2014/06/17/shiro-user-filter.html
  * @author TuMinglong
  *
  */

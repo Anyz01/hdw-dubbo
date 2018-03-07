@@ -9,20 +9,19 @@
 		<version>1.0.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>hdw-dubbo-upms-rpc-api</artifactId>
+
+	<artifactId>hdw-dubbo-mapper</artifactId>
 	<packaging>jar</packaging>
 
-	<name>hdw-dubbo-upms-rpc-api</name>
-	<url>http://maven.apache.org</url>
-
+	<name>upms.mapper</name>
+	<url>hdw-dubbo-mapper</url>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.hdw</groupId>
-			<artifactId>hdw-dubbo-mapper</artifactId>
+			<artifactId>hdw-dubbo-common</artifactId>
 			<version>1.0.0</version>
 			<type>jar</type>
 		</dependency>
 	</dependencies>
-
 </project>
