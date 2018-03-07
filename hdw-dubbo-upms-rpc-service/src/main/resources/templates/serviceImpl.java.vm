@@ -1,0 +1,40 @@
+package ${package.ServiceImpl};
+
+import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.toolkit.StringUtils;
+import com.gbicc.common.result.PageInfo;
+import ${package.Entity}.${entity};
+import ${package.Mapper}.${table.mapperName};
+import ${package.Service}.${table.serviceName};
+import ${superServiceImplClassPackage};
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * <p>
+ * $!{table.comment} 服务实现类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Service
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+	
+	@Autowired
+	private ${table.mapperName} ${table.entityPath}Mapper;
+
+	@Override
+	public void selectDataGrid(PageInfo pageInfo) {
+		Page<${entity}> page = new Page<${entity}>(pageInfo.getNowpage(), pageInfo.getSize());
+		String orderField = StringUtils.camelToUnderline(pageInfo.getSort());
+		page.setOrderByField(orderField);
+		page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
+		List<${entity}> list = ${table.entityPath}Mapper.select${entity}Page(page, pageInfo.getCondition());
+		pageInfo.setRows(list);
+		pageInfo.setTotal(page.getTotal());
+	}
+}

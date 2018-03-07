@@ -25,8 +25,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
-		<mybatisplus.version>2.1.4</mybatisplus.version>
+		<mybatis-plus-boot-starter.version>2.1.9</mybatis-plus-boot-starter.version>
+		<mybatisplus.version>2.1.9</mybatisplus.version>
 		<httpclient.version>4.5.3</httpclient.version>
 		<joda-time.version>2.8.4</joda-time.version>
 		<fastjson.version>1.2.38</fastjson.version>
@@ -66,8 +66,9 @@
 		<ehcache.version>2.6.11</ehcache.version>
 		<!-- thymeleaf -->
 		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
-        <thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
+		<thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
 		<thymeleaf-extras-shiro.version>2.0.0</thymeleaf-extras-shiro.version>
+		<velocity-engine-core.version>2.0</velocity-engine-core.version>
 	</properties>
 
 	<dependencyManagement>
@@ -128,15 +129,17 @@
 			<!-- mybatis-plus begin -->
 			<dependency>
 				<groupId>com.baomidou</groupId>
-				<artifactId>mybatisplus-spring-boot-starter</artifactId>
-				<version>${mybatisplus-spring-boot-starter.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus</artifactId>
-				<version>${mybatisplus.version}</version>
+				<artifactId>mybatis-plus-boot-starter</artifactId>
+				<version>${mybatis-plus-boot-starter.version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>tomcat-jdbc</artifactId>
+						<groupId>org.apache.tomcat</groupId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<!-- mybatis-plus end -->
+
 			<!-- pinyin4j begin -->
 			<dependency>
 				<groupId>com.belerweb</groupId>
@@ -302,6 +305,7 @@
 				<version>${ehcache.version}</version>
 			</dependency>
 			<!-- shiro end -->
+
 			<!-- thymeleaf模板中shiro标签 begin -->
 			<dependency>
 				<groupId>com.github.theborakompanioni</groupId>
@@ -309,6 +313,15 @@
 				<version>${thymeleaf-extras-shiro.version}</version>
 			</dependency>
 			<!-- thymeleaf模板中shiro标签 end -->
+
+			<!-- velocity begin -->
+			<dependency>
+				<groupId>org.apache.velocity</groupId>
+				<artifactId>velocity-engine-core</artifactId>
+				<version>${velocity-engine-core.version}</version>
+			</dependency>
+			<!-- velocity end -->
+
 		</dependencies>
 	</dependencyManagement>
 

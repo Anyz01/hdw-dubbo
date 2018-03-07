@@ -1,7 +1,8 @@
 package com.hdw.dubbo.common.scan;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -15,14 +16,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.hdw.dubbo.common.result.Result;
 
 
-
-
-
 @ControllerAdvice
 public class ExceptionTranslator {
 
-	private final Logger log = LogManager.getLogger(ExceptionTranslator.class);
-
+	private static final Logger log = LoggerFactory.getLogger(ExceptionTranslator.class);
+ 
+	/**
+	 * 对hibernate-validator异常错误信息简单处理
+	 * @param ex
+	 * @return
+	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
@@ -42,11 +45,6 @@ public class ExceptionTranslator {
 		return getFieldErrorResult(error);
 	}
 	
-	/**
-	 * 对hibernate-validator异常错误信息简单处理
-	 * @param error
-	 * @return
-	 */
 	private Result getFieldErrorResult(FieldError error) {
 		StringBuilder errorMsg = new StringBuilder(100);
 		errorMsg.append("$(form).find(\"[name=\\\"");
@@ -60,7 +58,7 @@ public class ExceptionTranslator {
 	}
 	
 	/**
-	 * 普通的异常交给 {@link ExceptionResolver} 处理
+	 * 普通的异常交给 ExceptionResolver 处理
 	 * 兼容 页面 异常和ajax异常
 	 */
 //	@ExceptionHandler(Exception.class)

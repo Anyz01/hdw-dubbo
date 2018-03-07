@@ -10,8 +10,6 @@
      <!-- 订阅服务 -->
     <dubbo:consumer check="true"/>
     
-    <dubbo:reference id="testService" interface="com.hdw.dubbo.upms.rpc.api.ITestService"/>
-    
     <dubbo:reference id="companyService" interface="com.hdw.dubbo.upms.rpc.api.ICompanyService"/>
     
     <dubbo:reference id="OrganizationService" interface="com.hdw.dubbo.upms.rpc.api.IOrganizationService"/>

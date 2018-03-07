@@ -1,8 +1,5 @@
 package com.hdw.dubbo;
 
-
-
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,11 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.hdw.dubbo.upms.entity.vo.UserVo;
-import com.hdw.dubbo.upms.rpc.api.ITestService;
 import com.hdw.dubbo.upms.rpc.api.IUserService;
-
-
-
 
 
 @RunWith(SpringRunner.class)
@@ -24,20 +17,10 @@ import com.hdw.dubbo.upms.rpc.api.IUserService;
 public class AppTest {
 	
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());  
-	
-	
-	@Autowired
-	private ITestService testService;
-	
+
 	@Autowired
 	private IUserService userService;
 
-	@Test
-	public void testDobbo(){
-		String msg=testService.print();
-		System.out.println("dubbo消息："+msg);
-	}
-	
 	@Test
 	public void testDobboByUser(){
 		UserVo user=userService.selectVoById(1l);
