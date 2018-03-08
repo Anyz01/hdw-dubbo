@@ -16,11 +16,16 @@
 
 	<modules>
 		<module>hdw-dubbo-common</module>
-		<module>hdw-dubbo-mapper</module>
+		<module>hdw-dubbo-upms-mapper</module>
 		<module>hdw-dubbo-upms-rpc-api</module>
 		<module>hdw-dubbo-upms-rpc-service</module>
 		<module>hdw-dubbo-upms-client</module>
 		<module>hdw-dubbo-upms-server</module>
+		<module>hdw-dubbo-search-mapper</module>
+		<module>hdw-dubbo-search-rpc-api</module>
+		<module>hdw-dubbo-search-rpc-service</module>
+		<module>hdw-dubbo-search-client</module>
+		<module>hdw-dubbo-search-server</module>
 	</modules>
 
 	<properties>

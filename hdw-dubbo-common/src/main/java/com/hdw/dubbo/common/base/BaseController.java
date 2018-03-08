@@ -79,6 +79,20 @@ public abstract class BaseController {
 	public Object renderError(String msg) {
 		Result result = new Result();
 		result.setMsg(msg);
+		result.setCode(-1);
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @param code 状态码
+	 * @param msg 失败信息
+	 * @return
+	 */
+	public Object renderError(Integer code,String msg) {
+		Result result = new Result();
+		result.setMsg(msg);
+		result.setCode(code);
 		return result;
 	}
 
@@ -90,6 +104,7 @@ public abstract class BaseController {
 	public Object renderSuccess() {
 		Result result = new Result();
 		result.setSuccess(true);
+		result.setCode(1);
 		return result;
 	}
 
@@ -104,6 +119,7 @@ public abstract class BaseController {
 		Result result = new Result();
 		result.setSuccess(true);
 		result.setMsg(msg);
+		result.setCode(1);
 		return result;
 	}
 
@@ -118,6 +134,7 @@ public abstract class BaseController {
 		Result result = new Result();
 		result.setSuccess(true);
 		result.setObj(obj);
+		result.setCode(1);
 		return result;
 	}
 

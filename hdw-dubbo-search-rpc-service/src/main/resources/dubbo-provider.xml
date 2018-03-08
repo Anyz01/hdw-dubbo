@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <dubbo:application name="${dubbo.appname}"/>
+    <dubbo:registry address="${dubbo.registry}"/>
+    <dubbo:protocol name="dubbo" port="${dubbo.protocol}"/>
+    
+    <dubbo:service interface="com.hdw.dubbo.search.rpc.api.ISearchApiService" ref="searchApiService"/>
+    <bean id="searchApiService" class="com.hdw.dubbo.search.rpc.service.impl.SearchApiServiceImpl"/>
+    
+  
+    
+</beans>

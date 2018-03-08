@@ -158,6 +158,7 @@ public class ShiroConfig {
 
 		// 其他的
 		filterChainDefinitionMap.put("/**", "authc");
+		filterChainDefinitionMap.put("/solr/**", "anon");
 
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 

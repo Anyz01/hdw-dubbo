@@ -10,11 +10,11 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>hdw-dubbo-mapper</artifactId>
+	<artifactId>hdw-dubbo-upms-mapper</artifactId>
 	<packaging>jar</packaging>
 
-	<name>upms.mapper</name>
-	<url>hdw-dubbo-mapper</url>
+	<name>hdw-dubbo-upms-mapper</name>
+	<url>http://maven.apache.org</url>
 
 	<dependencies>
 		<dependency>

@@ -1,0 +1,20 @@
+package ${package.Mapper};
+
+import java.util.List;
+import java.util.Map;
+
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import ${package.Entity}.${entity};
+import ${superMapperClassPackage};
+
+/**
+ * <p>
+  * $!{table.comment} Mapper 接口
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+	List<${entity}> select${entity}Page(Pagination page, Map<String, Object> params);
+}
