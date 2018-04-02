@@ -11,8 +11,8 @@ import java.io.Serializable;
  */
 public class Result implements Serializable {
 
-    public static final int SUCCESS = 1;
-    public static final int FAILURE = -1;
+    public static final int SUCCESS = 0;
+    public static final int FAILURE = 1;
 
     private static final long serialVersionUID = 5576237395711742681L;
 
@@ -55,6 +55,34 @@ public class Result implements Serializable {
 	public void setCode(Integer code) {
 		this.code = code;
 	}
+
+	public Result(Integer code, boolean success, String msg) {
+		super();
+		this.success = success;
+		this.msg = msg;
+		this.code = code;
+	}
+
+	public Result(boolean success, Integer code, Object obj) {
+		super();
+		this.success = success;
+		this.code = code;
+		this.obj = obj;
+	}
+
+	public Result(boolean success, String msg, Integer code, Object obj) {
+		super();
+		this.success = success;
+		this.msg = msg;
+		this.code = code;
+		this.obj = obj;
+	}
+
+	public Result() {
+		super();
+	}
+	
+	
 
 	
 
