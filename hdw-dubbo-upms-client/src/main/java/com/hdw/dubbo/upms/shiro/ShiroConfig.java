@@ -22,6 +22,7 @@ import com.hdw.dubbo.upms.shiro.captcha.DreamCaptcha;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 
+
 import javax.servlet.Filter;
 
 /**
@@ -123,9 +124,9 @@ public class ShiroConfig {
 	}
 
 	@Bean
-	public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
+	public ShiroFilterFactoryBean shiroFilter() {
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-		shiroFilterFactoryBean.setSecurityManager(securityManager);
+		shiroFilterFactoryBean.setSecurityManager(securityManager());
 		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
 		shiroFilterFactoryBean.setLoginUrl(loginUrl);
 		// 登录成功后要跳转的链接
@@ -260,4 +261,5 @@ public class ShiroConfig {
 	public ShiroDialect shiroDialect() {
 		return new ShiroDialect();
 	}
+	
 }

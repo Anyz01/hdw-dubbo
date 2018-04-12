@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.hdw.dubbo.common.config.redis.RedisUtil;
+import com.hdw.dubbo.common.config.redis.IRedisService;
 import com.hdw.dubbo.search.rpc.api.IRealDataService;
 import com.hdw.dubbo.search.rpc.api.ISearchApiService;
 
@@ -31,7 +31,7 @@ public class AppTest {
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private RedisUtil cacheManager;
+	private IRedisService redisService;
 	@Autowired
 	private IRealDataService realDataService;
 	@Autowired
@@ -194,61 +194,61 @@ public class AppTest {
 		System.out.println("------------String测试-----------");
 		String phone = "18627026982";
 
-		boolean StringFlag = cacheManager.exists("test");
+		boolean StringFlag = redisService.exists("test");
 		if (StringFlag) {
-			cacheManager.del("test");
+			redisService.del("test");
 		}
 
-		cacheManager.set("test", phone, 600);
-		String phoneS = (String) cacheManager.get("test");
+		redisService.set("test", phone, 600);
+		String phoneS = (String) redisService.get("test");
 		logger.info("从redis中获取String：" + phoneS);
-		cacheManager.del("test");
+		redisService.del("test");
 
 		System.out.println("------------Map测试-----------");
-		boolean MapFlag = cacheManager.exists("testMap");
+		boolean MapFlag = redisService.exists("testMap");
 		if (MapFlag) {
-			cacheManager.del("testMap");
+			redisService.del("testMap");
 		}
 
 		Map<String, Object> par = new HashMap<String, Object>();
 		par.put("district", "华容区");
 		par.put("businessType", "非煤矿山");
-		cacheManager.madd("testMap", par, 600);
-		String obj = (String) cacheManager.mget("testMap", "district");
+		redisService.madd("testMap", par, 600);
+		String obj = (String) redisService.mget("testMap", "district");
 		logger.info("从redis中获取map：key='district' value:" + obj);
-		Map<String, Object> par3 = cacheManager.mget("testMap");
+		Map<String, Object> par3 = redisService.mget("testMap");
 		for (String key : par3.keySet()) {
 			logger.info("从redis中获取map：key=" + key + " value:" + par3.get(key));
 		}
-		boolean delMapFlag = cacheManager.mdel("testMap", "district");
+		boolean delMapFlag = redisService.mdel("testMap", "district");
 		if (delMapFlag) {
 			logger.info("从redis中删除map中key为district的对象成功");
 		}
 
 		System.out.println("------------Set测试-----------");
-		boolean SetFlag = cacheManager.exists("testSet");
+		boolean SetFlag = redisService.exists("testSet");
 		if (SetFlag) {
-			cacheManager.del("testSet");
+			redisService.del("testSet");
 		}
-		cacheManager.sadd("testSet", "涂明龙");
-		cacheManager.sadd("testSet", "陈实");
-		cacheManager.sadd("testSet", "汪聪");
-		cacheManager.sadd("testSet", "谭美雄");
-		cacheManager.sadd("testSet", "朱贝贝");
-		Set<Serializable> set = cacheManager.sget("testSet");
+		redisService.sadd("testSet", "涂明龙");
+		redisService.sadd("testSet", "陈实");
+		redisService.sadd("testSet", "汪聪");
+		redisService.sadd("testSet", "谭美雄");
+		redisService.sadd("testSet", "朱贝贝");
+		Set<Object> set = redisService.sget("testSet");
 
-		for (Serializable s : set) {
+		for (Object s : set) {
 			logger.info("从redis中获取set：" + s.toString());
 		}
-		boolean delSetFlag = cacheManager.sdel("testSet", "涂明龙");
+		boolean delSetFlag = redisService.sdel("testSet", "涂明龙");
 		if (delSetFlag) {
 			logger.info("从redis中删除set中为涂明龙的对象成功");
 		}
 
 		System.out.println("------------List测试-----------");
-		boolean ListFlag = cacheManager.exists("testList");
+		boolean ListFlag = redisService.exists("testList");
 		if (ListFlag) {
-			cacheManager.del("testList");
+			redisService.del("testList");
 		}
 		List<String> list = new ArrayList<String>();
 		list.add("涂明龙");
@@ -256,9 +256,9 @@ public class AppTest {
 		list.add("汪聪");
 		list.add("谭美雄");
 		list.add("朱贝贝");
-		cacheManager.ladd("testList", list, 600);
+		redisService.ladd("testList", list, 600);
 
-		List<String> list2 = cacheManager.lget("testList");
+		List<String> list2 = redisService.lget("testList");
 		for (String s : list2) {
 			logger.info("从redis中获取List：" + s);
 		}

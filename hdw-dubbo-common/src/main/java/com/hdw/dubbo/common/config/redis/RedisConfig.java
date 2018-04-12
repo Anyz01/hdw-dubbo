@@ -90,7 +90,9 @@ public class RedisConfig extends CachingConfigurerSupport{
         //shiro cache keys
         expires.put("authorizationCache", 1800l);
         expires.put("authenticationCache", 1800l);
-        expires.put("authenticationCache", 1800l);
+        expires.put("activeSessionCache", 1800l);
+        expires.put("pac4jAuthorizationCache", 1800l);
+        expires.put("pac4jAuthenticationCache", 1800l);
         
         rcm.setExpires(expires);
         
