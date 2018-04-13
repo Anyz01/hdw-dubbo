@@ -34,8 +34,8 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "登录接口类", tags = { "登录接口" })
 @Controller
 public class LoginController extends CommonsController {
-	@Autowired
-	private DreamCaptcha dreamCaptcha;
+	//@Autowired
+	//private DreamCaptcha dreamCaptcha;
 
 	/**
 	 * 图形验证码
@@ -43,7 +43,7 @@ public class LoginController extends CommonsController {
 	@ApiOperation(value = "图形验证码", notes = "图形验证码")
 	@GetMapping("captcha.jpg")
 	public void captcha(HttpServletRequest request, HttpServletResponse response) {
-		dreamCaptcha.generate(request, response);
+		//dreamCaptcha.generate(request, response);
 	}
 
 	/**
@@ -111,9 +111,9 @@ public class LoginController extends CommonsController {
 		if (StringUtils.isBlank(captcha)) {
 			throw new RuntimeException("验证码不能为空");
 		}
-		if (!dreamCaptcha.validate(request, response, captcha)) {
-			throw new RuntimeException("验证码错误");
-		}
+//		if (!dreamCaptcha.validate(request, response, captcha)) {
+//			throw new RuntimeException("验证码错误");
+//		}
 		Subject user = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		// 设置记住密码
