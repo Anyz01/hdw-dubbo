@@ -17,7 +17,7 @@ public class PageInfo {
 
     private final static int PAGESIZE = 10; //默认显示的记录数 
 
-    private int total; // 总记录 
+    private Long total; // 总记录 
     private List rows; //显示的记录  
 
     @JsonIgnore
@@ -66,11 +66,11 @@ public class PageInfo {
         this.order = order;
     }
 
-    public int getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 

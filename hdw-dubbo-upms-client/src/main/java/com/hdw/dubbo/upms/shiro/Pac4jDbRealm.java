@@ -1,5 +1,6 @@
 package com.hdw.dubbo.upms.shiro;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,12 +11,13 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.pac4j.core.profile.CommonProfile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.hdw.dubbo.upms.entity.ShiroUser;
 import com.hdw.dubbo.upms.entity.User;
@@ -23,14 +25,17 @@ import com.hdw.dubbo.upms.entity.vo.UserVo;
 import com.hdw.dubbo.upms.rpc.api.IUpmsApiService;
 
 import io.buji.pac4j.realm.Pac4jRealm;
+import io.buji.pac4j.subject.Pac4jPrincipal;
+import io.buji.pac4j.token.Pac4jToken;
 
+@Component
 public class Pac4jDbRealm extends Pac4jRealm {
 
-	private static final Logger LOGGER = LogManager.getLogger(ShiroDbRealm.class);
+	private static final Logger LOGGER = LogManager.getLogger(Pac4jDbRealm.class);
 
 	@Autowired
 	private IUpmsApiService upmsApiService;
-
+	
 	public Pac4jDbRealm() {
 		super();
 	}
@@ -42,10 +47,19 @@ public class Pac4jDbRealm extends Pac4jRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken)
 			throws AuthenticationException {
+
 		LOGGER.info("Shiro开始登录认证");
-		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
+		Pac4jToken token = (Pac4jToken) authcToken;
+		LinkedHashMap<String, CommonProfile> profiles = token.getProfiles();
+		Pac4jPrincipal principal = new Pac4jPrincipal(profiles);
+
+		String loginName = principal.getProfile().getId();
+
+		// Session session = SecurityUtils.getSubject().getSession();
+		// session.setAttribute("userSessionId", loginName );
+
 		UserVo uservo = new UserVo();
-		uservo.setLoginName(token.getUsername());
+		uservo.setLoginName(loginName);
 		List<User> list = upmsApiService.selectByLoginName(uservo);
 		// 账号不存在
 		if (list == null || list.isEmpty()) {
@@ -63,8 +77,7 @@ public class Pac4jDbRealm extends Pac4jRealm {
 		ShiroUser shiroUser = new ShiroUser(user.getId(), user.getLoginName(), user.getName(), urls);
 		shiroUser.setRoles(roles);
 		// 认证缓存信息
-		return new SimpleAuthenticationInfo(shiroUser, user.getPassword().toCharArray(),
-				ShiroByteSource.of(user.getSalt()), getName());
+		return new SimpleAuthenticationInfo(shiroUser, profiles.hashCode(), getName());
 	}
 
 	/**
@@ -107,7 +120,5 @@ public class Pac4jDbRealm extends Pac4jRealm {
 		principals.add(loginName, super.getName());
 		super.clearCachedAuthenticationInfo(principals);
 	}
-	
-	
 
 }

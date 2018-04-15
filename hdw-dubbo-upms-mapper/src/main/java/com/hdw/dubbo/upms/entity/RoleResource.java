@@ -4,6 +4,7 @@ package com.hdw.dubbo.upms.entity;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -25,9 +26,11 @@ public class RoleResource implements Serializable {
 	private Long id;
 
 	/** 角色id */
+	@TableField(value="role_id")
 	private Long roleId;
 
 	/** 资源id */
+	@TableField(value="resource_id")
 	private Long resourceId;
 
 

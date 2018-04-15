@@ -1,6 +1,7 @@
 package com.hdw.dubbo.common.config.redis;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,24 +63,20 @@ public class RedisConfig extends CachingConfigurerSupport{
     	}
     }
     
- 
-    @Bean(name="jdkRedisTemplate")
-    public RedisTemplate<String, Object> jdkRedisTemplate(
+    @Primary
+    @Bean(name="redisTemplate")
+    public RedisTemplate<Serializable,Serializable> redisTemplate(
     		RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
+        RedisTemplate<Serializable,Serializable> redisTemplate = new RedisTemplate<Serializable,Serializable>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
-       
         JdkSerializationRedisSerializer jdkSerializationRedisSerializer=new JdkSerializationRedisSerializer();
         redisTemplate.setKeySerializer(jdkSerializationRedisSerializer);
         redisTemplate.setValueSerializer(jdkSerializationRedisSerializer);
         redisTemplate.setHashKeySerializer(jdkSerializationRedisSerializer);
         redisTemplate.setHashValueSerializer(jdkSerializationRedisSerializer);
-        
         return redisTemplate;
     }
     
-    @Primary
-	@Qualifier("stringRedisTemplate")
     @Bean(name="stringRedisTemplate")
     public RedisTemplate<String, Object> stringRedisTemplate(
     		RedisConnectionFactory redisConnectionFactory) {
@@ -93,7 +90,6 @@ public class RedisConfig extends CachingConfigurerSupport{
         return redisTemplate;
     }
     
-   
     @Bean(name="longRedisTemplate")
     public RedisTemplate<String, Object> longRedisTemplate(
     		RedisConnectionFactory redisConnectionFactory) {
@@ -108,7 +104,6 @@ public class RedisConfig extends CachingConfigurerSupport{
         return redisTemplate;
     }
     
- 
     @Bean(name="jsonRedisTemplate")
     public RedisTemplate<String, Object> jsonRedisTemplate(
     		RedisConnectionFactory redisConnectionFactory) {
@@ -133,7 +128,7 @@ public class RedisConfig extends CachingConfigurerSupport{
      * @return
      */
     @Bean
-    public CacheManager cacheManager(RedisTemplate<String,	Object> redisTemplate) {
+    public CacheManager cacheManager(@Qualifier("redisTemplate")RedisTemplate<Serializable,Serializable> redisTemplate) {
     	RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
         rcm.setDefaultExpiration(600);
         rcm.setUsePrefix(true);

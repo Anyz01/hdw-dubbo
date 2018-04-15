@@ -1,5 +1,7 @@
 package com.hdw.dubbo.upms.shiro;
 
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 
 import java.util.LinkedHashMap;
@@ -11,6 +13,7 @@ import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -261,5 +264,36 @@ public class ShiroConfig {
 	public ShiroDialect shiroDialect() {
 		return new ShiroDialect();
 	}
+	
+	/**
+	 * 保证实现了Shiro内部lifecycle函数的bean执行
+	 * @return
+	 */
+	@Bean
+    public LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+	
+	/**
+	 * 启用shrio 控制器授权注解拦截方式
+	 * @return
+	 */
+	@Bean
+    public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor() {
+        AuthorizationAttributeSourceAdvisor aasa = new AuthorizationAttributeSourceAdvisor();
+        aasa.setSecurityManager(securityManager());
+        return new AuthorizationAttributeSourceAdvisor();
+    }
+	
+	/**
+	 * AOP式方法级权限检查 
+	 * @return
+	 */
+	@Bean
+    public DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator daap = new DefaultAdvisorAutoProxyCreator();
+        daap.setProxyTargetClass(true);
+        return daap;
+    }
 	
 }

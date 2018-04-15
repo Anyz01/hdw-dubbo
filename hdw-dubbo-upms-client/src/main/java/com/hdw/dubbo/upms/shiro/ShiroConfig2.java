@@ -1,5 +1,7 @@
 package com.hdw.dubbo.upms.shiro;
 
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 
 
@@ -8,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -24,6 +27,7 @@ import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
 import org.pac4j.jwt.profile.JwtGenerator;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -103,17 +107,8 @@ public class ShiroConfig2 {
 	 * 身份认证realm(账号密码校验；权限等)
 	 */
 	@Bean
-	public Pac4jDbRealm pac4jDbRealm() {
+	public Realm pac4jDbRealm() {
 		Pac4jDbRealm pac4jDbRealm = new Pac4jDbRealm();
-		pac4jDbRealm.setCacheManager(shiroSpringCacheManager());
-		pac4jDbRealm.setCredentialsMatcher(credentialsMatcher());
-		// 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false
-		pac4jDbRealm.setAuthenticationCachingEnabled(true);
-		// 缓存AuthenticationInfo信息的缓存名称
-		pac4jDbRealm.setAuthenticationCacheName("pac4jAuthenticationCache");
-		// 缓存AuthorizationInfo信息的缓存名称
-		pac4jDbRealm.setAuthorizationCacheName("pac4jAuthenticationCache");
-
 		return pac4jDbRealm;
 	}
 
@@ -294,6 +289,38 @@ public class ShiroConfig2 {
 	public ShiroDialect shiroDialect() {
 		return new ShiroDialect();
 	}
+	
+	
+	/**
+	 * 保证实现了Shiro内部lifecycle函数的bean执行
+	 * @return
+	 */
+//	@Bean
+//    public LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
+//        return new LifecycleBeanPostProcessor();
+//    }
+//	
+//	/**
+//	 * 启用shrio 控制器授权注解拦截方式
+//	 * @return
+//	 */
+//	@Bean
+//    public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor() {
+//		AuthorizationAttributeSourceAdvisor aasa = new AuthorizationAttributeSourceAdvisor();
+//        aasa.setSecurityManager(securityManager());
+//        return aasa;
+//    }
+//	
+//	/**
+//	 * AOP式方法级权限检查 
+//	 * @return
+//	 */
+//	@Bean
+//    public DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
+//        DefaultAdvisorAutoProxyCreator daap = new DefaultAdvisorAutoProxyCreator();
+//        daap.setProxyTargetClass(true);
+//        return daap;
+//    }
 
 	/**
 	 * cas服务端配置
@@ -351,6 +378,7 @@ public class ShiroConfig2 {
 	 * 
 	 * @return
 	 */
+	@Bean
 	protected CasRestFormClient casRestFormClient() {
 		CasRestFormClient casRestFormClient = new CasRestFormClient();
 		casRestFormClient.setConfiguration(casConfiguration());
@@ -368,7 +396,7 @@ public class ShiroConfig2 {
 		parameterClient.setSupportGetRequest(true);
 		parameterClient.setName("jwt");
 		// 支持的client全部设置进去
-		clients.setClients(casClient(), casRestFormClient(), parameterClient);
+		clients.setClients(casClient(), casRestFormClient(),parameterClient);
 		return clients;
 	}
 
@@ -380,7 +408,7 @@ public class ShiroConfig2 {
 	}
 
 	@Bean
-	Pac4jSubjectFactory pac4jSubjectFactory() {
+	public Pac4jSubjectFactory pac4jSubjectFactory() {
 		Pac4jSubjectFactory pac4jSubjectFactory = new Pac4jSubjectFactory();
 		return pac4jSubjectFactory;
 	}
@@ -397,4 +425,5 @@ public class ShiroConfig2 {
 		filter.setConfig(casConfig());
 		return filter;
 	}
+	
 }

@@ -5,6 +5,7 @@ package com.hdw.dubbo.upms.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -26,18 +27,23 @@ public class SysLog implements Serializable {
 	private Long id;
 
 	/** 登陆名 */
+	@TableField(value="login_name")
 	private String loginName;
 
 	/** 角色名 */
+	@TableField(value="role_name")
 	private String roleName;
 
 	/** 内容 */
+	@TableField(value="opt_content")
 	private String optContent;
 
 	/** 客户端ip */
+	@TableField(value="client_ip")
 	private String clientIp;
 
 	/** 创建时间 */
+	@TableField(value="create_time")
 	private Date createTime;
 
 

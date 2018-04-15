@@ -33,8 +33,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<mybatis-plus-boot-starter.version>2.1.9</mybatis-plus-boot-starter.version>
-		<mybatisplus.version>2.1.9</mybatisplus.version>
+		<mybatis-plus-boot-starter.version>2.2.0</mybatis-plus-boot-starter.version>
+		<mybatisplus.version>2.2.0</mybatisplus.version>
 		<httpclient.version>4.5.3</httpclient.version>
 		<joda-time.version>2.9.6</joda-time.version>
 		<fastjson.version>1.2.38</fastjson.version>

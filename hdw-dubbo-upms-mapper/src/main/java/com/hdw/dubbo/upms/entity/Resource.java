@@ -1,5 +1,6 @@
 package com.hdw.dubbo.upms.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -32,6 +33,7 @@ public class Resource implements Serializable {
 	private String url;
 
 	/** 打开方式 ajax,iframe */
+	@TableField(value="open_mode")
 	private String openMode;
 
 	/** 资源介绍 */
@@ -54,9 +56,11 @@ public class Resource implements Serializable {
 	private Integer opened;
 
 	/** 资源类别 */
+	@TableField(value="resource_type")
 	private Integer resourceType;
 
 	/** 创建时间 */
+	@TableField(value="create_time")
 	private Date createTime;
 
 	public Long getId() {

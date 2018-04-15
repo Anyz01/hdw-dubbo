@@ -27,6 +27,8 @@ import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.util.Destroyable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 使用spring-cache作为shiro缓存
@@ -34,8 +36,11 @@ import org.apache.shiro.util.Destroyable;
  * @author TuMinglong
  *
  */
+@Component
 public class ShiroSpringCacheManager implements CacheManager, Destroyable {
 	private static final Logger logger = LogManager.getLogger(ShiroSpringCacheManager.class);
+	
+	@Autowired
 	private org.springframework.cache.CacheManager cacheManager;
 	
 	public org.springframework.cache.CacheManager getCacheManager() {

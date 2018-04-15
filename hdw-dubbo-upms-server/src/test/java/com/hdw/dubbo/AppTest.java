@@ -1,5 +1,7 @@
 package com.hdw.dubbo;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -8,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.hdw.dubbo.upms.entity.User;
 import com.hdw.dubbo.upms.entity.vo.UserVo;
+import com.hdw.dubbo.upms.rpc.api.IUpmsApiService;
 import com.hdw.dubbo.upms.rpc.api.IUserService;
 
 
@@ -20,11 +24,28 @@ public class AppTest {
 
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private IUpmsApiService upmsApiService;
+	
+	
 
 	@Test
-	public void testDobboByUser(){
+	public void testDobboByUserId(){
 		UserVo user=userService.selectVoById(1l);
 		System.out.println("dubbo消息："+user.getLoginName());
+	}
+	
+	@Test
+	public void testDobboByUser(){
+		UserVo uservo = new UserVo();
+		uservo.setLoginName("admin");
+		List<User> list = upmsApiService.selectByLoginName(uservo);
+		if(list!=null && !list.isEmpty()) {
+			User user = list.get(0);
+			System.out.println("dubbo消息："+user.getName());
+		}
+					
 	}
 	    
     @Test  

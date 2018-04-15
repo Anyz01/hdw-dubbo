@@ -34,8 +34,8 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "登录接口类", tags = { "登录接口" })
 @Controller
 public class LoginController extends CommonsController {
-	//@Autowired
-	//private DreamCaptcha dreamCaptcha;
+	@Autowired
+	private DreamCaptcha dreamCaptcha;
 
 	/**
 	 * 图形验证码
@@ -43,7 +43,7 @@ public class LoginController extends CommonsController {
 	@ApiOperation(value = "图形验证码", notes = "图形验证码")
 	@GetMapping("captcha.jpg")
 	public void captcha(HttpServletRequest request, HttpServletResponse response) {
-		//dreamCaptcha.generate(request, response);
+		dreamCaptcha.generate(request, response);
 	}
 
 	/**

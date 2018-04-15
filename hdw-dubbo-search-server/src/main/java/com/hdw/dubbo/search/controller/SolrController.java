@@ -138,7 +138,7 @@ public class SolrController extends BaseController{
         SolrDocumentList doc2 = response2.getResults();
         PageInfo pageInfo=new PageInfo(page, rows);
         pageInfo.setRows(list);
-        pageInfo.setTotal((int)doc2.getNumFound());
+        pageInfo.setTotal(doc2.getNumFound());
         System.err.println("查询到的总条数:" + docs.getNumFound() + ", 内容:" + docs);  
         
         return pageInfo;

@@ -19,6 +19,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.hdw.dubbo.upms.entity.ShiroUser;
 import com.hdw.dubbo.upms.entity.User;
@@ -29,6 +30,7 @@ import com.hdw.dubbo.upms.rpc.api.IUpmsApiService;
  * @description：shiro权限认证
  * @author：TuMinglong @date：2015/10/1 14:51
  */
+@Component
 public class ShiroDbRealm extends AuthorizingRealm {
 	private static final Logger LOGGER = LogManager.getLogger(ShiroDbRealm.class);
 

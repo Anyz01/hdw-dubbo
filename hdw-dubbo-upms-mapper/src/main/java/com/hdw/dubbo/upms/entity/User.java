@@ -4,6 +4,7 @@ package com.hdw.dubbo.upms.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -25,6 +26,7 @@ public class User implements Serializable {
 	private Long id;
 
 	/** 登陆名 */
+	@TableField(value="login_name")
 	private String loginName;
 
 	/** 用户名 */
@@ -46,15 +48,18 @@ public class User implements Serializable {
 	private String phone;
 
 	/** 用户类别 */
+	@TableField(value="user_type")
 	private Integer userType;
 
 	/** 用户状态 */
 	private Integer status;
 
 	/** 所属机构 */
+	@TableField(value="organization_id")
 	private Integer organizationId;
 
 	/** 创建时间 */
+	@TableField(value="create_time")
 	private Date createTime;
 
 
