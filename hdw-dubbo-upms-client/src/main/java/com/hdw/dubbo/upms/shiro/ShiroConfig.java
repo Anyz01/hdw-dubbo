@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import com.hdw.dubbo.upms.shiro.cache.ShiroSpringCacheManager;
 import com.hdw.dubbo.upms.shiro.captcha.DreamCaptcha;
@@ -243,7 +244,7 @@ public class ShiroConfig {
 		PasswordHash passwordHash = new PasswordHash();
 		// 密码加密 1次md5,增强密码可修改此处
 		passwordHash.setAlgorithmName("md5");
-		passwordHash.setHashIterations(1);
+		passwordHash.setHashIterations(2);
 		return passwordHash;
 	}
 
@@ -266,15 +267,6 @@ public class ShiroConfig {
 	}
 	
 	/**
-	 * 保证实现了Shiro内部lifecycle函数的bean执行
-	 * @return
-	 */
-	@Bean
-    public LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
-    }
-	
-	/**
 	 * 启用shrio 控制器授权注解拦截方式
 	 * @return
 	 */
@@ -286,10 +278,20 @@ public class ShiroConfig {
     }
 	
 	/**
+	 * 保证实现了Shiro内部lifecycle函数的bean执行
+	 * @return
+	 */
+	@Bean(name="lifecycleBeanPostProcessor")
+    public LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+	
+	/**
 	 * AOP式方法级权限检查 
 	 * @return
 	 */
 	@Bean
+	@DependsOn(value="lifecycleBeanPostProcessor")
     public DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator daap = new DefaultAdvisorAutoProxyCreator();
         daap.setProxyTargetClass(true);

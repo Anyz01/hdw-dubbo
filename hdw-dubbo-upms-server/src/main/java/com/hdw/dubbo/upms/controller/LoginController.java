@@ -111,9 +111,9 @@ public class LoginController extends CommonsController {
 		if (StringUtils.isBlank(captcha)) {
 			throw new RuntimeException("验证码不能为空");
 		}
-//		if (!dreamCaptcha.validate(request, response, captcha)) {
-//			throw new RuntimeException("验证码错误");
-//		}
+		if (!dreamCaptcha.validate(request, response, captcha)) {
+			throw new RuntimeException("验证码错误");
+		}
 		Subject user = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		// 设置记住密码

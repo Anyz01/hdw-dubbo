@@ -6,9 +6,11 @@ import org.springframework.util.Assert;
 
 
 /**
- * shiro密码加密配置
+ * 
+ * @description shiro密码加密配置
  * @author TuMinglong
- *
+ * @date 2018年4月16日 下午4:34:30
+ * @version 1.0.0
  */
 public class PasswordHash implements InitializingBean {
 	private String algorithmName;
@@ -34,5 +36,9 @@ public class PasswordHash implements InitializingBean {
 	
 	public String toHex(Object source, Object salt) {
 		return DigestUtils.hashByShiro(algorithmName, source, salt, hashIterations);
+	}
+	
+	public String toHexByCas(Object source, Object salt) {
+		return PasswordSalt.hashByShiro(algorithmName, source, salt, hashIterations);
 	}
 }

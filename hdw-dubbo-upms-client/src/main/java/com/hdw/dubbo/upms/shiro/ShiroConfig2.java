@@ -1,9 +1,9 @@
 package com.hdw.dubbo.upms.shiro;
 
-import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+
+
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -83,10 +83,9 @@ public class ShiroConfig2 {
 		dreamCaptcha.setCacheManager(shiroSpringCacheManager());
 		// 复用半小时缓存
 		dreamCaptcha.setCacheName("halfHour");
-
 		return dreamCaptcha;
 	}
-
+	
 	@Bean
 	public SecurityManager securityManager() {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -268,59 +267,14 @@ public class ShiroConfig2 {
 		PasswordHash passwordHash = new PasswordHash();
 		// 密码加密 1次md5,增强密码可修改此处
 		passwordHash.setAlgorithmName("md5");
-		passwordHash.setHashIterations(1);
+		passwordHash.setHashIterations(5);
 		return passwordHash;
-	}
-
-	/**
-	 * 密码错误5次锁定半小时
-	 * 
-	 * @return
-	 */
-	@Bean(name = "credentialsMatcher")
-	public RetryLimitCredentialsMatcher credentialsMatcher() {
-		RetryLimitCredentialsMatcher credentialsMatcher = new RetryLimitCredentialsMatcher(shiroSpringCacheManager());
-		credentialsMatcher.setRetryLimitCacheName("halfHour");
-		credentialsMatcher.setPasswordHash(passwordHash());
-		return credentialsMatcher;
 	}
 
 	@Bean(name = "shiroDialect")
 	public ShiroDialect shiroDialect() {
 		return new ShiroDialect();
 	}
-	
-	
-	/**
-	 * 保证实现了Shiro内部lifecycle函数的bean执行
-	 * @return
-	 */
-//	@Bean
-//    public LifecycleBeanPostProcessor getLifecycleBeanPostProcessor() {
-//        return new LifecycleBeanPostProcessor();
-//    }
-//	
-//	/**
-//	 * 启用shrio 控制器授权注解拦截方式
-//	 * @return
-//	 */
-//	@Bean
-//    public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor() {
-//		AuthorizationAttributeSourceAdvisor aasa = new AuthorizationAttributeSourceAdvisor();
-//        aasa.setSecurityManager(securityManager());
-//        return aasa;
-//    }
-//	
-//	/**
-//	 * AOP式方法级权限检查 
-//	 * @return
-//	 */
-//	@Bean
-//    public DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
-//        DefaultAdvisorAutoProxyCreator daap = new DefaultAdvisorAutoProxyCreator();
-//        daap.setProxyTargetClass(true);
-//        return daap;
-//    }
 
 	/**
 	 * cas服务端配置
@@ -396,7 +350,7 @@ public class ShiroConfig2 {
 		parameterClient.setSupportGetRequest(true);
 		parameterClient.setName("jwt");
 		// 支持的client全部设置进去
-		clients.setClients(casClient(), casRestFormClient(),parameterClient);
+		clients.setClients(casClient(), casRestFormClient(), parameterClient);
 		return clients;
 	}
 
@@ -425,5 +379,29 @@ public class ShiroConfig2 {
 		filter.setConfig(casConfig());
 		return filter;
 	}
-	
+
+	/**
+	 * 启用shrio 控制器授权注解拦截方式
+	 * 
+	 * @return
+	 */
+	@Bean
+	public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor() {
+		AuthorizationAttributeSourceAdvisor aasa = new AuthorizationAttributeSourceAdvisor();
+		aasa.setSecurityManager(securityManager());
+		return aasa;
+	}
+    
+	/**
+	 * AOP式方法级权限检查
+	 * 
+	 * @return
+	 */
+	@Bean
+	public DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
+		DefaultAdvisorAutoProxyCreator daap = new DefaultAdvisorAutoProxyCreator();
+		daap.setProxyTargetClass(true);
+		return daap;
+	}
+
 }

@@ -121,9 +121,15 @@ public class UserController extends CommonsController {
 		if (list != null && !list.isEmpty()) {
 			return renderError("登录名已存在!");
 		}
-		String salt = UUID.randomUUID().toString();
-		String pwd = passwordHash.toHex(userVo.getPassword(), salt);
-		userVo.setSalt(salt);
+//		//shiro算法
+//		String salt = UUID.randomUUID().toString();
+//		String pwd = passwordHash.toHex(userVo.getPassword(), salt);
+//		userVo.setSalt(salt);
+//		userVo.setPassword(pwd);
+		
+		//cas算法
+		String pwd = passwordHash.toHexByCas(userVo.getPassword(), userVo.getLoginName());
+		userVo.setSalt(userVo.getLoginName());
 		userVo.setPassword(pwd);
 		userService.insertByVo(userVo);
 		return renderSuccess("添加成功");

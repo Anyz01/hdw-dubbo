@@ -7,12 +7,14 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
@@ -55,8 +57,8 @@ public class Pac4jDbRealm extends Pac4jRealm {
 
 		String loginName = principal.getProfile().getId();
 
-		// Session session = SecurityUtils.getSubject().getSession();
-		// session.setAttribute("userSessionId", loginName );
+		Session session = SecurityUtils.getSubject().getSession();
+		session.setAttribute("userSessionId", loginName );
 
 		UserVo uservo = new UserVo();
 		uservo.setLoginName(loginName);
@@ -85,8 +87,29 @@ public class Pac4jDbRealm extends Pac4jRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
-
+		
+		Session session = SecurityUtils.getSubject().getSession();  
+        String loginName = (String)session.getAttribute("userSessionId"); 
+		
+		UserVo uservo = new UserVo();
+		uservo.setLoginName(loginName);
+		List<User> list = upmsApiService.selectByLoginName(uservo);
+		// 账号不存在
+		if (list == null || list.isEmpty()) {
+			return null;
+		}
+		User user = list.get(0);
+		// 账号未启用
+		if (user.getStatus() == 1) {
+			return null;
+		}
+		// 读取用户的url和角色
+		Map<String, Set<String>> resourceMap = upmsApiService.selectResourceMapByUserId(user.getId());
+		Set<String> urls = resourceMap.get("urls");
+		Set<String> roles = resourceMap.get("roles");
+		ShiroUser shiroUser = new ShiroUser(user.getId(), user.getLoginName(), user.getName(), urls);
+		shiroUser.setRoles(roles);
+		
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		info.setRoles(shiroUser.getRoles());
 		info.addStringPermissions(shiroUser.getUrlSet());
@@ -97,8 +120,11 @@ public class Pac4jDbRealm extends Pac4jRealm {
 	@Override
 	public void onLogout(PrincipalCollection principals) {
 		super.clearCachedAuthorizationInfo(principals);
-		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
-		removeUserCache(shiroUser);
+		Session session = SecurityUtils.getSubject().getSession();  
+        String loginName = (String)session.getAttribute("userSessionId");
+        LOGGER.error("从session中获取的userSessionId："+loginName); 
+        removeUserCache(loginName);
+		
 	}
 
 	/**
