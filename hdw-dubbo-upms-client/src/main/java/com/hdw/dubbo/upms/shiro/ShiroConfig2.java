@@ -135,7 +135,6 @@ public class ShiroConfig2 {
 		CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
 		cookieRememberMeManager.setCookie(rememberMeCookie());
 		cookieRememberMeManager.setCipherKey(org.apache.shiro.codec.Base64.decode("5aaC5qKm5oqA5pyvAAAAAA=="));
-
 		return cookieRememberMeManager;
 	}
 
