@@ -29,6 +29,9 @@ public class WebAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(WebAspect.class);
     
+    private long startTime=0;
+    private long endTime=0;
+    
     @Pointcut("execution(* com.hdw.dubbo.*.controller.*.*(..))")
     public void init(){
 
@@ -36,6 +39,7 @@ public class WebAspect {
     
     @Before("init()")
     public void doBefore(JoinPoint joinPoint){
+    	startTime=System.currentTimeMillis();
         //URL
         ServletRequestAttributes attributes=(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
@@ -46,7 +50,6 @@ public class WebAspect {
         logger.info("ip={}",request.getRemoteAddr());
         //类方法
         logger.info("class_method={}",joinPoint.getSignature().getDeclaringTypeName()+"."+joinPoint.getSignature().getName());
-
         //参数
         logger.info("args={}",joinPoint.getArgs());
     }
@@ -65,11 +68,18 @@ public class WebAspect {
 
     @AfterReturning(returning = "object",pointcut="init()")
      public void doAfterReturning(Object object){
-        logger.info("response={}",object.toString());
+    	if(object!=null) {
+    		logger.info("response={}",object.toString());
+    	}else {
+    		logger.info("response=");
+    	}
+       
      }
 
     @After("init()")
     public void doAfter(){
-        logger.info("执行完后到这里");
+    	endTime=System.currentTimeMillis();
+    	long totalSeconds = (endTime-startTime)/1000;
+        logger.info("----"+"执行时间："+totalSeconds+"s"+"----");
     }
 }

@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.9.RELEASE</version>
+		<version>1.5.12.RELEASE</version>
 	</parent>
 
 	<modules>
@@ -47,6 +47,7 @@
 		<commons-fileupload.version>1.3</commons-fileupload.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
+		<commons-net.version>3.6</commons-net.version>
 		<!-- pinyin4j -->
 		<pinyin4j.version>2.5.1</pinyin4j.version>
 		<!-- thumbnailator -->
@@ -128,6 +129,11 @@
 				<groupId>commons-collections</groupId>
 				<artifactId>commons-collections</artifactId>
 				<version>${commons-collections.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-net</groupId>
+				<artifactId>commons-net</artifactId>
+				<version>${commons-net.version}</version>
 			</dependency>
 			<!-- druid begin -->
 			<dependency>
@@ -382,7 +388,7 @@
 			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
-	
+
 	<profiles>
 		<profile>
 			<!-- 生产环境 -->
@@ -409,7 +415,7 @@
 			</properties>
 		</profile>
 	</profiles>
-	
+
 	<build>
 		<finalName>hdw-dubbo</finalName>
 		<resources>
@@ -436,7 +442,7 @@
 					<include>application-${profileActive}.properties</include>
 				</includes>
 			</resource>
-		</resources>	
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

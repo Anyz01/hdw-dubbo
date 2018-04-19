@@ -27,9 +27,6 @@ public class AppTest {
 	@Autowired
 	private IRedisService redisService;
 	
-
-
-
 	@Test
 	public void testRedis() {
 
