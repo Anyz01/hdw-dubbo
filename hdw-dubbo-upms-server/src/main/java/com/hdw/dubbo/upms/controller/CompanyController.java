@@ -40,7 +40,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value="企业信息业务接口类",tags= {"企业信息接口"})
 @Controller
 @RequestMapping("/company")
-public class CompanyController extends CommonsController {
+public class CompanyController extends CommonController {
 
 	@Autowired
 	private ICompanyService companyService;

@@ -30,7 +30,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "资源管理接口类", tags = { "资源管理接口" })
 @Controller
 @RequestMapping("/resource")
-public class ResourceController extends CommonsController {
+public class ResourceController extends CommonController {
 
 	@Autowired
 	private IResourceService resourceService;

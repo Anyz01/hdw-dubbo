@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(value = "登录接口类", tags = { "登录接口" })
 @Controller
-public class LoginController extends CommonsController {
+public class LoginController extends CommonController {
 	@Autowired
 	private DreamCaptcha dreamCaptcha;
 

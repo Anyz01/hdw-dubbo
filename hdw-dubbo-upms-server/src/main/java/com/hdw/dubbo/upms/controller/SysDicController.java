@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = " 数据字典类", tags = { " 数据字典接口" })
 @Controller
 @RequestMapping("/sysDic")
-public class SysDicController extends CommonsController {
+public class SysDicController extends CommonController {
 
 	@Autowired
 	private ISysDicService sysDicService;

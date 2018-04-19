@@ -1,7 +1,5 @@
 package com.hdw.dubbo.upms.shiro;
 
-
-
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 
@@ -10,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.mgt.SubjectFactory;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
@@ -85,7 +84,7 @@ public class ShiroConfig2 {
 		dreamCaptcha.setCacheName("halfHour");
 		return dreamCaptcha;
 	}
-	
+
 	@Bean
 	public SecurityManager securityManager() {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -266,7 +265,7 @@ public class ShiroConfig2 {
 		PasswordHash passwordHash = new PasswordHash();
 		// 密码加密 1次md5,增强密码可修改此处
 		passwordHash.setAlgorithmName("md5");
-		passwordHash.setHashIterations(5);
+		passwordHash.setHashIterations(2);
 		return passwordHash;
 	}
 
@@ -361,9 +360,8 @@ public class ShiroConfig2 {
 	}
 
 	@Bean
-	public Pac4jSubjectFactory pac4jSubjectFactory() {
-		Pac4jSubjectFactory pac4jSubjectFactory = new Pac4jSubjectFactory();
-		return pac4jSubjectFactory;
+	public SubjectFactory pac4jSubjectFactory() {
+		return new Pac4jSubjectFactory();
 	}
 
 	/**
@@ -390,7 +388,7 @@ public class ShiroConfig2 {
 		aasa.setSecurityManager(securityManager());
 		return aasa;
 	}
-    
+
 	/**
 	 * AOP式方法级权限检查
 	 * 

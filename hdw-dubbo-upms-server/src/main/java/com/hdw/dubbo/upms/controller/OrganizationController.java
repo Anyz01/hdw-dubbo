@@ -29,7 +29,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "部门管理接口类", tags = { "部门管理接口" })
 @Controller
 @RequestMapping("/organization")
-public class OrganizationController extends CommonsController {
+public class OrganizationController extends CommonController {
 
 	@Autowired
 	private IOrganizationService organizationService;

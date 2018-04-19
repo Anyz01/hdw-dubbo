@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
 import javax.validation.Valid;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.hdw.dubbo.common.result.PageInfo;
 import com.hdw.dubbo.upms.shiro.PasswordHash;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
 import com.hdw.dubbo.upms.entity.Role;
 import com.hdw.dubbo.upms.entity.User;
 import com.hdw.dubbo.upms.entity.vo.UserVo;
@@ -40,7 +34,7 @@ import com.hdw.dubbo.upms.rpc.api.IUserService;
 @Api(value = "用户管理接口类", tags = { "用户管理接口" })
 @Controller
 @RequestMapping("/user")
-public class UserController extends CommonsController {
+public class UserController extends CommonController {
 	@Autowired
 	private IUserService userService;
 	@Autowired
