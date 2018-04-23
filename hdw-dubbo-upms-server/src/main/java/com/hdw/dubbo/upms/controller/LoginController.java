@@ -154,13 +154,12 @@ public class LoginController extends CommonController {
 	 */
 	@ApiOperation(value = "退出 ", notes = "退出")
 
-	@PostMapping("/logout")
-	@ResponseBody
-	public Object logout() {
+	@GetMapping("/logout")
+	public String logout() {
 		logger.info("登出");
 		Subject subject = SecurityUtils.getSubject();
 		subject.logout();
-		return renderSuccess();
+		return "redirect:/index";
 	}
 
 }
