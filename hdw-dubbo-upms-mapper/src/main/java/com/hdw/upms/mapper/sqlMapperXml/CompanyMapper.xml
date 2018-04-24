@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdw.upms.mapper.CompanyMapper">
+	<!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, code, category_code as categoryCode, name, simple_name as simpleName, address, tel, email, province, city, county, legal_man AS legalMan, head_man as headMan, mobile, status, create_date as createDate, create_user as createUser, last_update_date as lastUpdateDate, last_update_user as lastUpdateUser
+    </sql>
+	<!-- 企业信息基本页 -->
+	<select id="selectCompanyPage" parameterType="map" resultType="Company">
+	select <include refid="Base_Column_List"></include>
+	from t_base_company
+	<where>
+		<if test="name !=null and name !=''">
+			name like '%${name}%'
+		</if>
+	</where>
+	</select>
+	
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    
+    <dubbo:application name="${dubbo.appname}"/>
+    <dubbo:registry file="./hdw-dubbo-upms-web.cache" address="${dubbo.registry}"/>
+     
+     <!-- 订阅服务 -->
+    <dubbo:consumer check="true"/>
+    
+    <dubbo:reference id="upmsApiService" interface="com.hdw.upms.api.IUpmsApiService"/>
+    
+    <dubbo:reference id="companyService" interface="com.hdw.upms.api.ICompanyService"/>
+    
+    <dubbo:reference id="OrganizationService" interface="com.hdw.upms.api.IOrganizationService"/>
+    
+    <dubbo:reference id="resourceService" interface="com.hdw.upms.api.IResourceService"/>
+  
+    <dubbo:reference id="roleResourceService" interface="com.hdw.upms.api.IRoleResourceService"/>
+    
+    <dubbo:reference id="roleService" interface="com.hdw.upms.api.IRoleService"/>
+    
+    <dubbo:reference id="sysDicService" interface="com.hdw.upms.api.ISysDicService"/>
+    
+    <dubbo:reference id="sysLogService" interface="com.hdw.upms.api.ISysLogService"/>
+    
+    <dubbo:reference id="userRoleService" interface="com.hdw.upms.api.IUserRoleService"/>
+    
+    <dubbo:reference  id="userService" interface="com.hdw.upms.api.IUserService"/>
+    
+    
+</beans>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdw.search.mapper.RealDataMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.hdw.dubbo.search.entity.RealData">
+		<id column="id" property="id" />
+		<result column="unit_id" property="unitId" />
+		<result column="device_id" property="deviceId" />
+		<result column="device_name" property="deviceName" />
+		<result column="device_loca" property="deviceLoca" />
+		<result column="status" property="status" />
+		<result column="realValue" property="realValue" />
+		<result column="unit" property="unit" />
+		<result column="max_range" property="maxRange" />
+		<result column="min_range" property="minRange" />
+		<result column="max_excep" property="maxExcep" />
+		<result column="min_excep" property="minExcep" />
+		<result column="low1" property="low1" />
+		<result column="low2" property="low2" />
+		<result column="low3" property="low3" />
+		<result column="high1" property="high1" />
+		<result column="high2" property="high2" />
+		<result column="high3" property="high3" />
+		<result column="is_key" property="isKey" />
+		<result column="alert_degree" property="alertDegree" />
+		<result column="device_type" property="deviceType" />
+		<result column="alarm_loca" property="alarmLoca" />
+		<result column="alarm_device_name" property="alarmDeviceName" />
+		<result column="alarm_time" property="alarmTime" />
+		<result column="alarm_ack_time" property="alarmAckTime" />
+		<result column="alarm_ack_des" property="alarmAckDes" />
+		<result column="alarm_ack_status" property="alarmAckStatus" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, unit_id AS unitId, device_id AS deviceId, device_name AS deviceName, device_loca AS deviceLoca, status, realValue, unit, max_range AS maxRange, min_range AS minRange, max_excep AS maxExcep, min_excep AS minExcep, low1, low2, low3, high1, high2, high3, is_key AS isKey, alert_degree AS alertDegree, device_type AS deviceType, alarm_loca AS alarmLoca, alarm_device_name AS alarmDeviceName, alarm_time AS alarmTime, alarm_ack_time AS alarmAckTime, alarm_ack_des AS alarmAckDes, alarm_ack_status AS alarmAckStatus, update_time AS updateTime
+    </sql>
+
+</mapper>

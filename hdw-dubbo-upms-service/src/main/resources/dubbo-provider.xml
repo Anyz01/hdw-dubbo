@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <dubbo:application name="${dubbo.appname}"/>
+    <dubbo:registry address="${dubbo.registry}"/>
+    <dubbo:protocol name="dubbo" port="${dubbo.protocol}"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.ICompanyService" ref="companyService"/>
+    <bean id="companyService" class="com.hdw.upms.service.impl.CompanyServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.IOrganizationService" ref="OrganizationService"/>
+    <bean id="OrganizationService" class="com.hdw.upms.service.impl.OrganizationServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.IResourceService" ref="resourceService"/>
+    <bean id="resourceService" class="com.hdw.upms.service.impl.ResourceServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.IRoleResourceService" ref="roleResourceService"/>
+    <bean id="roleResourceService" class="com.hdw.upms.service.impl.RoleResourceServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.IRoleService" ref="roleService"/>
+    <bean id="roleService" class="com.hdw.upms.service.impl.RoleServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.ISysDicService" ref="sysDicService"/>
+    <bean id="sysDicService" class="com.hdw.upms.service.impl.SysDicServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.ISysLogService" ref="sysLogService"/>
+    <bean id="sysLogService" class="com.hdw.upms.service.impl.SysLogServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.IUserRoleService" ref="userRoleService"/>
+    <bean id="userRoleService" class="com.hdw.upms.service.impl.UserRoleServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.IUserService" ref="userService"/>
+    <bean id="userService" class="com.hdw.upms.service.impl.UserServiceImpl"/>
+    
+    <dubbo:service interface="com.hdw.upms.api.IUpmsApiService" ref="upmsApiService"/>
+    <bean id="upmsApiService" class="com.hdw.upms.service.impl.UpmsApiServiceImpl"/>
+    
+</beans>

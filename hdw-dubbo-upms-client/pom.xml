@@ -20,7 +20,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.hdw</groupId>
-			<artifactId>hdw-dubbo-upms-rpc-api</artifactId>
+			<artifactId>hdw-dubbo-upms-api</artifactId>
 			<version>1.0.0</version>
 			<type>jar</type>
 		</dependency>

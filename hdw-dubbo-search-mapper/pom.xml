@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.hdw</groupId>
-			<artifactId>hdw-dubbo-common</artifactId>
+			<artifactId>hdw-common</artifactId>
 			<version>1.0.0</version>
 			<type>jar</type>
 		</dependency>
