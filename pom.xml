@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>hdw-common</module>
+		<module>hdw-monitor</module>
 		<module>hdw-dubbo-upms-mapper</module>
 		<module>hdw-dubbo-upms-api</module>
 		<module>hdw-dubbo-upms-service</module>
@@ -32,6 +33,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<spring-cloud.version>Edgware.SR3</spring-cloud.version>
 		<mybatis-plus-boot-starter.version>2.2.0</mybatis-plus-boot-starter.version>
 		<mybatisplus.version>2.2.0</mybatisplus.version>
 		<httpclient.version>4.5.3</httpclient.version>
@@ -79,10 +81,19 @@
 		<thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
 		<thymeleaf-extras-shiro.version>2.0.0</thymeleaf-extras-shiro.version>
 		<velocity-engine-core.version>2.0</velocity-engine-core.version>
+		<springboot-admin.version>1.5.7</springboot-admin.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
+
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<!-- 时间操作组件 begin -->
 			<dependency>
 				<groupId>joda-time</groupId>
@@ -376,6 +387,32 @@
 				<version>${velocity-engine-core.version}</version>
 			</dependency>
 			<!-- velocity end -->
+
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-server</artifactId>
+				<version>${springboot-admin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-server-ui</artifactId>
+				<version>${springboot-admin.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>de.codecentric</groupId>
+				<artifactId>spring-boot-admin-starter-client</artifactId>
+				<version>${springboot-admin.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-core</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

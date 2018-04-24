@@ -10,10 +10,10 @@
 		<version>1.0.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>hdw-dubbo-upms-service</artifactId>
+	<artifactId>hdw-monitor</artifactId>
 	<packaging>jar</packaging>
 
-	<name>hdw-dubbo-upms-service</name>
+	<name>hdw-monitor</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -22,54 +22,14 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.hdw</groupId>
-			<artifactId>hdw-dubbo-upms-api</artifactId>
-			<version>1.0.0</version>
-			<type>jar</type>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-server</artifactId>
 		</dependency>
-
-		<!-- dubbo -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>dubbo</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework</groupId>
-					<artifactId>spring</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>com.github.sgroschupf</groupId>
-			<artifactId>zkclient</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>ch.qos.logback</groupId>
-					<artifactId>logback-classic</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>ch.qos.logback</groupId>
-					<artifactId>logback-core</artifactId>
-				</exclusion>
-			</exclusions>
+			<artifactId>spring-boot-admin-server-ui</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<!-- JUnit test dependency -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -78,7 +38,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>hdw-dubbo-upms-rpc-service</finalName>
+		<finalName>hdw-monitor</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
