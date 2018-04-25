@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -55,5 +56,29 @@ public class AppTest {
         logger.warn("I am warn log.");  
         logger.error("I am error log.");  
     }  
+    
+    
+    @Value("${sso.cas.server.loginUrl}")
+	private String loginUrl;
+
+	@Value("${sso.cas.server.prefixUrl}")
+	private String prefixUrl;
+
+	@Value("${sso.cas.client.callbackUrl}")
+	private String callbackUrl;
+
+	@Value("${sso.cas.serviceUrl}")
+	private String serviceUrl;
+
+	@Value("${jwt.salt}")
+	private String salt;
+	
+	
+	 @Test  
+	    public void testValue() {  
+	       
+	        logger.error("loginUrl:"+loginUrl);  
+	    }  
+	    
 	
 }

@@ -1,4 +1,4 @@
-package com.hdw.upms.shiro.cas;
+package com.hdw.upms.shiro;
 
 import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
 import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;

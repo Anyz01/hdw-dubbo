@@ -30,6 +30,11 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
 		<!-- thymeleaf begin -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
