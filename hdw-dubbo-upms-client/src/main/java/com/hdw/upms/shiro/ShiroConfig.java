@@ -26,7 +26,6 @@ import com.hdw.upms.shiro.captcha.DreamCaptcha;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 
-
 import javax.servlet.Filter;
 
 /**
@@ -37,16 +36,16 @@ import javax.servlet.Filter;
  */
 //@Configuration
 public class ShiroConfig {
-	
+
 	@Value("${hdw.upms.loginUrl}")
 	private String loginUrl;
-	
+
 	@Value("${hdw.upms.successUrl}")
 	private String successUrl;
-	
+
 	@Value("${hdw.upms.unauthorizedUrl}")
 	private String unauthorizedUrl;
-	
+
 	@Autowired
 	private CacheManager cacheManager;
 
@@ -153,7 +152,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/favicon.ico", "anon");// 网站图标
 		filterChainDefinitionMap.put("/static/**", "anon");// 配置static文件下资源能被访问的
 		filterChainDefinitionMap.put("/kaptcha.jpg", "anon");// 图片验证码(kaptcha框架)
-		filterChainDefinitionMap.put("/api/v1/**", "anon");// API接口
+		filterChainDefinitionMap.put("/api/**", "anon");// API接口
 
 		// swagger接口文档
 		filterChainDefinitionMap.put("/v2/api-docs", "anon");
@@ -162,8 +161,9 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/swagger-ui.html", "anon");
 
 		// 其他的
-		filterChainDefinitionMap.put("/**", "authc");
 		filterChainDefinitionMap.put("/solr/**", "anon");
+		filterChainDefinitionMap.put("/test/**", "anon");
+		filterChainDefinitionMap.put("/**", "authc");
 
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
@@ -265,28 +265,37 @@ public class ShiroConfig {
 	public ShiroDialect shiroDialect() {
 		return new ShiroDialect();
 	}
-	
+
 	/**
-     * 下面的代码是添加注解支持
-     */
-    @Bean
-    @DependsOn("lifecycleBeanPostProcessor")
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
-        return defaultAdvisorAutoProxyCreator;
-    }
+	 * AOP式方法级权限检查
+	 * 
+	 * @return
+	 */
+	@Bean
+	@DependsOn("lifecycleBeanPostProcessor")
+	public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+		DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+		defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+		return defaultAdvisorAutoProxyCreator;
+	}
 
-    @Bean
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
-        return new LifecycleBeanPostProcessor();
-    }
+	@Bean
+	public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+		return new LifecycleBeanPostProcessor();
+	}
 
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
-        advisor.setSecurityManager(securityManager);
-        return advisor;
-    }
-	
+	/**
+	 * 启用shrio 控制器授权注解拦截方式
+	 * 
+	 * @param securityManager
+	 * @return
+	 */
+	@Bean
+	public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
+			DefaultWebSecurityManager securityManager) {
+		AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+		advisor.setSecurityManager(securityManager);
+		return advisor;
+	}
+
 }

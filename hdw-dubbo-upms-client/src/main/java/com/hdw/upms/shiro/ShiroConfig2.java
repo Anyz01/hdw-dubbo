@@ -1,5 +1,6 @@
 package com.hdw.upms.shiro;
 
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 
@@ -15,23 +16,14 @@ import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
-import org.pac4j.cas.client.CasClient;
-import org.pac4j.cas.client.rest.CasRestFormClient;
-import org.pac4j.cas.config.CasConfiguration;
-import org.pac4j.cas.config.CasProtocol;
-import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
-import org.pac4j.http.client.direct.ParameterClient;
-import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
-import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
-import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
-import org.pac4j.jwt.profile.JwtGenerator;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import com.hdw.upms.shiro.cache.ShiroSpringCacheManager;
 import com.hdw.upms.shiro.captcha.DreamCaptcha;
@@ -42,6 +34,7 @@ import io.buji.pac4j.filter.LogoutFilter;
 import io.buji.pac4j.filter.SecurityFilter;
 import io.buji.pac4j.subject.Pac4jSubjectFactory;
 
+import javax.annotation.Resource;
 import javax.servlet.Filter;
 
 /**
@@ -70,6 +63,10 @@ public class ShiroConfig2 {
 
 	@Autowired
 	private CacheManager cacheManager;
+	
+	@Resource(name="casConfig")
+	private Config casConfig; 
+
 
 	/**
 	 * 验证码
@@ -183,11 +180,11 @@ public class ShiroConfig2 {
 		Map<String, Filter> filters = new HashMap<>();
 		filters.put("casSecurityFilter", casSecurityFilter());
 		CallbackFilter callbackFilter = new CallbackFilter();
-		callbackFilter.setConfig(casConfig());
+		callbackFilter.setConfig(casConfig);
 		filters.put("callbackFilter", callbackFilter);
 
 		LogoutFilter logoutFilter = new LogoutFilter();
-		logoutFilter.setConfig(casConfig());
+		logoutFilter.setConfig(casConfig);
 		logoutFilter.setCentralLogout(true);
 		logoutFilter.setDefaultUrl(serviceUrl);
 		filters.put("logoutFilter", logoutFilter);
@@ -274,90 +271,6 @@ public class ShiroConfig2 {
 		return new ShiroDialect();
 	}
 
-	/**
-	 * cas服务端配置
-	 * 
-	 * @return
-	 */
-	@Bean
-	public CasConfiguration casConfiguration() {
-		CasConfiguration casConfiguration = new CasConfiguration(loginUrl);
-		casConfiguration.setProtocol(CasProtocol.CAS30);
-		casConfiguration.setPrefixUrl(prefixUrl);
-		return casConfiguration;
-	}
-
-	/**
-	 * cas客户端配置
-	 * 
-	 * @return
-	 */
-	@Bean
-	public CasClient casClient() {
-		CasClient casClient = new CasClient();
-		casClient.setConfiguration(casConfiguration());
-		casClient.setCallbackUrl(callbackUrl);
-		casClient.setName("cas");
-		return casClient;
-	}
-
-	/**
-	 * JWT Token 生成器，对CommonProfile生成然后每次携带token访问
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("rawtypes")
-	@Bean
-	protected JwtGenerator jwtGenerator() {
-		return new JwtGenerator(new SecretSignatureConfiguration(salt), new SecretEncryptionConfiguration(salt));
-	}
-
-	/**
-	 * JWT校验器，也就是目前设置的ParameterClient进行的校验器，是rest/或者前后端分离的核心校验器
-	 * 
-	 * @return
-	 */
-	@Bean
-	protected JwtAuthenticator jwtAuthenticator() {
-		JwtAuthenticator jwtAuthenticator = new JwtAuthenticator();
-		jwtAuthenticator.addSignatureConfiguration(new SecretSignatureConfiguration(salt));
-		jwtAuthenticator.addEncryptionConfiguration(new SecretEncryptionConfiguration(salt));
-		return jwtAuthenticator;
-	}
-
-	/**
-	 * 通过rest接口可以获取tgt,获取service ticket,甚至可以获取casProfile
-	 * 
-	 * @return
-	 */
-	@Bean
-	protected CasRestFormClient casRestFormClient() {
-		CasRestFormClient casRestFormClient = new CasRestFormClient();
-		casRestFormClient.setConfiguration(casConfiguration());
-		casRestFormClient.setName("rest");
-		return casRestFormClient;
-
-	}
-
-	@Bean
-	protected Clients clients() {
-		// 设置默认client
-		Clients clients = new Clients();
-		// token校验器，可以用HeaderClient更安全
-		ParameterClient parameterClient = new ParameterClient("token", jwtAuthenticator());
-		parameterClient.setSupportGetRequest(true);
-		parameterClient.setName("jwt");
-		// 支持的client全部设置进去
-		clients.setClients(casClient(), casRestFormClient(), parameterClient);
-		return clients;
-	}
-
-	@Bean
-	public Config casConfig() {
-		Config config = new Config();
-		config.setClients(clients());
-		return config;
-	}
 
 	@Bean
 	public SubjectFactory pac4jSubjectFactory() {
@@ -373,32 +286,43 @@ public class ShiroConfig2 {
 	public Filter casSecurityFilter() {
 		SecurityFilter filter = new SecurityFilter();
 		filter.setClients("cas,rest,jwt");
-		filter.setConfig(casConfig());
+		filter.setConfig(casConfig);
 		return filter;
 	}
 
-	/**
-	 * 启用shrio 控制器授权注解拦截方式
-	 * 
-	 * @return
-	 */
-	@Bean
-	public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor() {
-		AuthorizationAttributeSourceAdvisor aasa = new AuthorizationAttributeSourceAdvisor();
-		aasa.setSecurityManager(securityManager());
-		return aasa;
-	}
-
+	
 	/**
 	 * AOP式方法级权限检查
 	 * 
 	 * @return
 	 */
 	@Bean
-	public DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
-		DefaultAdvisorAutoProxyCreator daap = new DefaultAdvisorAutoProxyCreator();
-		daap.setProxyTargetClass(true);
-		return daap;
+	@DependsOn("lifecycleBeanPostProcessor")
+	public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+		DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+		defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+		return defaultAdvisorAutoProxyCreator;
 	}
+
+	@Bean
+	public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+		return new LifecycleBeanPostProcessor();
+	}
+
+	/**
+	 * 启用shrio 控制器授权注解拦截方式
+	 * 
+	 * @param securityManager
+	 * @return
+	 */
+	@Bean
+	public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
+			DefaultWebSecurityManager securityManager) {
+		AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+		advisor.setSecurityManager(securityManager);
+		return advisor;
+	}
+
+
 
 }
