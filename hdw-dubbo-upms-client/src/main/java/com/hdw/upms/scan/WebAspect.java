@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 
- * @description Http拦截器
+ * @description Http请求拦截器
  * @author TuMinglong
  * @date 2017年9月6日上午11:38:06
  *
@@ -32,7 +32,7 @@ public class WebAspect {
     private long startTime=0;
     private long endTime=0;
     
-    @Pointcut("execution(* com.hdw.dubbo.*.controller.*.*(..))")
+    @Pointcut("execution(* com.hdw.*.controller.*.*(..))")
     public void init(){
 
     }
@@ -79,7 +79,7 @@ public class WebAspect {
     @After("init()")
     public void doAfter(){
     	endTime=System.currentTimeMillis();
-    	long totalSeconds = (endTime-startTime)/1000;
-        logger.info("----"+"执行时间："+totalSeconds+"s"+"----");
+    	long totalMillis = endTime-startTime;
+        logger.info("----"+"执行时间："+totalMillis+"毫秒"+"----");
     }
 }
