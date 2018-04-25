@@ -281,7 +281,7 @@ public class ShiroConfig2 {
 	 */
 	@Bean
 	public CasConfiguration casConfiguration() {
-		System.out.println("loginUrl:"+loginUrl);
+		
 		CasConfiguration casConfiguration = new CasConfiguration(loginUrl);
 		casConfiguration.setProtocol(CasProtocol.CAS30);
 		casConfiguration.setPrefixUrl(prefixUrl);
