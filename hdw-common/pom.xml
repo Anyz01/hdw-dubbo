@@ -67,6 +67,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
@@ -74,7 +75,7 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-solr</artifactId>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
 		<!-- httpclient begin -->
@@ -122,6 +123,7 @@
 			<artifactId>druid</artifactId>
 		</dependency>
 		<!-- druid end -->
+		
 		<!-- mybatis-plus begin -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -139,6 +141,30 @@
 			</exclusions>
 		</dependency>
 		<!-- mybatis-plus end -->
+		
+		<!-- dubbo begin -->
+			<dependency>
+				<groupId>com.alibaba.boot</groupId>
+				<artifactId>dubbo-spring-boot-starter</artifactId>
+				<version>${dubbo-spring-boot-starter.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>com.101tec</groupId>
+				<artifactId>zkclient</artifactId>
+				<version>${zkclient.version}</version>
+			</dependency>
+			<!-- dubbo end -->
 
 		<!-- swagger2 begin -->
 		<dependency>
@@ -161,13 +187,7 @@
 			<artifactId>xfire-core</artifactId>
 		</dependency>
 		<!-- pinyin4j end -->
-		<!-- javamail begin -->
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-		</dependency>
-		<!-- javamail end -->
-
+		
 		<!-- excel begin -->
 		<dependency>
 			<groupId>net.sourceforge.jexcelapi</groupId>

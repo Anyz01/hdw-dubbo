@@ -18,15 +18,15 @@
 	<modules>
 		<module>hdw-common</module>
 		<module>hdw-monitor</module>
-		<module>hdw-dubbo-upms-mapper</module>
-		<module>hdw-dubbo-upms-api</module>
-		<module>hdw-dubbo-upms-service</module>
-		<module>hdw-dubbo-upms-client</module>
-		<module>hdw-dubbo-upms-web</module>
-		<module>hdw-dubbo-search-mapper</module>
-		<module>hdw-dubbo-search-api</module>
-		<module>hdw-dubbo-search-service</module>
-		<module>hdw-dubbo-search-web</module>
+		<module>hdw-upms-mapper</module>
+		<module>hdw-upms-api</module>
+		<module>hdw-upms-service</module>
+		<module>hdw-upms-client</module>
+		<module>hdw-upms-web</module>
+		<module>hdw-search-mapper</module>
+		<module>hdw-search-api</module>
+		<module>hdw-search-service</module>
+		<module>hdw-search-web</module>
 	</modules>
 
 	<properties>
@@ -58,16 +58,15 @@
 		<poi.version>3.17</poi.version>
 		<jxl.version>2.6.12</jxl.version>
 		<xfire.version>1.2.6</xfire.version>
-		<!-- mail -->
-		<mail.version>1.4.7</mail.version>
 		<!-- pdfbox -->
 		<pdfbox.version>2.0.7</pdfbox.version>
 		<!-- guava -->
 		<guava.version>20.0</guava.version>
 		<!-- fastjson -->
 		<fastjson.version>1.2.24</fastjson.version>
-		<dubbo.version>2.6.0</dubbo.version>
-		<zkclient.version>0.1</zkclient.version>
+		<dubbo.version>2.6.1</dubbo.version>
+		<dubbo-spring-boot-starter.version>0.1.0</dubbo-spring-boot-starter.version>
+		<zkclient.version>0.10</zkclient.version>
 		<solrj.version>6.6.0</solrj.version>
 		<fast.version>1.24</fast.version>
 		<springfox.swagger2.version>2.8.0</springfox.swagger2.version>
@@ -178,13 +177,6 @@
 				<version>${xfire.version}</version>
 			</dependency>
 			<!-- pinyin4j end -->
-			<!-- javamail begin -->
-			<dependency>
-				<groupId>javax.mail</groupId>
-				<artifactId>mail</artifactId>
-				<version>${mail.version}</version>
-			</dependency>
-			<!-- javamail end -->
 			<!-- excel begin -->
 			<dependency>
 				<groupId>net.sourceforge.jexcelapi</groupId>
@@ -262,18 +254,23 @@
 
 			<!-- dubbo begin -->
 			<dependency>
-				<groupId>com.alibaba</groupId>
-				<artifactId>dubbo</artifactId>
-				<version>${dubbo.version}</version>
+				<groupId>com.alibaba.boot</groupId>
+				<artifactId>dubbo-spring-boot-starter</artifactId>
+				<version>${dubbo-spring-boot-starter.version}</version>
 				<exclusions>
 					<exclusion>
-						<groupId>org.springframework</groupId>
-						<artifactId>spring</artifactId>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
+
 			<dependency>
-				<groupId>com.github.sgroschupf</groupId>
+				<groupId>com.101tec</groupId>
 				<artifactId>zkclient</artifactId>
 				<version>${zkclient.version}</version>
 			</dependency>
@@ -479,12 +476,14 @@
 				</includes>
 			</resource>
 		</resources>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 </project>
 

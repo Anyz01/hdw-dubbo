@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdw.upms.mapper.SysDicMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.hdw.upms.entity.SysDic">
+		<id column="id" property="id" />
+		<result column="parent_id" property="parentId" />
+		<result column="var_code" property="varCode" />
+		<result column="var_name" property="varName" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="create_user" property="createUser" />
+		<result column="update_user" property="updateUser" />
+	</resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, parent_id AS parentId, var_code AS varCode, var_name AS varName, create_time AS createTime, update_time AS updateTime, create_user AS createUser, update_user AS updateUser
+    </sql>
+
+</mapper>
