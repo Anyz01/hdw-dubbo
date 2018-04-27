@@ -3,7 +3,7 @@
 <mapper namespace="com.hdw.upms.mapper.UserMapper">
 
 	<resultMap id="userVoResultMap"
-		type="com.hdw.enterprise.entity.vo.UserVo">
+		type="com.hdw.upms.entity.vo.UserVo">
 		<id column="id" property="id" />
 		<result column="login_name" property="loginName" />
 		<result column="name" property="name" />
