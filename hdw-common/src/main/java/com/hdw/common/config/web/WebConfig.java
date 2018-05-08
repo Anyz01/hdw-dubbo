@@ -9,6 +9,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,8 +19,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.hdw.common.csrf.CsrfInterceptor;
 import com.hdw.common.interceptor.FileUploadTypeInterceptor;
-
-
 
 /**
  * 
@@ -32,33 +31,38 @@ import com.hdw.common.interceptor.FileUploadTypeInterceptor;
 public class WebConfig extends WebMvcConfigurerAdapter {
 	@Autowired
 	private CsrfInterceptor csrfInterceptor;
-	
+
 	@Autowired
 	private FileUploadTypeInterceptor fileUploadTypeInterceptor;
 
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
-        builder.serializationInclusion(JsonInclude.Include.NON_NULL);
-        ObjectMapper objectMapper = builder.build();
-        SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
-        objectMapper.registerModule(simpleModule);
-        objectMapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);// 忽略 transient 修饰的属性
-        converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
-        super.configureMessageConverters(converters);
-    }
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+	}
+
+	@Override
+	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
+		builder.serializationInclusion(JsonInclude.Include.NON_NULL);
+		ObjectMapper objectMapper = builder.build();
+		SimpleModule simpleModule = new SimpleModule();
+		simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+		objectMapper.registerModule(simpleModule);
+		objectMapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);// 忽略 transient 修饰的属性
+		converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
+		super.configureMessageConverters(converters);
+	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		//注册自定义拦截器，添加拦截路径和排除拦截路径    
-		//添加csrf拦截器
-        registry.addInterceptor(csrfInterceptor).addPathPatterns("/login");  
-        //添加文件上传类型拦截器
-        registry.addInterceptor(fileUploadTypeInterceptor).addPathPatterns("/**");   
-        
+		// 注册自定义拦截器，添加拦截路径和排除拦截路径
+		// 添加csrf拦截器
+		registry.addInterceptor(csrfInterceptor).addPathPatterns("/login");
+		// 添加文件上传类型拦截器
+		registry.addInterceptor(fileUploadTypeInterceptor).addPathPatterns("/**");
+
 		super.addInterceptors(registry);
 	}
-    
-    
+
 }
