@@ -1,7 +1,5 @@
 package com.hdw.upms.service;
 
-import java.util.List;
-
 import com.baomidou.mybatisplus.service.IService;
 import com.hdw.common.result.PageInfo;
 import com.hdw.upms.entity.User;
@@ -14,17 +12,23 @@ import com.hdw.upms.entity.vo.UserVo;
  */
 public interface IUserService extends IService<User> {
 
-    List<User> selectByLoginName(UserVo userVo);
+	UserVo selectByLoginName(String loginName);
 
-    void insertByVo(UserVo userVo);
+	void insertByVo(UserVo userVo);
 
-    UserVo selectVoById(Long id);
+	void updateByVo(UserVo userVo);
 
-    void updateByVo(UserVo userVo);
+	UserVo selectVoById(Long id);
+	/**
+	 * 设置角色
+	 * @param userId
+	 * @param roleIds
+	 */
+	void setRoles(Long userId,String roleIds);
 
-    void updatePwdByUserId(Long userId, String md5Hex);
+	void updatePwdByUserId(Long userId, String md5Hex);
 
-    void selectDataGrid(PageInfo pageInfo);
+	PageInfo selectDataGrid(PageInfo pageInfo);
 
-    void deleteUserById(Long id);
+	void deleteUserById(Long id);
 }

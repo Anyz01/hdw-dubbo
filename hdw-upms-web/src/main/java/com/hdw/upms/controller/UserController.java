@@ -1,31 +1,26 @@
 package com.hdw.upms.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.hdw.common.base.BaseController;
 import com.hdw.common.result.PageInfo;
-import com.hdw.upms.shiro.PasswordHash;
+import com.hdw.upms.entity.User;
+import com.hdw.upms.entity.vo.UserVo;
+import com.hdw.upms.service.IUserService;
+import com.hdw.upms.shiro.ShiroKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import com.hdw.upms.entity.Role;
-import com.hdw.upms.entity.User;
-import com.hdw.upms.entity.vo.UserVo;
-import com.hdw.upms.service.IUserService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @description：用户管理
@@ -36,12 +31,10 @@ import com.hdw.upms.service.IUserService;
 @Api(value = "用户管理接口类", tags = { "用户管理接口" })
 @Controller
 @RequestMapping("/user")
-public class UserController extends CommonController {
+public class UserController extends BaseController {
 
 	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
 	private IUserService userService;
-	@Autowired
-	private PasswordHash passwordHash;
 
 	/**
 	 * 用户管理页
@@ -50,47 +43,52 @@ public class UserController extends CommonController {
 	 */
 	@GetMapping("/manager")
 	public String manager() {
-		return "admin/user/user";
+		return "system/user/user";
 	}
 
 	/**
 	 * 用户管理列表
-	 *
-	 * @param userVo
-	 * @param page
-	 * @param rows
+	 * @param offset
+	 * @param limit
 	 * @param sort
 	 * @param order
+	 * @param name
+	 * @param startTime
+	 * @param endTime
+	 * @param deptId
 	 * @return
 	 */
 	@ApiOperation(value = "获取权限列表", notes = "获取权限列表")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "page", value = "页数", dataType = "int", required = true),
-			@ApiImplicitParam(name = "rows", value = "行数", dataType = "int", required = true),
+	@ApiImplicitParams({ @ApiImplicitParam(name = "offset", value = "页数", dataType = "int", required = true),
+			@ApiImplicitParam(name = "limit", value = "行数", dataType = "int", required = true),
 			@ApiImplicitParam(name = "sort", value = "根据某属性排序", dataType = "string"),
 			@ApiImplicitParam(name = "order", value = "升降序", dataType = "string"),
-			@ApiImplicitParam(name = "userVo", value = "升降序") })
+			@ApiImplicitParam(name = "name", value = "账号/姓名",dataType = "string"),
+			@ApiImplicitParam(name = "deptId", value = "部门编号",dataType = "int")
+	})
 
-	@PostMapping("/dataGrid")
+	@RequestMapping("/dataGrid")
 	@ResponseBody
-	public Object dataGrid(UserVo userVo, Integer page, Integer rows, String sort, String order) {
-		PageInfo pageInfo = new PageInfo(page, rows, sort, order);
+	public Object dataGrid(Integer offset, Integer limit, String sort, String order,
+						   @RequestParam(required = false) String name, @RequestParam(required = false)String startTime, @RequestParam(required = false)String endTime, @RequestParam(required = false)Integer deptId) {
+		PageInfo pageInfo = new PageInfo(offset, limit,sort,order);
 		Map<String, Object> condition = new HashMap<String, Object>();
 
-		if (StringUtils.isNotBlank(userVo.getName())) {
-			condition.put("name", userVo.getName());
+		if (StringUtils.isNotBlank(name)) {
+			condition.put("name", name);
 		}
-		if (userVo.getOrganizationId() != null) {
-			condition.put("organizationId", userVo.getOrganizationId());
+		if (deptId != null) {
+			condition.put("organizationId", deptId);
 		}
-		if (userVo.getCreatedateStart() != null) {
-			condition.put("startTime", userVo.getCreatedateStart());
+		if (StringUtils.isNotBlank(startTime)) {
+			condition.put("startTime", startTime);
 		}
-		if (userVo.getCreatedateEnd() != null) {
-			condition.put("endTime", userVo.getCreatedateEnd());
+		if (StringUtils.isNotBlank(endTime)) {
+			condition.put("endTime", endTime);
 		}
 		pageInfo.setCondition(condition);
-		userService.selectDataGrid(pageInfo);
-		return pageInfo;
+		PageInfo page=userService.selectDataGrid(pageInfo);
+		return page;
 	}
 
 	/**
@@ -100,135 +98,220 @@ public class UserController extends CommonController {
 	 */
 	@GetMapping("/addPage")
 	public String addPage() {
-		return "admin/user/userAdd";
+		return "system/user/userAdd";
 	}
 
 	/**
 	 * 添加用户
 	 *
-	 * @param userVo
+	 * @param user
 	 * @return
 	 */
 	@ApiOperation(value = "添加用户", notes = "添加用户")
-
 	@PostMapping("/add")
 	@ResponseBody
-	public Object add(@Valid UserVo userVo) {
-		List<User> list = userService.selectByLoginName(userVo);
-		if (list != null && !list.isEmpty()) {
-			return renderError("登录名已存在!");
+	public Object add(@Valid User user) throws RuntimeException{
+		try{
+			UserVo u = userService.selectByLoginName(user.getLoginName());
+			if (u != null) {
+				return renderError("登录名已存在!");
+			}
+			String salt=ShiroKit.getRandomSalt(2);
+			user.setSalt(salt);
+			String pwd=ShiroKit.md5(user.getPassword(),salt);
+			user.setPassword(pwd);
+			user.setCreateTime(new Date());
+			user.setUpdateTime(new Date());
+			userService.insert(user);
+			return renderSuccess("添加成功");
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			throw new RuntimeException("运行异常，请联系管理员");
 		}
-//		//shiro算法
-//		String salt = UUID.randomUUID().toString();
-//		String pwd = passwordHash.toHex(userVo.getPassword(), salt);
-//		userVo.setSalt(salt);
-//		userVo.setPassword(pwd);
-		
-		//cas算法
-		String pwd = passwordHash.toHexByCas(userVo.getPassword(), userVo.getLoginName());
-		userVo.setSalt(userVo.getLoginName());
-		userVo.setPassword(pwd);
-		userService.insertByVo(userVo);
-		return renderSuccess("添加成功");
+
 	}
 
 	/**
 	 * 编辑用户页
 	 *
-	 * @param id
-	 * @param model
 	 * @return
 	 */
-	@GetMapping("/editPage")
-	public String editPage(Model model, Long id) {
-		UserVo userVo = userService.selectVoById(id);
-		List<Role> rolesList = userVo.getRolesList();
-		List<Long> ids = new ArrayList<Long>();
-		for (Role role : rolesList) {
-			ids.add(role.getId());
-		}
-		model.addAttribute("roleIds", ids);
-		model.addAttribute("user", userVo);
-		return "admin/user/userEdit";
+	@GetMapping("/editPage/{userId}")
+	public String editPage(Model model ,@PathVariable("userId") Long userId) {
+		User user=userService.selectById(userId);
+		model.addAttribute("user",user);
+		return "system/user/userEdit";
 	}
 
 	/**
 	 * 编辑用户
 	 *
-	 * @param userVo
+	 * @param user
 	 * @return
 	 */
 	@ApiOperation(value = "编辑用户", notes = "编辑用户")
-
-	@RequiresRoles("admin")
 	@PostMapping("/edit")
 	@ResponseBody
-	public Object edit(@Valid UserVo userVo) {
-		List<User> list = userService.selectByLoginName(userVo);
-		if (list != null && !list.isEmpty()) {
-			return renderError("登录名已存在!");
+	public Object edit(@Valid User user) throws  RuntimeException{
+		try {
+			UserVo u = userService.selectByLoginName(user.getLoginName());
+			String pwd=ShiroKit.md5(user.getPassword(),u.getSalt());
+			user.setPassword(pwd);
+			user.setUpdateTime(new Date());
+			userService.updateById(user);
+			return renderSuccess("修改成功");
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			throw new RuntimeException("运行异常，请联系管理员");
 		}
-		// 更新密码
-		if (StringUtils.isNotBlank(userVo.getPassword())) {
-			User user = userService.selectById(userVo.getId());
-			String salt = user.getSalt();
-			String pwd = passwordHash.toHex(userVo.getPassword(), salt);
-			userVo.setPassword(pwd);
-		}
-		userService.updateByVo(userVo);
-		return renderSuccess("修改成功！");
 	}
 
-	/**
-	 * 修改密码页
-	 *
-	 * @return
-	 */
-	@GetMapping("/editPwdPage")
-	public String editPwdPage() {
-		return "admin/user/userEditPwd";
-	}
-
-	/**
-	 * 修改密码
-	 *
-	 * @param oldPwd
-	 * @param pwd
-	 * @return
-	 */
-	@ApiOperation(value = "修改密码", notes = "修改密码")
-
-	@PostMapping("/editUserPwd")
-	@ResponseBody
-	public Object editUserPwd(String oldPwd, String pwd) {
-		User user = userService.selectById(getUserId());
-		String salt = user.getSalt();
-		if (!user.getPassword().equals(passwordHash.toHex(oldPwd, salt))) {
-			return renderError("老密码不正确!");
-		}
-		userService.updatePwdByUserId(getUserId(), passwordHash.toHex(pwd, salt));
-		return renderSuccess("密码修改成功！");
-	}
-
+	
 	/**
 	 * 删除用户
 	 *
-	 * @param id
+	 * @param userId
 	 * @return
 	 */
 	@ApiOperation(value = "删除用户", notes = "删除用户")
-	@ApiImplicitParam(name = "id", value = "用户ID", dataType = "Long", required = true)
+	@ApiImplicitParam(name = "userId", value = "用户ID", dataType = "Long", required = true)
 
 	@RequiresRoles("admin")
 	@PostMapping("/delete")
 	@ResponseBody
-	public Object delete(Long id) {
-		Long currentUserId = getUserId();
-		if (id == currentUserId) {
-			return renderError("不可以删除自己！");
+	public Object delete(Long userId) throws RuntimeException{
+		try {
+			Long currentUserId = ShiroKit.getUser().getId();
+			if (userId == currentUserId) {
+				return renderError("不可以删除自己！");
+			}
+			userService.deleteUserById(userId);
+			return renderSuccess("删除成功！");
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			throw new RuntimeException("运行异常，请联系管理员");
 		}
-		userService.deleteUserById(id);
-		return renderSuccess("删除成功！");
+
 	}
+
+	/**
+	 * 冻结账户
+	 * @param userId
+	 * @return
+	 */
+	@RequiresRoles("admin")
+	@PostMapping("/freeze")
+	@ResponseBody
+	public Object freeze(Long userId) throws RuntimeException{
+		try{
+			User user=userService.selectById(userId);
+			if (null== user) {
+				return renderError("账户不存在");
+			}
+			user.setStatus(1);
+			user.setUpdateTime(new Date());
+			userService.updateById(user);
+			return renderSuccess("冻结成功！");
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new RuntimeException("运行异常，请联系管理员");
+		}
+	}
+
+
+	/**
+	 * 解冻账户
+	 * @param userId
+	 * @return
+	 */
+	@RequiresRoles("admin")
+	@PostMapping("/unfreeze")
+	@ResponseBody
+	public Object unfreeze(Long userId) throws RuntimeException{
+		try{
+			User user=userService.selectById(userId);
+			if (null== user) {
+				return renderError("账户不存在");
+			}
+			user.setStatus(0);
+			user.setUpdateTime(new Date());
+			userService.updateById(user);
+			return renderSuccess("冻结成功！");
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			throw  new RuntimeException("运行异常请联系管理员");
+		}
+
+	}
+
+	/**
+	 * 重置密码
+	 * @param userId
+	 * @return
+	 */
+	@PostMapping("/reset")
+	@ResponseBody
+	public Object reset(Long userId,String pwd) throws RuntimeException{
+		try{
+			User user=userService.selectById(userId);
+			if (null== user) {
+				return renderError("账户不存在");
+			}
+			String salt=ShiroKit.getRandomSalt(2);
+			user.setSalt(salt);
+			if(StringUtils.isNotBlank(pwd)){
+				user.setPassword(ShiroKit.md5(pwd,salt));
+			}else{
+				user.setPassword(ShiroKit.md5("123456",salt));
+			}
+			user.setUpdateTime(new Date());
+			userService.updateById(user);
+			return renderSuccess("重置密码成功！");
+		}catch (Exception e){
+			logger.error(e.getMessage());
+			throw  new RuntimeException("运行异常，联系管理员");
+		}
+
+	}
+
+	/**
+	 * 跳转到角色分配页面
+	 * @param userId
+	 * @param model
+	 * @return
+	 */
+	@RequiresRoles("admin")
+	@GetMapping("roleAssign/{userId}")
+	public String roleAssign(@PathVariable("userId") Long userId,Model model){
+		UserVo user=userService.selectVoById(userId);
+		model.addAttribute("userId",userId);
+		model.addAttribute("roleList",user.getRolesList());
+		return "system/user/userRoleAssign";
+	}
+
+	/**
+	 * 设置角色
+	 * @param userId
+	 * @param roleIds
+	 * @return
+	 * @throws RuntimeException
+	 */
+	@RequestMapping("/setRole")
+	@ResponseBody
+	@RequiresRoles("admin")
+	public Object setRole(@RequestParam("userId") Long userId, @RequestParam("roleIds")String roleIds)throws RuntimeException{
+		try {
+			if(userId==null && StringUtils.isBlank(roleIds)){
+				return renderError("授权失败");
+			}
+			userService.setRoles(userId,roleIds);
+			return renderSuccess();
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new RuntimeException(e);
+		}
+		
+	}
+
 
 }

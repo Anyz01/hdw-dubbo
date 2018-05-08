@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head th:include="/header">
+    <title>用户管理-添加</title>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox-content">
+        <form id="fm" class="form-horizontal" data-validator-option="{timely:8, focusCleanup:true, theme:'simple_bottom'}">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">角色</label>
+                <div class="col-sm-8">
+                    <select id="roleIds" name="roleIds" class="form-control" multiple="multiple" data-rule="角色:required;">
+                    </select>
+                </div>
+            </div>
+             <input type="hidden" name="userId" th:value="${userId}">
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="text-center">
+                    <button class="btn btn-primary" type="submit">保存</button>
+                    <button class="btn btn-white" type="reset">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div th:include="/footer"></div>
+<script type="text/javascript" th:inline="javascript">
+   $(function(){
+	   var userId=[[${userId}]];
+	   var table = new $Select2List("roleIds", basePath + "role/selectTreeByUserId/"+userId);
+       table.init();
+       
+       $("#fm").validator({
+			valid: function (form) {
+				console.log("到这里："+$(form).serialize());
+				var me = this;
+				// 提交表单之前，hold住表单，防止重复提交
+				me.holdSubmit();
+				$.ajax({
+					url: basePath + "user/setRole",
+					data: $(form).serialize(),
+					type: "POST",
+					dataType: 'json',
+					success: function (data) {
+                        if (data.success) {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.msg(data.msg,{
+                            	  icon: 1,
+                            	  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            	},function () {
+                            	window.parent.location.reload();
+                                parent.layer.close(index);
+                            });
+                            
+                        } else {
+                        	parent.layer.msg(data.msg,{
+                          	  icon: 2,
+                        	  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        	});
+                            me.holdSubmit(false);
+                        }
+                    }
+				});
+			}
+		});
+   });
+    
+
+</script>
+</body>
+
+</html>

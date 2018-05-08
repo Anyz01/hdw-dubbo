@@ -1,12 +1,16 @@
 package com.hdw.upms.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
-import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -17,7 +21,7 @@ import java.io.Serializable;
  * @since 2018-04-26
  */
 @TableName("t_sys_user")
-public class User extends Model<User> {
+public class User extends Model<User> implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
@@ -29,6 +33,8 @@ public class User extends Model<User> {
     /**
      * 登陆名
      */
+	@NotBlank
+	@Length(min = 4, max = 64)
 	@TableField("login_name")
 	private String loginName;
     /**
@@ -38,10 +44,12 @@ public class User extends Model<User> {
     /**
      * 密码
      */
+	@JsonIgnore
 	private String password;
     /**
      * 密码加密盐
      */
+	@JsonIgnore
 	private String salt;
     /**
      * 性别
@@ -55,6 +63,7 @@ public class User extends Model<User> {
      * 手机号
      */
 	private String phone;
+
 	private String email;
     /**
      * 用户类别
@@ -74,6 +83,7 @@ public class User extends Model<User> {
      */
 	@TableField("organization_id")
 	private Long organizationId;
+
 	@TableField("enterprise_id")
 	private Long enterpriseId;
     /**
@@ -219,6 +229,22 @@ public class User extends Model<User> {
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
+	}
+
+	/**
+	 * 比较vo和数据库中的用户是否同一个user，采用id比较
+	 * @param user 用户
+	 * @return 是否同一个人
+	 */
+	public boolean equalsUser(User user) {
+		if (user == null) {
+			return false;
+		}
+		Long userId = user.getId();
+		if (id == null || userId == null) {
+			return false;
+		}
+		return id.equals(userId);
 	}
 
 }

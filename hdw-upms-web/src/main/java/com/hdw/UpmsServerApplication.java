@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 
 /**
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @SpringBootApplication
 @EnableAspectJAutoProxy
+@EnableAsync
 public class UpmsServerApplication extends SpringBootServletInitializer {
 
 	protected final static Logger logger = LoggerFactory.getLogger(UpmsServerApplication.class);

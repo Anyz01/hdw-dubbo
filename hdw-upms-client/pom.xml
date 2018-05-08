@@ -28,58 +28,63 @@
 		<!-- shiro begin -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
-			<artifactId>shiro-core</artifactId>
+			<artifactId>shiro-spring</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.shiro</groupId>
-			<artifactId>shiro-web</artifactId>
-		</dependency>
+		<!-- shiro ehcache (shiro缓存)-->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-ehcache</artifactId>
 			<exclusions>
 				<exclusion>
-					<artifactId>ehcache-core</artifactId>
-					<groupId>net.sf.ehcache</groupId>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<!--验证码框架-->
 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.shiro</groupId>
-			<artifactId>shiro-spring</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.buji</groupId>
-			<artifactId>buji-pac4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.pac4j</groupId>
-			<artifactId>pac4j-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.pac4j</groupId>
-			<artifactId>pac4j-cas</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.pac4j</groupId>
-			<artifactId>pac4j-jwt</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.pac4j</groupId>
-			<artifactId>pac4j-http</artifactId>
-		</dependency>
+			<groupId>com.github.axet</groupId>
+			<artifactId>kaptcha</artifactId>
+			</dependency>
 		<!-- shiro end -->
 
 		<!-- thymeleaf模板中shiro标签 begin -->
 		<dependency>
 			<groupId>com.github.theborakompanioni</groupId>
 			<artifactId>thymeleaf-extras-shiro</artifactId>
-		</dependency>
+			</dependency>
 		<!-- thymeleaf模板中shiro标签 end -->
+
+		<!--  pac4j -->
+		<dependency>
+			<groupId>io.buji</groupId>
+			<artifactId>buji-pac4j</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-core</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-cas</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-jwt</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-http</artifactId>
+			</dependency>
+		<!-- pac4j end -->
+
 
 	</dependencies>
 

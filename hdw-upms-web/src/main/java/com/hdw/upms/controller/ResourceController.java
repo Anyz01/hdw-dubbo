@@ -1,24 +1,30 @@
 package com.hdw.upms.controller;
 
-import java.util.Date;
-
-import javax.validation.Valid;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.hdw.upms.entity.Resource;
-import com.hdw.upms.entity.ShiroUser;
-import com.hdw.upms.service.IResourceService;
 import com.alibaba.dubbo.config.annotation.Reference;
-
+import com.hdw.common.base.BaseController;
+import com.hdw.common.result.ZTreeNode;
+import com.hdw.upms.entity.Resource;
+import com.hdw.upms.entity.vo.UserVo;
+import com.hdw.upms.service.IResourceService;
+import com.hdw.upms.shiro.ShiroKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -30,7 +36,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "资源管理接口类", tags = { "资源管理接口" })
 @Controller
 @RequestMapping("/resource")
-public class ResourceController extends CommonController {
+public class ResourceController extends BaseController {
 
 	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
 	private IResourceService resourceService;
@@ -40,13 +46,12 @@ public class ResourceController extends CommonController {
 	 *
 	 * @return
 	 */
-	@ApiOperation(value = "获取资源树", notes = "获取资源树")
-
+	@ApiOperation(value = "获取菜单树", notes = "获取菜单树")
 	@GetMapping("/tree")
 	@ResponseBody
 	public Object tree() {
-		ShiroUser shiroUser = getShiroUser();
-		return resourceService.selectTree(shiroUser);
+		UserVo userVo = ShiroKit.getUser();
+		return resourceService.selectTree(userVo);
 	}
 
 	/**
@@ -56,7 +61,7 @@ public class ResourceController extends CommonController {
 	 */
 	@GetMapping("/manager")
 	public String manager() {
-		return "admin/resource/resource";
+		return "system/resource/resource";
 	}
 
 	/**
@@ -65,10 +70,26 @@ public class ResourceController extends CommonController {
 	 * @return
 	 */
 	@ApiOperation(value = "获取资源树表", notes = "获取资源树表")
-	@GetMapping("/treeGrid")
+	@RequestMapping("/treeGrid")
 	@ResponseBody
-	public Object treeGrid() {
-		return resourceService.selectAll();
+	public Object treeGrid(@RequestParam(required = false) String menuName) {
+		Map<String, Object> par = new HashMap<>();
+		if (StringUtils.isNotBlank(menuName)) {
+			par.put("name", "menuName");
+		}
+		return resourceService.selectTreeGrid(par);
+	}
+
+	/**
+	 * 获取菜单列表(选择父级菜单用)
+	 */
+	@ApiOperation(value = "获取菜单列表", notes = "获取菜单列表")
+	@RequestMapping(value = "/selectMenuTree")
+	@ResponseBody
+	public List<ZTreeNode> selectMenuTreeList() {
+		List<ZTreeNode> roleTreeList = resourceService.selectMenuTree();
+		roleTreeList.add(ZTreeNode.createParent());
+		return roleTreeList;
 	}
 
 	/**
@@ -78,7 +99,7 @@ public class ResourceController extends CommonController {
 	 */
 	@GetMapping("/addPage")
 	public String addPage() {
-		return "admin/resource/resourceAdd";
+		return "system/resource/resourceAdd";
 	}
 
 	/**
@@ -88,40 +109,19 @@ public class ResourceController extends CommonController {
 	 * @return
 	 */
 	@ApiOperation(value = "添加资源信息", notes = "添加资源信息")
-
 	@PostMapping("/add")
 	@ResponseBody
-	public Object add(@Valid Resource resource) {
-		resource.setCreateTime(new Date());
-		// 选择菜单时将openMode设置为null
-		Integer type = resource.getResourceType();
-		if (null != type && type == 0) {
-			resource.setOpenMode(null);
+	public Object add(@Valid Resource resource) throws RuntimeException {
+		try {
+			resource.setCreateTime(new Date());
+			resource.setUpdateTime(new Date());
+			resourceService.insert(resource);
+			return renderSuccess("添加成功！");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new RuntimeException("添加失败，请联系管理员");
 		}
-		resourceService.insert(resource);
-		return renderSuccess("添加成功！");
-	}
 
-	/**
-	 * 查询所有的菜单
-	 */
-	@ApiOperation(value = "获取所有的菜单", notes = "获取所有的菜单")
-
-	@GetMapping("/allTree")
-	@ResponseBody
-	public Object allMenu() {
-		return resourceService.selectAllMenu();
-	}
-
-	/**
-	 * 查询所有的资源tree
-	 */
-	@ApiOperation(value = "获取所有的资源树", notes = "获取所有的资源树")
-
-	@GetMapping("/allTrees")
-	@ResponseBody
-	public Object allTree() {
-		return resourceService.selectAllTree();
 	}
 
 	/**
@@ -131,11 +131,19 @@ public class ResourceController extends CommonController {
 	 * @param id
 	 * @return
 	 */
-	@GetMapping("/editPage")
-	public String editPage(Model model, Long id) {
-		Resource resource = resourceService.selectById(id);
+	@GetMapping("/editPage/{resourceId}")
+	public String editPage(Model model, @PathVariable("resourceId") Long resourceId) {
+		Resource resource = resourceService.selectById(resourceId);
+		// 获取父级菜单名称
+		Resource resource2 = resourceService.selectById(resource.getPid());
+		if (resource2 != null) {
+			resource.setPname(resource2.getName());
+		} else {
+			resource.setPname("顶级");
+		}
+
 		model.addAttribute("resource", resource);
-		return "admin/resource/resourceEdit";
+		return "system/resource/resourceEdit";
 	}
 
 	/**
@@ -146,11 +154,18 @@ public class ResourceController extends CommonController {
 	 */
 	@ApiOperation(value = "编辑资源信息", notes = "编辑资源信息")
 
-	@GetMapping("/edit")
+	@PostMapping("/edit")
 	@ResponseBody
-	public Object edit(@Valid Resource resource) {
-		resourceService.updateById(resource);
-		return renderSuccess("编辑成功！");
+	public Object edit(@Valid Resource resource) throws RuntimeException {
+		try {
+			resource.setUpdateTime(new Date());
+			resourceService.updateById(resource);
+			return renderSuccess("编辑成功！");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new RuntimeException("编辑失败，请联系管理员");
+		}
+
 	}
 
 	/**
@@ -161,12 +176,16 @@ public class ResourceController extends CommonController {
 	 */
 	@ApiOperation(value = "删除资源信息", notes = "删除资源信息")
 	@ApiImplicitParam(name = "id", value = "资源ID", dataType = "Long", required = true)
-
-	@GetMapping("/delete")
+	@PostMapping("/delete")
 	@ResponseBody
-	public Object delete(Long id) {
-		resourceService.deleteById(id);
-		return renderSuccess("删除成功！");
+	public Object delete(Long resourceId) throws RuntimeException {
+		try {
+			resourceService.deleteById(resourceId);
+			return renderSuccess("删除成功！");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new RuntimeException("删除失败，请联系管理员");
+		}
 	}
 
 }

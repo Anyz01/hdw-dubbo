@@ -1,27 +1,24 @@
 package com.hdw.upms.scan;
 
-import java.util.Date;
-import java.util.Enumeration;
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.hdw.upms.entity.SysLog;
+import com.hdw.upms.entity.vo.UserVo;
+import com.hdw.upms.service.IUpmsApiService;
+import com.hdw.upms.shiro.ShiroKit;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.hdw.upms.entity.SysLog;
-import com.hdw.upms.service.IUpmsApiService;
-import com.alibaba.dubbo.config.annotation.Reference;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.Enumeration;
 
 
 /**
@@ -35,12 +32,31 @@ import com.alibaba.dubbo.config.annotation.Reference;
 @Order
 public class SysLogAspect {
 	private static final Logger LOGGER = LogManager.getLogger(SysLogAspect.class);
+	private long startTime=0;
+	private long endTime=0;
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://172.16.5.85:20880")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
 	private IUpmsApiService upmsApiService;
 
 	@Pointcut("within(@org.springframework.stereotype.Controller *)")
 	public void cutController() {
+	}
+
+	@Before("cutController()")
+	public void doBefore(JoinPoint joinPoint){
+		startTime=System.currentTimeMillis();
+		//URL
+		ServletRequestAttributes attributes=(ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		HttpServletRequest request = attributes.getRequest();
+		LOGGER.info("url={}",request.getRequestURL());
+		//method
+		LOGGER.info("method={}",request.getMethod());
+		//ip
+		LOGGER.info("ip={}",request.getRemoteAddr());
+		//类方法
+		LOGGER.info("class_method={}",joinPoint.getSignature().getDeclaringTypeName()+"."+joinPoint.getSignature().getName());
+		//参数
+		LOGGER.info("args={}",joinPoint.getArgs());
 	}
 
 	@Around("cutController()")
@@ -70,13 +86,12 @@ public class SysLogAspect {
 		LOGGER.info(strMessage);
 		if (isWriteLog(strMethodName)) {
 			try {
-				Subject currentUser = SecurityUtils.getSubject();
-				PrincipalCollection collection = currentUser.getPrincipals();
-				if (null != collection) {
-					String loginName = collection.getPrimaryPrincipal().toString();
+				UserVo userVo=ShiroKit.getUser();
+				if (null != userVo) {
+					String loginName = userVo.getLoginName();
 					SysLog sysLog = new SysLog();
 					sysLog.setLoginName(loginName);
-					sysLog.setRoleName(loginName);
+					sysLog.setRoleName(userVo.getRolesList().get(0).getName());
 					sysLog.setOptContent(strMessage);
 					sysLog.setCreateTime(new Date());
 					if (request != null) {
@@ -91,6 +106,23 @@ public class SysLogAspect {
 		}
 
 		return point.proceed();
+	}
+
+	@AfterReturning(returning = "object",pointcut="cutController()")
+	public void doAfterReturning(Object object){
+		if(object!=null) {
+			LOGGER.info("response={}",object.toString());
+		}else {
+			LOGGER.info("response=");
+		}
+
+	}
+
+	@After("cutController()")
+	public void doAfter(){
+		endTime=System.currentTimeMillis();
+		long totalMillis = endTime-startTime;
+		LOGGER.info("----"+"执行时间："+totalMillis+"毫秒"+"----");
 	}
 
 	private boolean isWriteLog(String method) {

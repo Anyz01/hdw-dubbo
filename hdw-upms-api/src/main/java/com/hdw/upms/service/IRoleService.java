@@ -1,12 +1,13 @@
 package com.hdw.upms.service;
 
+import com.baomidou.mybatisplus.service.IService;
+import com.hdw.common.result.PageInfo;
+import com.hdw.common.result.Select2Node;
+import com.hdw.upms.entity.Role;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.baomidou.mybatisplus.service.IService;
-import com.hdw.common.result.PageInfo;
-import com.hdw.upms.entity.Role;
 
 /**
  *
@@ -15,9 +16,16 @@ import com.hdw.upms.entity.Role;
  */
 public interface IRoleService extends IService<Role> {
 
-    void selectDataGrid(PageInfo pageInfo);
+    PageInfo selectDataGrid(PageInfo pageInfo);
 
-    Object selectTree();
+    List<Select2Node> selectTree();
+    
+    /**
+     * 根据用户Id获取角色树
+     * @param userId
+     * @return
+     */
+    List<Select2Node> selectTreeByUserId(Long userId);
 
     List<Long> selectResourceIdListByRoleId(Long id);
 

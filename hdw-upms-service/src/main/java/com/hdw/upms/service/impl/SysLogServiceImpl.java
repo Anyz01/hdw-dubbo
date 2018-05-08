@@ -2,10 +2,12 @@ package com.hdw.upms.service.impl;
 
 
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.hdw.common.result.PageInfo;
 import com.hdw.upms.entity.SysLog;
 import com.hdw.upms.mapper.SysLogMapper;
@@ -24,15 +26,19 @@ import com.hdw.upms.service.ISysLogService;
         registry = "${dubbo.registry.id}"
 )
 public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> implements ISysLogService {
+	
+	@Autowired
+	private SysLogMapper sysLogMapper;
     
     @Override
-    public void selectDataGrid(PageInfo pageInfo) {
-        Page<SysLog> page = new Page<SysLog>(pageInfo.getNowpage(), pageInfo.getSize());
-        EntityWrapper<SysLog> wrapper = new EntityWrapper<SysLog>();
-        wrapper.orderBy(pageInfo.getSort(), pageInfo.getOrder().equalsIgnoreCase("ASC"));
-        selectPage(page, wrapper);
-        pageInfo.setRows(page.getRecords());
+    public PageInfo selectDataGrid(PageInfo pageInfo) {
+    	Page<SysLog> page = new Page<SysLog>(pageInfo.getNowpage(), pageInfo.getSize());
+    	String orderField = StringUtils.camelToUnderline(pageInfo.getSort());
+		page.setOrderByField(orderField);
+		page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
+        List<SysLog> list=sysLogMapper.selectLogPage(page, pageInfo.getCondition());
+        pageInfo.setRows(list);
         pageInfo.setTotal(page.getTotal());
+        return pageInfo;
     }
-    
 }

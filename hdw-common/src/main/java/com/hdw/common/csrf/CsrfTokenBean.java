@@ -2,8 +2,15 @@ package com.hdw.common.csrf;
 
 import java.io.Serializable;
 
+
 import org.springframework.util.Assert;
 
+/**
+ * 
+ * @Descriptin CsrfTokenBean
+ * @author TuMinglong
+ * @Date 2018年4月28日 上午9:55:39
+ */
 public class CsrfTokenBean implements Serializable {
 	private static final long serialVersionUID = -6865031901744243607L;
 

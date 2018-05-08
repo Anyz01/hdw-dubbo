@@ -4,6 +4,7 @@ package com.hdw.upms.entity;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -27,11 +28,13 @@ public class UserRole implements Serializable {
     /**
      * 用户id
      */
+    @TableField(value="user_id")
     private Long userId;
 
     /**
      * 角色id
      */
+    @TableField(value="role_id")
     private Long roleId;
 
 

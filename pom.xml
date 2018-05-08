@@ -23,6 +23,9 @@
 		<module>hdw-upms-service</module>
 		<module>hdw-upms-client</module>
 		<module>hdw-upms-web</module>
+		<module>hdw-enterprise-mapper</module>
+		<module>hdw-enterprise-api</module>
+		<module>hdw-enterprise-service</module>
 		<module>hdw-search-mapper</module>
 		<module>hdw-search-api</module>
 		<module>hdw-search-service</module>
@@ -177,6 +180,7 @@
 				<version>${xfire.version}</version>
 			</dependency>
 			<!-- pinyin4j end -->
+			
 			<!-- excel begin -->
 			<dependency>
 				<groupId>net.sourceforge.jexcelapi</groupId>
@@ -313,35 +317,45 @@
 			<!-- shiro begin -->
 			<dependency>
 				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-core</artifactId>
+				<artifactId>shiro-spring</artifactId>
 				<version>${shiro.version}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>slf4j-api</artifactId>
+						<groupId>org.slf4j</groupId>
+					</exclusion>
+				</exclusions>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-web</artifactId>
-				<version>${shiro.version}</version>
-			</dependency>
+			<!-- shiro ehcache (shiro缓存)-->
 			<dependency>
 				<groupId>org.apache.shiro</groupId>
 				<artifactId>shiro-ehcache</artifactId>
 				<version>${shiro.version}</version>
 				<exclusions>
 					<exclusion>
-						<artifactId>ehcache-core</artifactId>
-						<groupId>net.sf.ehcache</groupId>
+						<artifactId>slf4j-api</artifactId>
+						<groupId>org.slf4j</groupId>
 					</exclusion>
 				</exclusions>
 			</dependency>
+
+			<!--验证码框架-->
 			<dependency>
-				<groupId>net.sf.ehcache</groupId>
-				<artifactId>ehcache</artifactId>
-				<version>${ehcache.version}</version>
+				<groupId>com.github.axet</groupId>
+				<artifactId>kaptcha</artifactId>
+				<version>0.0.9</version>
 			</dependency>
+			<!-- shiro end -->
+
+			<!-- thymeleaf模板中shiro标签 begin -->
 			<dependency>
-				<groupId>org.apache.shiro</groupId>
-				<artifactId>shiro-spring</artifactId>
-				<version>${shiro.version}</version>
+				<groupId>com.github.theborakompanioni</groupId>
+				<artifactId>thymeleaf-extras-shiro</artifactId>
+				<version>${thymeleaf-extras-shiro.version}</version>
 			</dependency>
+			<!-- thymeleaf模板中shiro标签 end -->
+
+			<!--  pac4j -->
 			<dependency>
 				<groupId>io.buji</groupId>
 				<artifactId>buji-pac4j</artifactId>
@@ -367,15 +381,7 @@
 				<artifactId>pac4j-http</artifactId>
 				<version>${pac4j.version}</version>
 			</dependency>
-			<!-- shiro end -->
-
-			<!-- thymeleaf模板中shiro标签 begin -->
-			<dependency>
-				<groupId>com.github.theborakompanioni</groupId>
-				<artifactId>thymeleaf-extras-shiro</artifactId>
-				<version>${thymeleaf-extras-shiro.version}</version>
-			</dependency>
-			<!-- thymeleaf模板中shiro标签 end -->
+			<!-- pac4j end -->
 
 			<!-- velocity begin -->
 			<dependency>

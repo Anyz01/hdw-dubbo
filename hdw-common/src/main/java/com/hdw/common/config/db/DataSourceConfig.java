@@ -3,7 +3,6 @@ package com.hdw.common.config.db;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
-import com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean;
 import com.hdw.common.util.security.SecurityUtil;
 
 import org.mybatis.spring.annotation.MapperScan;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +29,7 @@ import java.util.Map;
  * @date 2018年1月24日 下午4:07:51
  */
 @Configuration
-@MapperScan("com.hdw.*.mapper")
+@MapperScan(basePackages = {"com.hdw.*.mapper"})
 public class DataSourceConfig {
 	protected final static Logger logger = LoggerFactory.getLogger(DataSourceConfig.class);
 
@@ -129,7 +127,7 @@ public class DataSourceConfig {
 	/**
 	 * 主数据源
 	 */
-	@Qualifier("masterDataSource")
+	@Primary
 	@Bean(name = "masterDataSource")
 	public DruidDataSource masterDataSource() throws SQLException {
 
@@ -166,7 +164,6 @@ public class DataSourceConfig {
 	 * @return
 	 * @throws SQLException
 	 */
-	@Qualifier("slaveDataSource")
 	@Bean(name = "slaveDataSource")
 	public DruidDataSource slaveDataSource() throws SQLException {
 		DruidDataSource datasource = new DruidDataSource();
@@ -198,8 +195,6 @@ public class DataSourceConfig {
 
 	@DependsOn(value = { "masterDataSource", "slaveDataSource" })
 	@Bean(name = "datasource")
-	@Qualifier("datasource")
-	@Primary
 	public DynamicDataSource dynamicDataSource(@Qualifier(value = "masterDataSource") DataSource masterDataSource,
 			@Qualifier(value = "slaveDataSource") DataSource slaveDataSource) {
 		DynamicDataSource bean = new DynamicDataSource();
@@ -208,15 +203,6 @@ public class DataSourceConfig {
 		targetDataSources.put("slaveDataSource", slaveDataSource);
 		bean.setTargetDataSources(targetDataSources);
 		bean.setDefaultTargetDataSource(masterDataSource);
-		return bean;
-	}
-
-	@Bean(name = "sessionFactory")
-	@ConfigurationProperties(prefix = "mybatis-plus")
-	@Primary
-	public MybatisSqlSessionFactoryBean sqlSessionFactory(@Qualifier(value = "datasource") DataSource dataSource) {
-		MybatisSqlSessionFactoryBean bean = new MybatisSqlSessionFactoryBean();
-		bean.setDataSource(dataSource);
 		return bean;
 	}
 

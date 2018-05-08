@@ -16,5 +16,18 @@
     <sql id="Base_Column_List">
         id, login_name AS loginName, role_name AS roleName, opt_content AS optContent, client_ip AS clientIp, create_time AS createTime
     </sql>
+    
+    <select id="selectLogPage" parameterType="map" resultType="SysLog">
+    	select <include refid="Base_Column_List"/> from t_sys_log t
+    	<where>
+    		<if test="loginName!=null and loginName!=''">
+    		   t.login_name like '%${loginName}%'
+    		</if>
+    		<if test=" startTime != null and starTime !='' and endTime !=null and endTime!=''">
+               and (t.creat_time between #{startTime} and #{endTime})
+			</if>
+    	</where>
+    		
+    </select>
 
 </mapper>

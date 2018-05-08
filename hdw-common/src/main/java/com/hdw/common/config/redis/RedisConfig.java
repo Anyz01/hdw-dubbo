@@ -1,9 +1,8 @@
 package com.hdw.common.config.redis;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +19,11 @@ import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericToStringSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.springframework.data.redis.serializer.*;
 import redis.clients.jedis.JedisPoolConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -62,14 +55,18 @@ public class RedisConfig extends CachingConfigurerSupport {
 
 	@Primary
 	@Bean(name = "redisTemplate")
-	public RedisTemplate<Serializable, Serializable> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-		RedisTemplate<Serializable, Serializable> redisTemplate = new RedisTemplate<Serializable, Serializable>();
+	public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+		RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
-		JdkSerializationRedisSerializer jdkSerializationRedisSerializer = new JdkSerializationRedisSerializer();
-		redisTemplate.setKeySerializer(jdkSerializationRedisSerializer);
-		redisTemplate.setValueSerializer(jdkSerializationRedisSerializer);
-		redisTemplate.setHashKeySerializer(jdkSerializationRedisSerializer);
-		redisTemplate.setHashValueSerializer(jdkSerializationRedisSerializer);
+		
+		RedisSerializer<String> stringSerializer = new StringRedisSerializer();
+		RedisObjectSerializer redisObjectSerializer=new RedisObjectSerializer();
+		
+		redisTemplate.setKeySerializer(stringSerializer);
+		redisTemplate.setValueSerializer(redisObjectSerializer);
+		redisTemplate.setHashKeySerializer(stringSerializer);
+		redisTemplate.setHashValueSerializer(redisObjectSerializer);
+
 		return redisTemplate;
 	}
 
@@ -77,11 +74,14 @@ public class RedisConfig extends CachingConfigurerSupport {
 	public RedisTemplate<String, Object> stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
+		
 		RedisSerializer<String> stringSerializer = new StringRedisSerializer();
+		
 		redisTemplate.setKeySerializer(stringSerializer);
 		redisTemplate.setValueSerializer(stringSerializer);
 		redisTemplate.setHashKeySerializer(stringSerializer);
 		redisTemplate.setHashValueSerializer(stringSerializer);
+		
 		return redisTemplate;
 	}
 
@@ -89,12 +89,15 @@ public class RedisConfig extends CachingConfigurerSupport {
 	public RedisTemplate<String, Object> longRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
+		
 		RedisSerializer<String> stringSerializer = new StringRedisSerializer();
 		GenericToStringSerializer<Long> genericToStringSerializer = new GenericToStringSerializer<>(Long.class);
+		
 		redisTemplate.setKeySerializer(stringSerializer);
 		redisTemplate.setValueSerializer(genericToStringSerializer);
 		redisTemplate.setHashKeySerializer(stringSerializer);
 		redisTemplate.setHashValueSerializer(genericToStringSerializer);
+		
 		return redisTemplate;
 	}
 
@@ -102,17 +105,19 @@ public class RedisConfig extends CachingConfigurerSupport {
 	public RedisTemplate<String, Object> jsonRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
+		
 		Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(
 				Object.class);
 		ObjectMapper om = new ObjectMapper();
 		om.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
 		om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 		jackson2JsonRedisSerializer.setObjectMapper(om);
+		
 		redisTemplate.setKeySerializer(jackson2JsonRedisSerializer);
 		redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
 		redisTemplate.setHashKeySerializer(jackson2JsonRedisSerializer);
 		redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
-		redisTemplate.afterPropertiesSet();
+		
 		return redisTemplate;
 	}
 
@@ -124,7 +129,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 	 */
 	@Bean
 	public CacheManager cacheManager(
-			@Qualifier("redisTemplate") RedisTemplate<Serializable, Serializable> redisTemplate) {
+			@Qualifier("redisTemplate") RedisTemplate<Object, Object> redisTemplate) {
 		RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
 		rcm.setDefaultExpiration(600);
 		rcm.setUsePrefix(true);

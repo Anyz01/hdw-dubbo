@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head th:include="/header">
+    <title>资源管理-列表</title>
+</head>
+
+<body class="gray-bg">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>菜单管理</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row row-lg">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control" id="resourceName" placeholder="菜单名称" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <button type="submit" class="btn btn-sm btn-primary" onclick="Resource.search()">
+                                        <i class="fa fa-search">搜索</i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="hidden-xs" id="ResourceTableToolbar" role="group">
+                                <button class="btn btn-sm btn-primary" type="submit" onclick="Resource.openAddResource()">
+                                    <i class="fa fa-pencil"></i>添加</button>
+                                <button class="btn btn-sm btn-info" type="submit" onclick="Resource.openChangeResource()">
+                                    <i class="fa fa-paste"></i>修改</button>
+                                <button class="btn btn-sm btn-danger" type="submit" onclick="Resource.delResource()">
+                                    <i class="fa fa-cut"></i>删除</button>
+                            </div>
+                            <table id="ResourceTable" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:include="/footer"></div>
+    <script type="text/javascript" th:inline="javascript">
+        /**
+         * 角色管理的单例
+         */
+        var Resource = {
+            id: "ResourceTable",	//表格id
+            seItem: null,		//选中的条目
+            table: null,
+            layerIndex: -1
+        };
+
+        /**
+         * 初始化表格的列
+         */
+        Resource.initColumn = function () {
+            var columns = [
+                { field: 'selectItem', radio: true },
+                { title: 'id', field: 'id', visible: false, align: 'center', valign: 'middle' },
+                { title: '菜单名称', field: 'name', align: 'center', valign: 'middle', sortable: true, width: '17%' },
+                { title: '菜单介绍', field: 'description', align: 'center', valign: 'middle', sortable: true, width: '12%' },
+                { title: '菜单父编号', field: 'pid', align: 'center', valign: 'middle', sortable: true },
+                { title: '请求地址', field: 'url', align: 'center', valign: 'middle', sortable: true, width: '15%' },
+                { title: '排序', field: 'seq', align: 'center', valign: 'middle', sortable: true },
+                { title: '图标', field: 'icon', align: 'center', valign: 'middle', sortable: true },
+                { title: '资源类型', field: 'resourceType', align: 'center', valign: 'middle', sortable: true },
+                { title: '打开状态', field: 'openedName', align: 'center', valign: 'middle', sortable: true },
+                { title: '打开方式', field: 'openMode', align: 'center', valign: 'middle', sortable: true },
+                { title: '状态', field: 'statusName', align: 'center', valign: 'middle', sortable: true },
+                { title: '创建时间', field: 'createTime', align: 'center', valign: 'middle', sortable: true },
+                { title: '更新时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true }]
+            return columns;
+        };
+
+
+        /**
+         * 检查是否选中
+         */
+        Resource.check = function () {
+            var selected = $('#' + this.id).bootstrapTreeTable('getSelections');
+            if (selected.length == 0) {
+                hdw.info("请先选中表格中的某一记录！");
+                return false;
+            } else {
+                Resource.seItem = selected[0];
+                return true;
+            }
+        };
+
+        /**
+         * 点击添加菜单
+         */
+        Resource.openAddResource = function () {
+            var index = layer.open({
+                type: 2,
+                title: '添加菜单',
+                area: ['830px', '450px'], //宽高
+                fix: false, //不固定
+                maxmin: true,
+                content: basePath + 'resource/addPage'
+            });
+            this.layerIndex = index;
+        };
+
+        /**
+         * 点击修改
+         */
+        Resource.openChangeResource = function () {
+            if (this.check()) {
+                var index = layer.open({
+                    type: 2,
+                    title: '修改菜单',
+                    area: ['800px', '450px'], //宽高
+                    fix: false, //不固定
+                    maxmin: true,
+                    content: basePath + 'resource/editPage/' + this.seItem.id
+                });
+                this.layerIndex = index;
+            }
+        };
+
+        /**
+         * 删除
+         */
+        Resource.delResource = function () {
+            if (this.check()) {
+                var operation = function () {
+                    var ajax = new $ax(basePath + "resource/delete", function (data) {
+                        if (data.success) {
+                            hdw.success("删除成功!");
+                        } else {
+                            hdw.error("删除失败!" + data.msg + "!");
+                        }
+                        Resource.table.refresh();
+                    }, function (data) {
+                        hdw.error("删除失败!" + data.responseJSON.message + "!");
+                    });
+                    ajax.set("resourceId", Resource.seItem.id);
+                    ajax.start();
+                };
+
+                hdw.confirm("是否刪除该菜单?", operation);
+            }
+        };
+
+        /**
+         * 搜索
+         */
+        Resource.search = function () {
+            var queryData = {};
+
+            queryData['resourceName'] = $("#resourceName").val();
+
+            Resource.table.refresh({ query: queryData });
+        }
+
+        $(function () {
+            var defaultColunms = Resource.initColumn();
+            var table = new BSTreeTable(Resource.id, basePath + "resource/treeGrid", defaultColunms);
+            table.setExpandColumn(2);
+            table.setIdField("id");
+            table.setCodeField("id");
+            table.setParentCodeField("pid");
+            table.setExpandAll(true);
+            table.init();
+            Resource.table = table;
+        });
+
+    </script>
+</body>
+
+</html>

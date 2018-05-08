@@ -266,8 +266,8 @@ public final class SecurityUtil {
 	public static void main(String[] args) throws Exception {
 		System.out.println(encryptAes("123456"));
 		System.out.println(decryptAes("SOe5LfrpIM4RO6/gZuURlw=="));
-		System.out.println(encryptDes("123456"));
-		System.out.println(decryptDes("7S9yQ5Pm9/e="));
+		System.out.println(encryptDes("Hdw@2017"));
+		System.out.println(decryptDes("w0A0Gdpt/lhCbNU+agGPz7=="));
 		System.out.println(encryptMd5("123456"));
 		System.out.println(encryptSHA("1"));
 		Map<String, Object> key = RSACoder.initKey();

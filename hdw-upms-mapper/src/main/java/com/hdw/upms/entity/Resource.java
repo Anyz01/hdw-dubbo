@@ -56,15 +56,15 @@ public class Resource extends Model<Resource> {
      */
 	private Integer seq;
     /**
-     * 状态
+     * 状态(0-开启，1-关闭)
      */
 	private Integer status;
     /**
-     * 打开状态
+     * 打开状态(0-开启，1-关闭)
      */
 	private Integer opened;
     /**
-     * 资源类别
+     * 资源类别(0-菜单，1-方法)
      */
 	@TableField("resource_type")
 	private Integer resourceType;
@@ -78,6 +78,12 @@ public class Resource extends Model<Resource> {
      */
 	@TableField("update_time")
 	private Date updateTime;
+	
+	/**
+	 * 父级菜单名称
+	 */
+	@TableField(exist=false)
+	private String pname;
 
 
 	public Long getId() {
@@ -182,6 +188,14 @@ public class Resource extends Model<Resource> {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+	
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
 	}
 
 	@Override

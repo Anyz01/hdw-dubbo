@@ -3,6 +3,12 @@ package com.hdw.common.csrf;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 
+ * @Descriptin CsrfTokenRepository
+ * @author TuMinglong
+ * @Date 2018年4月28日 上午9:55:46
+ */
 public interface CsrfTokenRepository {
 	/**
 	 * Generates a {@link CsrfTokenBean}

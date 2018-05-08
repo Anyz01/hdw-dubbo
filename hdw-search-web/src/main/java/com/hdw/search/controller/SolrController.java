@@ -28,7 +28,7 @@ import com.hdw.search.api.ISearchApiService;
 @RequestMapping("/solr")
 public class SolrController extends BaseController{
 	
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20881")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20882")
 	private ISearchApiService searchApiService;
 	
 	 /** 

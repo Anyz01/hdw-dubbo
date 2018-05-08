@@ -4,13 +4,15 @@ import com.baomidou.mybatisplus.service.IService;
 import com.hdw.common.result.PageInfo;
 import com.hdw.upms.entity.SysLog;
 
+
 /**
- *
- * SysLog 表数据服务层接口
- *
+ * 
+ * @Descriptin 日志接口实现层
+ * @author TuMinglong
+ * @Date 2018年5月6日 下午8:35:34
  */
 public interface ISysLogService extends IService<SysLog> {
 
-    void selectDataGrid(PageInfo pageInfo);
-
+    PageInfo selectDataGrid(PageInfo pageInfo);
+    
 }

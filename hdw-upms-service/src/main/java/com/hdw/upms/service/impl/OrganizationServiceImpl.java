@@ -1,16 +1,15 @@
 package com.hdw.upms.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.alibaba.dubbo.config.annotation.Service;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.hdw.common.result.Tree;
+import com.hdw.common.result.ZTreeNode;
 import com.hdw.upms.entity.Organization;
 import com.hdw.upms.mapper.OrganizationMapper;
 import com.hdw.upms.service.IOrganizationService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -33,28 +32,14 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
     private OrganizationMapper organizationMapper;
     
     @Override
-    public List<Tree> selectTree() {
-        List<Organization> organizationList = selectTreeGrid();
-
-        List<Tree> trees = new ArrayList<Tree>();
-        if (organizationList != null) {
-            for (Organization organization : organizationList) {
-                Tree tree = new Tree();
-                tree.setId(organization.getId());
-                tree.setText(organization.getName());
-                tree.setIconCls(organization.getIcon());
-                tree.setPid(organization.getPid());
-                trees.add(tree);
-            }
-        }
-        return trees;
+    public List<ZTreeNode> selectTree() {
+         return organizationMapper.selectTree();
     }
 
     @Override
-    public List<Organization> selectTreeGrid() {
-        EntityWrapper<Organization> wrapper = new EntityWrapper<Organization>();
-        wrapper.orderBy("seq");
-        return organizationMapper.selectList(wrapper);
+    public List<Map<String,Object>> selectTreeGrid(Map<String,Object> par) {
+        
+        return organizationMapper.selectTreeGrid(par);
     }
 
 

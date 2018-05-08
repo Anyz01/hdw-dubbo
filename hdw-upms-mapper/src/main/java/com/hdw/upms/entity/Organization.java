@@ -50,11 +50,19 @@ public class Organization extends Model<Organization> {
      * 排序
      */
 	private Integer seq;
+	
+	/**
+     * 父级名称
+     */
+	@TableField(exist=false)
+	private String pname;
+    
     /**
      * 记录创建时间
      */
 	@TableField("create_time")
 	private Date createTime;
+	
     /**
      * 记录最后修改时间
      */
@@ -132,6 +140,14 @@ public class Organization extends Model<Organization> {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+	
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
 	}
 
 	@Override

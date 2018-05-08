@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head th:include="/header">
+    <title>企业管理-列表</title>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>企业管理</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row row-lg">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-1 col-lg-1 control-label">行业:</label>
+                                    <div class="col-sm-2 col-lg-2">
+                                        <select id="sel_menu1" name="industryCode" class="form-control"></select>
+                                    </div>
+                                    <label class="col-sm-1 col-lg-1 control-label">区域:</label>
+                                    <div class="col-sm-2 col-lg-2">
+                                        <select id="sel_menu2" name="areaCode" class="form-control"></select>
+                                    </div>
+                                    <label class="col-sm-1 col-lg-1 control-label">企业:</label>
+                                    <div class="col-sm-2 col-lg-2">
+                                        <select id="sel_menu3" name="enterpriseId" class="form-control"></select>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-3">
+                                        <button type="submit" class="btn btn-sm btn-primary" onclick="Enterprise.search()">
+                                            <i class="fa fa-search">搜索</i>
+                                        </button>
+                                        <button type="submit" class="btn btn-sm btn-primary" onclick=" Enterprise.resetSearch()">
+                                            <i class="fa fa-fa-trash">重置</i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="hidden-xs" id="enterpriseTableToolbar" Enterprise="group">
+                                    <button class="btn btn-sm btn-primary" type="submit" onclick="Enterprise.openAddEnterprise()">
+                                        <i class="fa fa-pencil"></i>添加</button>
+                                    <button class="btn btn-sm btn-info" type="submit" onclick="Enterprise.openChangeEnterprise()">
+                                        <i class="fa fa-paste"></i>修改</button>
+                                    <button class="btn btn-sm btn-danger" type="submit" onclick="Enterprise.delEnterprise()">
+                                        <i class="fa fa-cut"></i>删除</button>
+                                </div>
+                                <table id="enterpriseTable" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:include="/footer"></div>
+    <script type="text/javascript" th:inline="javascript">
+        /**
+        * 日志管理的单例
+        */
+        var Enterprise = {
+            id: "enterpriseTable",	//表格id
+            seItem: null,		//选中的条目
+            table: null,
+            layerIndex: -1
+        };
+
+        /**
+         * 初始化表格的列
+         */
+        Enterprise.initColumn = function () {
+            var columns = [
+                { field: 'selectItem', radio: true },
+                { title: 'id', field: 'id', visible: false, align: 'center', valign: 'middle' },
+                { title: '企业名', field: 'enterpriseName', align: 'center', valign: 'middle', sortable: true },
+                { title: '所属行业', field: 'industryName', align: 'center', valign: 'middle', sortable: true },
+                { title: '所属区域', field: 'areaName', align: 'center', valign: 'middle', sortable: true },
+                { title: '风险清单', field: 'riskModelList', align: 'center', valign: 'middle', sortable: true },
+                { title: '负责人姓名', field: 'mainPerson', align: 'center', valign: 'middle', sortable: true },
+                { title: '企业负责人移动电话号码', field: 'mainPersonMobile', align: 'center', valign: 'middle', sortable: true },
+                { title: '安全负责人姓名', field: 'safePerson', align: 'center', valign: 'middle', sortable: true },
+                { title: '安全负责人移动电话号码', field: 'safePersonMobile', align: 'center', valign: 'middle', sortable: true },
+                {
+                    title: '创建时间', field: 'createTime', align: 'center', valign: 'middle', sortable: true, formatter: function (value, row, index) {
+                        return hdw.formatDate(value);
+                    }
+                }, {
+                    title: '创建时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, formatter: function (value, row, index) {
+                        return hdw.formatDate(value);
+                    }
+                }]
+            return columns;
+        };
+
+
+        /**
+         * 检查是否选中
+         */
+        Enterprise.check = function () {
+            var selected = $('#' + this.id).bootstrapTable('getSelections');
+            if (selected.length == 0) {
+                hdw.info("请先选中表格中的某一记录！");
+                return false;
+            } else {
+                Enterprise.seItem = selected[0];
+                return true;
+            }
+        };
+
+        /**
+        * 点击添加企业
+        */
+        Enterprise.openAddEnterprise = function () {
+            var index = layer.open({
+                type: 2,
+                title: '添加企业',
+                area: ['830px', '450px'], //宽高
+                fix: false, //不固定
+                maxmin: true,
+                content: basePath + 'enterprise/addPage'
+            });
+            this.layerIndex = index;
+        };
+
+        /**
+         * 点击修改
+         */
+        Enterprise.openChangeEnterprise = function () {
+            if (this.check()) {
+                var index = layer.open({
+                    type: 2,
+                    title: '修改企业',
+                    area: ['800px', '450px'], //宽高
+                    fix: false, //不固定
+                    maxmin: true,
+                    content: basePath + 'enterprise/editPage/' + this.seItem.id
+                });
+                this.layerIndex = index;
+            }
+        };
+
+        /**
+         * 删除
+         */
+        Enterprise.delEnterprise = function () {
+            if (this.check()) {
+                var operation = function () {
+                    var ajax = new $ax(basePath + "enterprise/delete", function (data) {
+                        if (data.success) {
+                            hdw.success("删除成功!");
+                        } else {
+                            hdw.error("删除失败!" + data.msg + "!");
+                        }
+                        Enterprise.table.refresh();
+                    }, function (data) {
+                        hdw.error("删除失败!" + data.responseJSON.message + "!");
+                    });
+                    ajax.set("dicId", Enterprise.seItem.id);
+                    ajax.start();
+                };
+
+                hdw.confirm("是否刪除该菜单?", operation);
+            }
+        };
+
+        /**
+         * 重置
+         */
+        Enterprise.resetSearch = function () {
+            $("#sel_menu1").val("");
+            $("#sel_menu1").val("");
+            $("#sel_menu1").val("");
+            Enterprise.search();
+        }
+
+        /**
+         * 搜索
+         */
+        Enterprise.search = function () {
+            var queryData = {};
+            queryData['industryCode'] = $("#sel_menu1").val();
+            queryData['areaCode'] = $("#sel_menu2").val();
+            queryData['enterpriseId'] = $("#sel_menu3").val();
+            Enterprise.table.refresh({ query: queryData });
+        }
+
+        $(function () {
+            var defaultColunms = Enterprise.initColumn();
+            var table = new BSTable(Enterprise.id, basePath + "enterprise/dataGrid", defaultColunms);
+            table.setPaginationType("server");
+            table.init();
+            Enterprise.table = table;
+
+
+            var S2L = new $Select2List("sel_menu1", basePath + "dic/select2Tree/9");
+            S2L.init();
+            var S2L2 = new $Select2List("sel_menu2", basePath + "dic/select2Tree/16");
+            S2L2.init();
+            var S2L3 = new $Select2List("sel_menu3", basePath + "enterprise/select2Tree");
+            S2L3.init();
+            
+            var url="";
+            var industryCode = "";
+            var areaCode = "";
+            $("#sel_menu1").on("change", function (e) {
+                url = basePath + "enterprise/select2Tree";
+                industryCode = $("#sel_menu1").val();
+                areaCode = $("#sel_menu2").val();
+                console.log("到这里：" + industryCode + " " + areaCode);
+                if (industryCode != '') {
+                    url += "?industryCode=" + industryCode;
+                }
+                if (areaCode != '') {
+                    url += "?areaCode=" + areaCode;
+                }
+                if (industryCode != '' && areaCode != '') {
+                    url += "?industryCode=" + industryCode + "&areaCode=" + areaCode;
+                }
+                S2L3 = new $Select2List("sel_menu3", url);
+                S2L3.init();
+            });
+            $("#sel_menu2").on("change", function (e) {
+                url = basePath + "enterprise/select2Tree";
+                industryCode = $("#sel_menu1").val();
+                areaCode = $("#sel_menu2").val();
+                console.log("到这里2：" + industryCode + " " + areaCode);
+                if (industryCode != '') {
+                    url += "?industryCode=" + industryCode;
+                }
+                if (areaCode != '') {
+                    url += "?areaCode=" + areaCode;
+                }
+                if (industryCode != '' && areaCode != '') {
+                    url += "?industryCode=" + industryCode + "&areaCode=" + areaCode;
+                }
+                S2L3 = new $Select2List("sel_menu3", url);
+                S2L3.init();
+            });
+        });
+    </script>
+</body>
+
+</html>

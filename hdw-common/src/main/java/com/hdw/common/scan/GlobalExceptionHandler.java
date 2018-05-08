@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.validation.BindException;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
@@ -46,8 +44,7 @@ public class GlobalExceptionHandler {
 	private static final String logExceptionFormat = "全局异常捕获: Code: %s Detail: %s";
 
 	// 运行异常
-	@ExceptionHandler(RuntimeException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(value = RuntimeException.class)
 	@ResponseBody
 	public Result runtimeExecptionHandler(RuntimeException ex) {
 		return resultFormat(1, ex);
@@ -55,7 +52,6 @@ public class GlobalExceptionHandler {
 
 	// 空指针异常
 	@ExceptionHandler(NullPointerException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result nullPointerExceptionHandler(NullPointerException ex) {
 		return resultFormat(2, ex);
@@ -63,7 +59,6 @@ public class GlobalExceptionHandler {
 
 	// 类型转换异常
 	@ExceptionHandler(ClassCastException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result classCastExceptionHandler(ClassCastException ex) {
 		return resultFormat(3, ex);
@@ -71,7 +66,6 @@ public class GlobalExceptionHandler {
 
 	// IO异常
 	@ExceptionHandler(IOException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result iOExceptionHandler(IOException ex) {
 		return resultFormat(4, ex);
@@ -79,7 +73,6 @@ public class GlobalExceptionHandler {
 
 	// 未知方法异常
 	@ExceptionHandler(NoSuchMethodException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result noSuchMethodExceptionHandler(NoSuchMethodException ex) {
 		return resultFormat(5, ex);
@@ -87,7 +80,6 @@ public class GlobalExceptionHandler {
 
 	// 数组越界异常
 	@ExceptionHandler(IndexOutOfBoundsException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result indexOutOfBoundsExceptionHandler(IndexOutOfBoundsException ex) {
 		return resultFormat(6, ex);
@@ -95,7 +87,7 @@ public class GlobalExceptionHandler {
 
 	// 400错误
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	
 	@ResponseBody
 	public Result requestNotReadable(HttpMessageNotReadableException ex) {
 		System.out.println("400..requestNotReadable");
@@ -104,7 +96,6 @@ public class GlobalExceptionHandler {
 
 	// 400错误
 	@ExceptionHandler(TypeMismatchException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result requestTypeMismatch(TypeMismatchException ex) {
 		System.out.println("400..TypeMismatchException");
@@ -113,7 +104,6 @@ public class GlobalExceptionHandler {
 
 	// 400错误
 	@ExceptionHandler(MissingServletRequestParameterException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result requestMissingServletRequest(MissingServletRequestParameterException ex) {
 		System.out.println("400..MissingServletRequestParameterException");
@@ -122,7 +112,6 @@ public class GlobalExceptionHandler {
 
 	// 405错误
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result request405(HttpRequestMethodNotSupportedException ex) {
 		return resultFormat(10, ex);
@@ -130,7 +119,6 @@ public class GlobalExceptionHandler {
 
 	// 406错误
 	@ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result request406(HttpMediaTypeNotAcceptableException ex) {
 		return resultFormat(11, ex);
@@ -138,35 +126,32 @@ public class GlobalExceptionHandler {
 
 	// 500错误
 	@ExceptionHandler({ ConversionNotSupportedException.class, HttpMessageNotWritableException.class })
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result server500(RuntimeException ex) {
 		return resultFormat(12, ex);
 	}
 
 	// 栈溢出
-	@ExceptionHandler({ StackOverflowError.class })
+	@ExceptionHandler(StackOverflowError.class)
+	@ResponseBody
 	public Result requestStackOverflow(StackOverflowError ex) {
 		return resultFormat(13, ex);
 	}
 
 	// hibernate validator异常
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
 		return resultFormat(14, ex);
 	}
 
 	@ExceptionHandler(BindException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result bindExceptionHandler(BindException ex) {
 		return resultFormat(15, ex);
 	}
 
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
 	public Result maxUploadSizeExceededExceptionHandler(MaxUploadSizeExceededException ex) {
 		return resultFormat(16, ex);

@@ -61,6 +61,12 @@ public class SysDic extends Model<SysDic> {
      */
 	@TableField("update_user")
 	private String updateUser;
+	
+	/**
+     * 父级名称
+     */
+	@TableField(exist=false)
+	private String pname;
 
 
 	public Long getId() {
@@ -125,6 +131,14 @@ public class SysDic extends Model<SysDic> {
 
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
+	}
+	
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
 	}
 
 	@Override

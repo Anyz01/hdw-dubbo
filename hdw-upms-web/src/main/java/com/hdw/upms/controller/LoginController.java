@@ -1,16 +1,20 @@
 package com.hdw.upms.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.hdw.common.base.BaseController;
+import com.hdw.common.csrf.CsrfToken;
+import com.hdw.common.result.MenuNode;
+import com.hdw.upms.entity.vo.UserVo;
+import com.hdw.upms.service.IResourceService;
+import com.hdw.upms.shiro.IncorrectCaptchaException;
+import com.hdw.upms.shiro.ShiroKit;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hdw.common.csrf.CsrfToken;
-import com.hdw.upms.shiro.captcha.DreamCaptcha;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 
@@ -33,18 +35,10 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(value = "登录接口类", tags = { "登录接口" })
 @Controller
-public class LoginController extends CommonController {
-	@Autowired
-	private DreamCaptcha dreamCaptcha;
+public class LoginController extends BaseController {
 
-	/**
-	 * 图形验证码
-	 */
-	@ApiOperation(value = "图形验证码", notes = "图形验证码")
-	@GetMapping("captcha.jpg")
-	public void captcha(HttpServletRequest request, HttpServletResponse response) {
-		dreamCaptcha.generate(request, response);
-	}
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
+	private IResourceService resourceService;
 
 	/**
 	 * 首页
@@ -64,6 +58,11 @@ public class LoginController extends CommonController {
 	 */
 	@GetMapping("/index")
 	public String index(Model model) {
+		UserVo userVo = ShiroKit.getUser();
+		List<MenuNode> list = resourceService.selectTree(userVo);
+		model.addAttribute("loginName", userVo.getLoginName());
+		model.addAttribute("roleName", userVo.getRolesList().get(0).getDescription());
+		model.addAttribute("resource", list);
 		return "index";
 	}
 
@@ -99,37 +98,30 @@ public class LoginController extends CommonController {
 	@CsrfToken(remove = true)
 	@ResponseBody
 	public Object loginPost(HttpServletRequest request, HttpServletResponse response, String username, String password,
-			String captcha, @RequestParam(value = "rememberMe", defaultValue = "0") Integer rememberMe) {
+			String captcha, @RequestParam(value = "rememberMe", defaultValue = "0") Integer rememberMe)
+			throws RuntimeException {
 		logger.info("POST请求登录");
-		// 改为全部抛出异常，避免ajax csrf token被刷新
-		if (StringUtils.isBlank(username)) {
-			throw new RuntimeException("用户名不能为空");
-		}
-		if (StringUtils.isBlank(password)) {
-			throw new RuntimeException("密码不能为空");
-		}
-		if (StringUtils.isBlank(captcha)) {
-			throw new RuntimeException("验证码不能为空");
-		}
-		if (!dreamCaptcha.validate(request, response, captcha)) {
-			throw new RuntimeException("验证码错误");
-		}
-		Subject user = SecurityUtils.getSubject();
-		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-		// 设置记住密码
-		token.setRememberMe(1 == rememberMe);
-		try {
-			user.login(token);
-			return renderSuccess();
-		} catch (UnknownAccountException e) {
-			throw new RuntimeException("账号不存在！", e);
-		} catch (DisabledAccountException e) {
-			throw new RuntimeException("账号未启用！", e);
-		} catch (IncorrectCredentialsException e) {
-			throw new RuntimeException("密码错误！", e);
-		} catch (Throwable e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
+		//登录失败从request中获取shiro处理的异常信息。shiroLoginFailure:就是shiro异常类的全类名.
+        Object exception = request.getAttribute("shiroLoginFailure");
+        String msg;
+        if (exception != null) {
+            if (UnknownAccountException.class.isInstance(exception)) {
+                msg = "用户名不正确，请重新输入";
+            } else if (IncorrectCredentialsException.class.isInstance(exception)) {
+                msg = "密码错误，请重新输入";
+            } else if (IncorrectCaptchaException.class.isInstance(exception)) {
+                msg = "验证码错误";
+            } else if (AuthenticationException.class.isInstance(exception)) {
+                msg = "该用户已被禁用，如有疑问请联系系统管理员。";
+            } else {
+                msg = "发生未知错误，请联系管理员。";
+            }
+           
+            return renderError(msg);
+        }else {
+        	return renderSuccess();
+        }
+     
 	}
 
 	/**
@@ -144,7 +136,7 @@ public class LoginController extends CommonController {
 		if (SecurityUtils.getSubject().isAuthenticated() == false) {
 			return "redirect:/login";
 		}
-		return "unauth";
+		return "403";
 	}
 
 	/**

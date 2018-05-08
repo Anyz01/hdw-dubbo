@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hdw.upms.mapper.RoleMapper">
 
-   <!-- 通用查询映射结果 -->
+	<!-- 通用查询映射结果 -->
 	<resultMap id="BaseResultMap" type="com.hdw.upms.entity.Role">
 		<id column="id" property="id" />
 		<result column="name" property="name" />
@@ -13,60 +13,126 @@
 		<result column="update_time" property="updateTime" />
 	</resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, name, seq, description, status, create_time AS createTime, update_time AS updateTime
-    </sql>
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, name, seq, description, status, create_time AS
+		createTime,
+		update_time AS updateTime
+	</sql>
 
-    <select id="selectResourceIdListByRoleId" resultType="java.lang.Long" parameterType="java.lang.Long">
-        SELECT
-            e.resource_id AS id
-        FROM
-            role r
-        LEFT JOIN role_resource e ON r.id = e.role_id
-        WHERE
-            r.id = #{id}
-    </select>
+	<select id="selectResourceIdListByRoleId"
+		resultType="java.lang.Long" parameterType="java.lang.Long">
+		SELECT
+		e.resource_id AS id
+		FROM
+		t_sys_role r
+		LEFT JOIN t_sys_role_resource e ON r.id = e.role_id
+		WHERE
+		r.id =
+		#{id}
+	</select>
 
-    <select id="selectResourceListByRoleIdList" resultType="Resource"
-            parameterType="java.lang.Long">
-        SELECT
-            DISTINCT s.id AS id,
-            s.NAME AS 'name',
-            s.url AS url,
-            s.description AS description,
-            s.icon AS icon,
-            s.pid AS pid,
-            s.seq AS seq,
-            s.STATUS AS 'status',
-            s.open_mode AS openMode,
-            s.opened as opened,
-            s.resource_type AS resourceType,
-            s.create_time AS createTime,
-            s.update_time AS updateTime
-        FROM
-            t_sys_role r
-        LEFT JOIN t_sys_role_resource e ON r.id = e.role_id
-        LEFT JOIN t_sys_resource s ON e.resource_id = s.id
-        WHERE
-            r.id in  
-            <foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
-                #{item}
-            </foreach>
-        AND s.resource_type = 0
-        ORDER BY seq
-    </select>
+	<select id="selectResourceListByRoleIdList"
+		resultType="Resource" parameterType="java.lang.Long">
+		SELECT
+		DISTINCT s.id AS id,
+		s.NAME AS 'name',
+		s.url AS url,
+		s.description
+		AS description,
+		s.icon AS icon,
+		s.pid AS pid,
+		s.seq AS seq,
+		s.STATUS AS
+		'status',
+		s.open_mode AS openMode,
+		s.opened as opened,
+		s.resource_type AS
+		resourceType,
+		s.create_time AS createTime,
+		s.update_time AS updateTime
+		FROM
+		t_sys_role r
+		LEFT JOIN t_sys_role_resource e ON r.id = e.role_id
+		LEFT JOIN t_sys_resource s ON e.resource_id = s.id
+		WHERE
+		r.id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		AND s.resource_type = 0
+		ORDER BY seq
+	</select>
 
-    <select id="selectResourceListByRoleId" resultType="java.util.HashMap" parameterType="java.lang.Long">
-        SELECT
-            e.id AS id,
-            s.url AS url
-        FROM
-            t_sys_role r
-        LEFT JOIN t_sys_role_resource e ON r.id = e.role_id
-        LEFT JOIN t_sys_resource s ON e.resource_id = s.id
-        WHERE
-            r.id = #{id}
-    </select>
+	<select id="selectResourceListByRoleIdAndPidList"
+		resultType="Resource">
+		SELECT
+		DISTINCT s.id AS id,
+		s.NAME AS 'name',
+		s.url AS url,
+		s.description
+		AS description,
+		s.icon AS icon,
+		s.pid AS pid,
+		s.seq AS seq,
+		s.STATUS AS
+		'status',
+		s.open_mode AS openMode,
+		s.opened as opened,
+		s.resource_type AS
+		resourceType,
+		s.create_time AS createTime,
+		s.update_time AS updateTime
+		FROM
+		t_sys_role r
+		LEFT JOIN t_sys_role_resource e ON r.id = e.role_id
+		LEFT JOIN t_sys_resource s ON e.resource_id = s.id
+		WHERE
+		r.id in
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		AND s.resource_type = 0
+		AND s.pid=#{pid}
+		AND r.status = 0
+		ORDER BY seq
+	</select>
+
+	<select id="selectResourceListByRoleId"
+		resultType="java.util.HashMap" parameterType="java.lang.Long">
+		SELECT
+		e.id AS id,
+		s.url AS
+		url
+		FROM
+		t_sys_role r
+		LEFT JOIN t_sys_role_resource e ON r.id = e.role_id
+		LEFT JOIN t_sys_resource s ON e.resource_id = s.id
+		WHERE
+		r.id = #{id}
+	</select>
+
+	<select id="selectRolePage" parameterType="map" resultType="map">
+		SELECT
+		t.id,
+		t.name,
+		t.seq,
+		t.description,
+		t. status,
+		t.create_time AS createTime,
+		t.update_time AS updateTime
+		FROM
+		t_sys_role t
+		<where>
+			<if test="id!=null">
+				t.id=#{id}
+			</if>
+			<if test="name!=null and name!='' ">
+				and t.name like '%${name}%'
+			</if>
+		</where>
+	</select>
 
 </mapper>

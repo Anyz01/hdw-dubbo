@@ -1,5 +1,6 @@
 package com.hdw.common.result;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,23 +9,24 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * 
- * @description TreeVo
+ * @Descriptin TreeVo
  * @author TuMinglong
- * @date 2017年10月2日 下午3:46:23
- *
+ * @Date 2018年5月6日 下午12:41:37
  */
-public class Tree implements java.io.Serializable {
+public class Tree implements Serializable {
 
     private static final long serialVersionUID = 980682543891282923L;
+    
     private Long id;
+    private Long pId;
     private String text;
-    private String state = "open";// open,closed
+    private boolean open = false;
     private boolean checked = false;
     private Object attributes;
     @JsonInclude(Include.NON_NULL)
     private List<Tree> children; // null不输出
     private String iconCls;
-    private Long pid;
+   
     /**
      * ajax,iframe,
      */
@@ -44,18 +46,6 @@ public class Tree implements java.io.Serializable {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-    
-    public void setState(Integer opened) {
-        this.state = (null != opened && opened == 1) ? "open" : "closed";
     }
     
     public boolean isChecked() {
@@ -90,12 +80,12 @@ public class Tree implements java.io.Serializable {
         this.iconCls = iconCls;
     }
 
-    public Long getPid() {
-        return pid;
+    public Long getPId() {
+        return pId;
     }
 
-    public void setPid(Long pid) {
-        this.pid = pid;
+    public void setPId(Long pId) {
+        this.pId = pId;
     }
 
     public String getOpenMode() {
@@ -105,5 +95,15 @@ public class Tree implements java.io.Serializable {
     public void setOpenMode(String openMode) {
         this.openMode = openMode;
     }
+
+	public boolean isOpen() {
+		return open;
+	}
+
+	public void setOpen(boolean open) {
+		this.open = open;
+	}
+    
+    
 
 }

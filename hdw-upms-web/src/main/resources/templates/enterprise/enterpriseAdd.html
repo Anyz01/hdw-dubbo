@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head th:include="/header">
+    <title>部门管理-添加</title>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form class="form-horizontal" id="fm" data-validator-option="{timely:3, focusCleanup:true}">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                    <input type="hidden" id="id" name="id" value="">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">企业名称：</label>
+                        <div class="col-sm-8">
+                            <input id="enterpriseName" name="enterpriseName" type="text" class="form-control" data-rule="required;length(~50)">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">负责人姓名：</label>
+                        <div class="col-sm-8">
+                            <input id="mainPerson" name="mainPerson" type="text" class="form-control" data-rule="required;length(~30)">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">企业负责人移动电话号码：</label>
+                        <div class="col-sm-8">
+                            <input id="code" name="mainPersonMobile" type="text" class="form-control" data-rule="required;length(~12)">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">安全负责人姓名：</label>
+                        <div class="col-sm-8">
+                            <input id="safePerson" name="safePerson" type="text" class="form-control" data-rule="required;length(~30)">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">安全负责人移动电话号码：</label>
+                        <div class="col-sm-8">
+                            <input id="safePersonMobile" name="safePersonMobile" type="text" class="form-control" data-rule="required;length(~12)">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">风险清单:</label>
+                        <div class="col-sm-8">
+                            <input id="riskModelList" name="riskModelList" type="text" class="form-control" data-rule="required;">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">所属行业:</label>
+                        <div class="col-sm-8">
+                            <select id="sel_menu1" name="industryCode" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">所属区域:</label>
+                        <div class="col-sm-8">
+                            <select id="sel_menu2" name="areaCode" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="text-center">
+                            <button class="btn btn-primary" type="submit">保存</button>
+                            <button class="btn btn-white" type="reset">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div th:include="/footer"></div>
+    <script type="text/javascript" th:inline="javascript">
+
+        $(function () {
+            var S2L = new $Select2List("sel_menu1", basePath + "dic/select2Tree/9");
+            S2L.init();
+            var S2L2 = new $Select2List("sel_menu2", basePath + "dic/select2Tree/16");
+            S2L2.init();
+        });
+
+        $("#fm").validator({
+            valid: function (form) {
+                var me = this;
+                // 提交表单之前，hold住表单，防止重复提交
+                me.holdSubmit();
+                $.ajax({
+                    url: basePath + "enterprise/edit",
+                    data: $(form).serialize(),
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.success) {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.msg(data.msg, {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                window.parent.location.reload();
+                                parent.layer.close(index);
+                            });
+
+                        } else {
+                            parent.layer.msg(data.msg, {
+                                icon: 2,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            });
+                            me.holdSubmit(false);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

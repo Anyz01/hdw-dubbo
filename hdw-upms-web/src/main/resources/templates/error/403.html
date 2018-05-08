@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="header">
+    <title>403</title>
+</head>
+<body class="gray-bg">
+<div class="middle-box text-center animated fadeInDown">
+    <h1>403</h1>
+    <h3 class="font-bold">没有权限</h3>
+
+    <div class="error-desc">
+        <br/>您可以返回登录页看看
+        <br/><a th:href="@{login.html}" class="btn btn-primary m-t">主页</a>
+    </div>
+</div>
+<script th:src="@{'/js/jquery.min.js?v=2.1.4'}"></script>
+<script th:src="@{'/js/bootstrap.min.js?v=3.3.6'}"></script>
+</body>
+</html>

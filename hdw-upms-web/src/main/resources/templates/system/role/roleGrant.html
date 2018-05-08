@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head th:include="/header">
+    <title>角色管理-授权</title>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox-content">
+            <form method="post" class="form form-horizontal">
+                <div id="resourceTree" class="ztree"></div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="text-center">
+                        <button class="btn btn-primary" type="button" onclick="Resource.update()">保存</button>
+                        <button class="btn btn-white" type="button" onclick="Resource.close()">关闭</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:include="/footer"></div>
+    <script type="text/javascript" th:inline="javascript">
+        var Resource = {
+            roleId:[[${ roleId }]]
+        };
+        var setting = {
+            view: {
+                showLine: true,                  //是否显示节点间的连线  
+                checkable: true,                  //每个节点上是否显示 CheckBox
+                showIcon: true
+            },
+            check: {
+                enable: true,
+                chkStyle: "checkbox",
+                chkboxType: { "Y": "ps", "N": "ps" }
+            },
+            data: {
+    			simpleData: {
+    				enable: true,			//数据是否采用简单 Array 格式，默认false
+    				idKey: "id",
+    				pIdKey: "pId",
+    				rootPId: 0
+    			}
+            }
+        };
+
+        $(function () {
+            var ztree = new $ZTree("resourceTree", basePath + "role/findResourceIdListByRoleId/" + Resource.roleId);
+            ztree.setSettings(setting);
+            ztree.init();
+            instance = ztree;
+        });
+
+        Resource.update = function () {
+            
+            var nodes = instance.getCheckBoxId();
+            var arr = [];
+            for (var i = 0; i < nodes.length; i++) {
+                arr.push(nodes[i].id);
+            }
+            $.ajax({
+                url: basePath + "role/grant",
+                type: "post",
+                dataType: 'json',
+                data: { "roleId": this.roleId, "resourceIds": arr.join() },
+                success: function (data) {
+                    if (data.success) {
+                    	var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.msg(data.msg, function () {
+                            parent.layer.close(index);
+                        });
+                    } else {
+                        parent.layer.msg(data.msg);
+                    }
+                }
+            });
+        }
+
+        //关闭窗口
+        Resource.close = function () {
+            //获取iframe层的索引
+            var index = parent.layer.getFrameIndex(window.name);
+            //ifram层关闭自身，传入索引
+            parent.layer.close(index);
+        }
+    </script>
+</body>
+</html>

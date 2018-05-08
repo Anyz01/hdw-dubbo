@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
  * @author TuMinglong
  * @date 2018年3月6日 上午9:59:38
  */
+@Component
 public class CsrfInterceptor extends HandlerInterceptorAdapter {
 	private static final Logger logger = LoggerFactory.getLogger(CsrfInterceptor.class);
 	

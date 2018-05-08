@@ -1,5 +1,6 @@
 package com.hdw.common.result;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -8,16 +9,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 
- * @description 分页实体类 (结合jqery easyui、bootstrap table)
+ * @Descriptin PageInfo 分页实体类 (结合EasyUI、Jquery Table)
  * @author TuMinglong
- * @date 2018年1月24日 下午4:09:35
+ * @Date 2018年5月7日 下午4:23:03
  */
 @SuppressWarnings("rawtypes")
-public class PageInfo {
+public class PageInfo implements Serializable{
 
-    private final static int PAGESIZE = 10; //默认显示的记录数 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-    private Long total; // 总记录 
+	private final static int PAGESIZE = 10; //默认显示的记录数 
+
+    private long total; // 总记录 
     private List rows; //显示的记录  
 
     @JsonIgnore
@@ -45,7 +51,7 @@ public class PageInfo {
             this.nowpage = 1;
         } else {
             //当前页
-            this.nowpage = nowpage;
+            this.nowpage = nowpage/pagesize+1;;
         }
         //记录每页显示的记录数  
         if (pagesize < 0) {
@@ -66,11 +72,11 @@ public class PageInfo {
         this.order = order;
     }
 
-    public Long getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(Long total) {
+    public void setTotal(long total) {
         this.total = total;
     }
 
