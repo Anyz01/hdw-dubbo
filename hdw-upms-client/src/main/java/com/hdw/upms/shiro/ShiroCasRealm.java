@@ -21,16 +21,15 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
-import org.springframework.stereotype.Component;
 
-import java.util.LinkedHashMap;
+import java.util.*;
 
-@Component
+
 public class ShiroCasRealm extends Pac4jRealm {
 
 	private static final Logger LOGGER = LogManager.getLogger(ShiroCasRealm.class);
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
 	private IUpmsApiService upmsApiService;
 	
 	public ShiroCasRealm() {
@@ -53,7 +52,7 @@ public class ShiroCasRealm extends Pac4jRealm {
 		String loginName = principal.getProfile().getId();
 
 		Session session = SecurityUtils.getSubject().getSession();
-		session.setAttribute("userSessionId", loginName );
+		session.setAttribute("user", loginName );
 
 		UserVo userVo= upmsApiService.selectByLoginName(loginName);
 		// 账号不存在
@@ -64,8 +63,9 @@ public class ShiroCasRealm extends Pac4jRealm {
 		if (userVo.getStatus() == 1) {
 			return null;
 		}
+		ShiroUser su = userVoToShiroUser(userVo);
 		// 认证缓存信息
-		return new SimpleAuthenticationInfo(userVo, profiles.hashCode(), getName());
+		return new SimpleAuthenticationInfo(su, profiles.hashCode(), getName());
 	}
 
 	/**
@@ -73,32 +73,15 @@ public class ShiroCasRealm extends Pac4jRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		
-		Session session = SecurityUtils.getSubject().getSession();  
-        String loginName = (String)session.getAttribute("userSessionId");
-
-		UserVo userVo= upmsApiService.selectByLoginName(loginName);
-		// 账号不存在
-		if (userVo == null) {
-			return null;
-		}
-		// 账号未启用
-		if (userVo.getStatus() == 1) {
-			return null;
-		}
-
-		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		// 设置相应角色的权限信息
-		for (RoleVo role : userVo.getRolesList()) {
-			// 设置角色
-			authorizationInfo.addRole(role.getName());
-			for (Resource r : role.getPermissions()) {
-				// 设置权限
-				authorizationInfo.addStringPermission(r.getUrl());
-			}
-		}
-
-		return authorizationInfo;
+		LOGGER.info("Shiro开始权限配置");
+		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
+		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+		Set<String> roles=new HashSet<>();
+		List<String> roleList=shiroUser.getRoles();
+		roles.addAll(roleList);
+		info.setRoles(roles);
+		info.addStringPermissions(shiroUser.getUrlSet());
+		return info;
 	}
 
 	@Override
@@ -130,4 +113,38 @@ public class ShiroCasRealm extends Pac4jRealm {
 		super.clearCachedAuthenticationInfo(principals);
 	}
 
+	/**
+	 * 将UserVo赋值给shiroUser
+	 *
+	 * @param userVo
+	 * @return
+	 */
+	public ShiroUser userVoToShiroUser(UserVo userVo) {
+		if (userVo == null) {
+			return null;
+		} else {
+			ShiroUser su = new ShiroUser();
+			su.setId(userVo.getId());
+			su.setLoginName(userVo.getLoginName());
+			su.setOrganizationId(userVo.getOrganizationId());
+			su.setEnterpriseId(userVo.getEnterpriseId());
+			List<RoleVo> rvList = userVo.getRolesList();
+			List<String> urlSet = new ArrayList<>();
+			List<String> roles = new ArrayList<>();
+			if (rvList != null && !rvList.isEmpty()) {
+				for (RoleVo rv : rvList) {
+					roles.add(rv.getName());
+					List<Resource> rList = rv.getPermissions();
+					if (rList != null && !rList.isEmpty()) {
+						for (Resource r : rList) {
+							urlSet.add(r.getUrl());
+						}
+					}
+				}
+			}
+			su.setRoles(roles);
+			su.setUrlSet(urlSet);
+			return su;
+		}
+	}
 }

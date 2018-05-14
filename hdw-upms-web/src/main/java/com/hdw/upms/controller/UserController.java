@@ -33,7 +33,7 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController extends BaseController {
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
 	private IUserService userService;
 
 	/**

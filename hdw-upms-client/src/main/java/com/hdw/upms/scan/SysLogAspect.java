@@ -2,21 +2,22 @@ package com.hdw.upms.scan;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.upms.entity.SysLog;
-import com.hdw.upms.entity.vo.UserVo;
 import com.hdw.upms.service.IUpmsApiService;
 import com.hdw.upms.shiro.ShiroKit;
+import com.hdw.upms.shiro.ShiroUser;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.Date;
 import java.util.Enumeration;
 
@@ -29,13 +30,12 @@ import java.util.Enumeration;
  */
 @Aspect
 @Component
-@Order
 public class SysLogAspect {
 	private static final Logger LOGGER = LogManager.getLogger(SysLogAspect.class);
 	private long startTime=0;
 	private long endTime=0;
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
 	private IUpmsApiService upmsApiService;
 
 	@Pointcut("within(@org.springframework.stereotype.Controller *)")
@@ -86,12 +86,12 @@ public class SysLogAspect {
 		LOGGER.info(strMessage);
 		if (isWriteLog(strMethodName)) {
 			try {
-				UserVo userVo=ShiroKit.getUser();
-				if (null != userVo) {
-					String loginName = userVo.getLoginName();
+				ShiroUser shiroUser=ShiroKit.getUser();
+				if (null != shiroUser) {
+					String loginName = shiroUser.getLoginName();
 					SysLog sysLog = new SysLog();
 					sysLog.setLoginName(loginName);
-					sysLog.setRoleName(userVo.getRolesList().get(0).getName());
+					sysLog.setRoleName(shiroUser.getRoles().get(0));
 					sysLog.setOptContent(strMessage);
 					sysLog.setCreateTime(new Date());
 					if (request != null) {

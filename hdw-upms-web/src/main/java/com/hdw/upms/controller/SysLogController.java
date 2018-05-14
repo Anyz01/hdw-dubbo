@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/sysLog")
 public class SysLogController extends BaseController{
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
 	private ISysLogService sysLogService;
 
 	/**

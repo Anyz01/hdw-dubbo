@@ -1,7 +1,6 @@
 package com.hdw.upms.shiro;
 
 import com.hdw.common.util.JacksonUtils;
-import com.hdw.upms.entity.vo.UserVo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -64,11 +63,12 @@ public class ShiroKit {
      *
      * @return ShiroUser
      */
-    public static UserVo getUser() {
+    public static ShiroUser getUser() {
         if (isGuest()) {
             return null;
         } else {
-            return JacksonUtils.toObject(getSubject().getPrincipals().getPrimaryPrincipal().toString(),UserVo.class);
+            return JacksonUtils.toObject(getSubject().getPrincipals().getPrimaryPrincipal().toString(),ShiroUser.class);
+
         }
     }
 

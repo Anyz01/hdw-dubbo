@@ -115,15 +115,17 @@ public class RedisServiceImpl implements IRedisService {
 	@Override
 	public <T> void ladd(String key, List<T> values, int second) {
 		
-		jsonRedisTemplate.opsForList().leftPushAll(key, values);
-		expire(key, second);
+		for (T t : values) {
+			this.ladd(key,t,second);
+		}
 	}
 
 	@Override
 	public <T> void ladd(String key, List<T> values) {
 		
-		jsonRedisTemplate.opsForList().leftPushAll(key,values);
-		expire(key, EXPIRE);
+		for (T t : values) {
+			this.ladd(key,t);
+		}
 	}
 
 	@Override

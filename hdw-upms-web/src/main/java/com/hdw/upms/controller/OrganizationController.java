@@ -37,7 +37,7 @@ import java.util.Map;
 @RequestMapping("/organization")
 public class OrganizationController extends BaseController {
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
 	private IOrganizationService organizationService;
 
 	/**

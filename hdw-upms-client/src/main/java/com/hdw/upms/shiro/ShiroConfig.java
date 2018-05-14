@@ -21,19 +21,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Description : Apache Shiro 核心通过 Filter 来实现，就好像SpringMvc 通过DispachServlet
- * 来主控制一样。 既然是使用 Filter 一般也就能猜到，是通过URL规则来进行过滤和权限校验，所以我们需要定义一系列关于URL的规则和访问权限。
+ * 
+ * @Description Apache Shiro 核心通过 Filter 来实现，
+ * 就好像SpringMvc 通过DispachServlet来主控制一样。 既然是使用 Filter 一般也就能猜到，
+ * 是通过URL规则来进行过滤和权限校验，
+ * 所以我们需要定义一系列关于URL的规则和访问权限。
+ * @author TuMinglong
+ * @date 2018年5月14日下午7:57:14
+ * @version 1.0.0
  */
-
 @Configuration
-@Order(1)
 public class ShiroConfig {
 
 	@Value("${hdw.upms.loginUrl}")
@@ -110,11 +113,8 @@ public class ShiroConfig {
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 		// 必须设置 SecurityManager
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
-		// 验证码过滤器
-		Map<String, Filter> filtersMap = shiroFilterFactoryBean.getFilters();
-		KaptchaFilter kaptchaFilter = new KaptchaFilter();
-		filtersMap.put("kaptchaFilter", kaptchaFilter);
 		
+		Map<String, Filter> filtersMap = shiroFilterFactoryBean.getFilters();
 		filtersMap.put("user", ajaxSessionFilter());
 		
 		// 实现自己规则roles,这是为了实现or的效果
@@ -123,12 +123,11 @@ public class ShiroConfig {
 		shiroFilterFactoryBean.setFilters(filtersMap);
 		// 拦截器
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-		// 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
+
 		filterChainDefinitionMap.put("/logout", "logout");
 		// 配置记住我或认证通过可以访问的地址
 		filterChainDefinitionMap.put("/index", "user");
 		filterChainDefinitionMap.put("/", "user");
-		filterChainDefinitionMap.put("/login", "kaptchaFilter");
 		// 开放的静态资源
 		filterChainDefinitionMap.put("/favicon.ico", "anon");// 网站图标
 		filterChainDefinitionMap.put("/static/**", "anon");// 配置static文件下资源能被访问
@@ -150,14 +149,15 @@ public class ShiroConfig {
 		// 其他的
 		filterChainDefinitionMap.put("/solr/**", "anon");
 		filterChainDefinitionMap.put("/test/**", "anon");
+		filterChainDefinitionMap.put("/login", "anon");
 		filterChainDefinitionMap.put("/**", "authc");
 
-		// 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面
 		shiroFilterFactoryBean.setLoginUrl(loginUrl);
 		// 登录成功后要跳转的链接
 		shiroFilterFactoryBean.setSuccessUrl(successUrl);
-		// 未授权界面，不生效(详情原因看MyExceptionResolver)
+		
 		shiroFilterFactoryBean.setUnauthorizedUrl(unauthorizedUrl);
+		
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
 		return shiroFilterFactoryBean;
@@ -238,7 +238,6 @@ public class ShiroConfig {
 	 */
 	@Bean
 	public SimpleCookie rememberMeCookie() {
-		// 这个参数是cookie的名称，对应前端的checkbox的name = rememberMe
 		SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
 		simpleCookie.setHttpOnly(true);
 		// 记住我cookie生效时间7天 ,单位秒

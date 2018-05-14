@@ -6,14 +6,15 @@ import com.hdw.common.csrf.CsrfToken;
 import com.hdw.common.result.MenuNode;
 import com.hdw.upms.entity.vo.UserVo;
 import com.hdw.upms.service.IResourceService;
-import com.hdw.upms.shiro.IncorrectCaptchaException;
+import com.hdw.upms.service.IUpmsApiService;
 import com.hdw.upms.shiro.ShiroKit;
+import com.hdw.upms.shiro.ShiroUser;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,10 +37,13 @@ import java.util.List;
 @Api(value = "登录接口类", tags = { "登录接口" })
 @Controller
 public class LoginController extends BaseController {
+	
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
+	private IUpmsApiService upmsApiService;
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
 	private IResourceService resourceService;
-
+	
 	/**
 	 * 首页
 	 *
@@ -58,7 +62,8 @@ public class LoginController extends BaseController {
 	 */
 	@GetMapping("/index")
 	public String index(Model model) {
-		UserVo userVo = ShiroKit.getUser();
+		ShiroUser shiroUser = ShiroKit.getUser();
+		UserVo userVo=upmsApiService.selectByLoginName(shiroUser.getLoginName());
 		List<MenuNode> list = resourceService.selectTree(userVo);
 		model.addAttribute("loginName", userVo.getLoginName());
 		model.addAttribute("roleName", userVo.getRolesList().get(0).getDescription());
@@ -66,10 +71,10 @@ public class LoginController extends BaseController {
 		return "index";
 	}
 
+	
 	/**
 	 * GET 登录
-	 * 
-	 * @return {String}
+	 * @return
 	 */
 	@ApiOperation(value = "GET 登录", notes = "GET 登录")
 
@@ -84,13 +89,11 @@ public class LoginController extends BaseController {
 	}
 
 	/**
-	 * POST 登录 shiro 写法
-	 *
-	 * @param username
-	 *            用户名
-	 * @param password
-	 *            密码
-	 * @return {Object}
+	 * POST请求登录
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws RuntimeException
 	 */
 	@ApiOperation(value = "POST 登录 ", notes = "POST 登录 ")
 
@@ -98,36 +101,50 @@ public class LoginController extends BaseController {
 	@CsrfToken(remove = true)
 	@ResponseBody
 	public Object loginPost(HttpServletRequest request, HttpServletResponse response, String username, String password,
-			String captcha, @RequestParam(value = "rememberMe", defaultValue = "0") Integer rememberMe)
-			throws RuntimeException {
+							String captcha, @RequestParam(value = "rememberMe", defaultValue = "0") Integer rememberMe) throws RuntimeException{
 		logger.info("POST请求登录");
-		//登录失败从request中获取shiro处理的异常信息。shiroLoginFailure:就是shiro异常类的全类名.
-        Object exception = request.getAttribute("shiroLoginFailure");
-        String msg;
-        if (exception != null) {
-            if (UnknownAccountException.class.isInstance(exception)) {
-                msg = "用户名不正确，请重新输入";
-            } else if (IncorrectCredentialsException.class.isInstance(exception)) {
-                msg = "密码错误，请重新输入";
-            } else if (IncorrectCaptchaException.class.isInstance(exception)) {
-                msg = "验证码错误";
-            } else if (AuthenticationException.class.isInstance(exception)) {
-                msg = "该用户已被禁用，如有疑问请联系系统管理员。";
-            } else {
-                msg = "发生未知错误，请联系管理员。";
-            }
-           
-            return renderError(msg);
-        }else {
-        	return renderSuccess();
-        }
-     
+		if (StringUtils.isBlank(username)) {
+			throw new RuntimeException("用户名不能为空");
+		}
+		if (StringUtils.isBlank(password)) {
+			throw new RuntimeException("密码不能为空");
+		}
+		if (StringUtils.isBlank(captcha)) {
+			throw new RuntimeException("验证码不能为空");
+		}
+		String sessionCaptcha = (String) request.getSession().getAttribute(
+				com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
+		logger.info("session中的图形码字符串:" + sessionCaptcha);
+
+		//比对
+		if (captcha == null || !captcha.equalsIgnoreCase(captcha)) {
+			throw new RuntimeException("验证码错误");
+		}
+		Subject subject = SecurityUtils.getSubject();
+		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+		// 设置记住密码
+		token.setRememberMe(1 == rememberMe);
+		try {
+			subject.login(token);
+			//验证成功,把用户信息放到session中
+			ShiroUser user = ShiroKit.getUser();
+			request.getSession().setAttribute("user", user);
+			return renderSuccess("登录成功");
+		} catch (UnknownAccountException e) {
+			throw new RuntimeException("账号不存在！");
+		} catch (DisabledAccountException e) {
+			throw new RuntimeException("账号未启用！");
+		} catch (IncorrectCredentialsException e) {
+			throw new RuntimeException("密码错误！", e);
+		} catch (Throwable e) {
+			throw new RuntimeException("发生未知错误，请联系管理员");
+		}
 	}
 
+	
 	/**
 	 * 未授权
-	 * 
-	 * @return {String}
+	 * @return
 	 */
 	@ApiOperation(value = "未授权 ", notes = "未授权 ")
 
@@ -139,10 +156,10 @@ public class LoginController extends BaseController {
 		return "403";
 	}
 
+	
 	/**
 	 * 退出
-	 * 
-	 * @return {Result}
+	 * @return
 	 */
 	@ApiOperation(value = "退出 ", notes = "退出")
 

@@ -6,7 +6,10 @@ import com.hdw.common.result.ZTreeNode;
 import com.hdw.upms.entity.Resource;
 import com.hdw.upms.entity.vo.UserVo;
 import com.hdw.upms.service.IResourceService;
+import com.hdw.upms.service.IUpmsApiService;
 import com.hdw.upms.shiro.ShiroKit;
+import com.hdw.upms.shiro.ShiroUser;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -37,8 +40,11 @@ import java.util.Map;
 @Controller
 @RequestMapping("/resource")
 public class ResourceController extends BaseController {
+	
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
+	private IUpmsApiService upmsApiService;
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
 	private IResourceService resourceService;
 
 	/**
@@ -50,7 +56,8 @@ public class ResourceController extends BaseController {
 	@GetMapping("/tree")
 	@ResponseBody
 	public Object tree() {
-		UserVo userVo = ShiroKit.getUser();
+		ShiroUser shiroUser = ShiroKit.getUser();
+		UserVo userVo=upmsApiService.selectByLoginName(shiroUser.getLoginName());
 		return resourceService.selectTree(userVo);
 	}
 
