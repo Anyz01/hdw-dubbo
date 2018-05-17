@@ -1,226 +1,191 @@
 package com.hdw.common.config.redis;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @Description redis工具类实现类
+ * @Author TuMinglong
+ * @Date 2018/5/16 15:09
+ */
 @Component
 public class RedisServiceImpl implements IRedisService {
-	
-	@Resource(name="stringRedisTemplate")
-	private RedisTemplate<String, Object> stringRedisTemplate;
-	
-	@Resource(name="jsonRedisTemplate")
-	private RedisTemplate<String, Object> jsonRedisTemplate;
-	
-	@Value("${spring.redis.expiration}")
-	private Integer EXPIRE;
 
-	@Override
-	public long ttl(String key) {
-		
-		return stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
-	}
+    @Resource(name="redisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
 
-	@Override
-	public boolean expire(String key, int second) {
-		
-		return stringRedisTemplate.hasKey(key);
-	}
+    @Resource(name="jsonRedisTemplate")
+    private RedisTemplate<String, Object> jsonRedisTemplate;
 
-	@Override
-	public boolean exireAt(String key, long unixTime) {
-		
-		return stringRedisTemplate.expireAt(key, new Date(unixTime));
-	}
+    @Value("${spring.redis.expiration}")
+    private Integer EXPIRE;
 
-	@Override
-	public long incr(String key, long delta) {
-		
-		return stringRedisTemplate.opsForValue().increment(key, delta);
-	}
+    @Override
+    public boolean exists(String key) {
 
-	@Override
-	public Set<String> keys(String pattern) {
-		
-		return stringRedisTemplate.keys(pattern);
-	}
+        return  redisTemplate.hasKey(key);
+    }
 
-	@Override
-	public void del(String key) {
-		
-		stringRedisTemplate.delete(key);
-	}
+    @Override
+    public void del(String key) {
+        redisTemplate.delete(key);
+    }
 
-	@Override
-	public void delAll(String keys) {
-		
-		stringRedisTemplate.delete(stringRedisTemplate.keys(keys));
-	}
+    @Override
+    public void delAll(List<String> keys) {
+        redisTemplate.delete(keys);
+    }
 
-	@Override
-	public boolean exists(String key) {
-		
-		return stringRedisTemplate.hasKey(key);
-	}
+    @Override
+    public boolean expire(String key, int second) {
+        return  redisTemplate.expire(key,second,TimeUnit.SECONDS);
+    }
 
-	@Override
-	public String getType(String key) {
-	
-		return stringRedisTemplate.type(key).getClass().getName();
-	}
+    @Override
+    public boolean exireAt(String key, long unixTime) {
+        return redisTemplate.expireAt(key,new Date(unixTime));
+    }
 
-	@Override
-	public Object get(String key) {
-		
-		return stringRedisTemplate.opsForValue().get(key);
-	}
+    @Override
+    public long ttl(String key) {
+        return redisTemplate.getExpire(key,TimeUnit.SECONDS);
+    }
 
-	@Override
-	public void set(String key, Object value, int seconds) {
-		
-		stringRedisTemplate.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
-	}
+    @Override
+    public long incr(String key, long num) {
+        return redisTemplate.opsForValue().increment(key, num);
+    }
 
-	@Override
-	public void set(String key, Object value) {
-		
-		stringRedisTemplate.opsForValue().set(key, value);
-		expire(key, EXPIRE);
-	}
+    @Override
+    public Set<String> keys(String pattern) {
+        return redisTemplate.keys(pattern);
+    }
 
-	@Override
-	public <T> void ladd(String key, T values, int second) {
-		
-		jsonRedisTemplate.opsForList().leftPush(key, values);
-		expire(key, second);
-	}
+    @Override
+    public String getType(String key) {
+        return redisTemplate.type(key).getClass().getName();
+    }
 
-	@Override
-	public <T> void ladd(String key, T values) {
-		
-		jsonRedisTemplate.opsForList().leftPush(key, values);
-		expire(key, EXPIRE);
-	}
+    @Override
+    public Object get(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
 
-	@Override
-	public <T> void ladd(String key, List<T> values, int second) {
-		
-		for (T t : values) {
-			this.ladd(key,t,second);
-		}
-	}
+    @Override
+    public void set(String key, Object value, int seconds) {
+         redisTemplate.opsForValue().set(key,value,seconds,TimeUnit.SECONDS);
+    }
 
-	@Override
-	public <T> void ladd(String key, List<T> values) {
-		
-		for (T t : values) {
-			this.ladd(key,t);
-		}
-	}
+    @Override
+    public void set(String key, Object value) {
+         this.set(key,value,EXPIRE);
+    }
 
-	@Override
-	public void ltrim(String key, long start, long end) {
-		
-		jsonRedisTemplate.opsForList().trim(key, start, end);
-	}
+    @Override
+    public <T> void ladd(String key, T values, int second) {
+        jsonRedisTemplate.opsForList().leftPush(key,values);
+        this.expire(key,second);
+    }
 
-	@Override
-	public Long lsize(String key) {
-		
-		return jsonRedisTemplate.opsForList().size(key);
-	}
+    @Override
+    public <T> void ladd(String key, T values) {
+            this.ladd(key,values,EXPIRE);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> List<T> lget(String key) {
-		
-		return (List<T>) jsonRedisTemplate.opsForList().range(key,0,-1);
-	}
+    @Override
+    public <T> void ladd(String key, List<T> values, int second) {
+        for (T t : values) {
+            this.ladd(key,t,second);
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> List<T> lget(String key, Long start, Long end) {
-		
-		return (List<T>) jsonRedisTemplate.opsForList().range(key,start,end);
-	}
+    @Override
+    public <T> void ladd(String key, List<T> values) {
+        for (T t : values) {
+            this.ladd(key,t,EXPIRE);
+        }
+    }
 
-	@Override
-	public void sadd(String key, Object value, int second) {
-		
-		jsonRedisTemplate.opsForSet().add(key, value);
-		expire(key, second);
-	}
+    @Override
+    public void ltrim(String key, long start, long end) {
+        jsonRedisTemplate.opsForList().trim(key, start, end);
+    }
 
-	@Override
-	public void sadd(String key, Object value) {
-		
-		jsonRedisTemplate.opsForSet().add(key, value);
-		expire(key, EXPIRE);
-	}
+    @Override
+    public Long lsize(String key) {
+        return jsonRedisTemplate.opsForList().size(key);
+    }
 
-	@Override
-	public Set<Object> sget(String key) {
-		
-		return jsonRedisTemplate.opsForSet().members(key);
-	}
+    @Override
+    public <T> List<T> lget(String key) {
+        return this.lget(key,0l,-1l);
+    }
 
-	@Override
-	public boolean sdel(String key, Object value) {
-		
-		long flag=jsonRedisTemplate.opsForSet().remove(key, value);
-		if(flag==1) {
-			return true;
-		}else {
-			return false;
-		}
-	}
+    @Override
+    public <T> List<T> lget(String key, Long start, Long end) {
+        return (List<T>) jsonRedisTemplate.opsForList().range(key,start,end);
+    }
 
-	@Override
-	public void madd(String key, Map<String, Object> par, int second) {
-		
-		stringRedisTemplate.opsForHash().putAll(key, par);
-		expire(key, second);
-	}
+    @Override
+    public void sadd(String key, Object value, int second) {
+        jsonRedisTemplate.opsForSet().add(key, value);
+        this.expire(key,second);
+    }
 
-	@Override
-	public void madd(String key, Map<String, Object> par) {
-		
-		stringRedisTemplate.opsForHash().putAll(key, par);
-		expire(key, EXPIRE);
-	}
+    @Override
+    public void sadd(String key, Object value) {
+        this.sadd(key,value,EXPIRE);
+    }
 
-	@Override
-	public Map<String, Object> mget(String key) {
-		
-		Map<Object, Object> resultMap= stringRedisTemplate.opsForHash().entries(key);
-		Map<String,Object> map=new HashMap<String,Object>();
-		for (Object obj : resultMap.keySet()) {
-			map.put(obj.toString(), resultMap.get(obj));
-		}
-	    return map;
-	}
+    @Override
+    public Set<Object> sget(String key) {
+        return jsonRedisTemplate.opsForSet().members(key);
+    }
 
-	@Override
-	public Object mget(String key, String field) {
-		
-		 Object value=stringRedisTemplate.opsForHash().get(key,field);  
-		 return value; 
-	}
+    @Override
+    public boolean sdel(String key, Object value) {
+        long flag=jsonRedisTemplate.opsForSet().remove(key, value);
+        if(flag==1) {
+            return true;
+        }else {
+            return false;
+        }
+    }
 
-	@Override
-	public boolean mdel(String key, String field) {
-		
-		return stringRedisTemplate.opsForHash().delete(key, field)==1;
-	}
+    @Override
+    public void madd(String key, Map<String, Object> par, int second) {
+        redisTemplate.opsForHash().putAll(key, par);
+        this.expire(key,second);
+    }
 
+    @Override
+    public void madd(String key, Map<String, Object> par) {
+        this.madd(key,par,EXPIRE);
+    }
+
+    @Override
+    public Map<String, Object> mget(String key) {
+        Map<Object, Object> resultMap=redisTemplate.opsForHash().entries(key);
+        Map<String,Object> map=new HashMap<String,Object>();
+        for (Object obj : resultMap.keySet()) {
+            map.put(obj.toString(), resultMap.get(obj));
+        }
+        return map;
+    }
+
+    @Override
+    public Object mget(String key, String field) {
+        Object value=redisTemplate.opsForHash().get(key,field);
+        return value;
+    }
+
+    @Override
+    public boolean mdel(String key, String field) {
+        return redisTemplate.opsForHash().delete(key, field)==1;
+    }
 }

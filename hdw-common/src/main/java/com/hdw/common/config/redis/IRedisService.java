@@ -13,12 +13,26 @@ import java.util.Set;
 public interface IRedisService {
 
 	/**
-	 * 实现命令，返回给定key的剩余生存时间（TTL,time to live）
-	 * 
+	 * 查看key是否存在
+	 *
 	 * @param key
 	 * @return
 	 */
-	long ttl(String key);
+	boolean exists(String key);
+
+	/**
+	 * 删除key
+	 *
+	 * @param key
+	 */
+	void del(String key);
+
+	/**
+	 * 批量删除key
+	 *
+	 * @param keys
+	 */
+	void delAll(List<String> keys);
 
 	/**
 	 * 实现命令：expire设置过期时间，单位秒
@@ -39,13 +53,21 @@ public interface IRedisService {
 	boolean exireAt(String key, long unixTime);
 
 	/**
-	 * 实现命令：INCR key,增加key一次
-	 * 
+	 * 实现命令：返回给定key的剩余生存时间（TTL,time to live）
+	 *
 	 * @param key
-	 * @param delta
 	 * @return
 	 */
-	long incr(String key, long delta);
+	long ttl(String key);
+
+	/**
+	 * 实现命令：将键的整数值按给定的数值增加
+	 * 
+	 * @param key
+	 * @param num
+	 * @return
+	 */
+	long incr(String key, long num);
 
 	/**
 	 * 实现命令：KEYS pattern,查找所有符合给定模式pattern的key
@@ -56,28 +78,6 @@ public interface IRedisService {
 	Set<String> keys(String pattern);
 
 	/**
-	 * 删除key
-	 * 
-	 * @param key
-	 */
-	void del(String key);
-
-	/**
-	 * 批量删除key
-	 * 
-	 * @param key
-	 */
-	void delAll(String keys);
-
-	/**
-	 * 查看key是否存在
-	 * 
-	 * @param key
-	 * @return
-	 */
-	boolean exists(String key);
-
-	/**
 	 * 返回 key 所储存的值的类型
 	 * 
 	 * @param key
@@ -86,7 +86,7 @@ public interface IRedisService {
 	String getType(String key);
 
 	/**
-	 * 获取 java 8种基本类型的数据请直接使用
+	 * 获取java 8种基本类型的数据请直接使用
 	 * 
 	 * @param key
 	 * @return
@@ -187,8 +187,8 @@ public interface IRedisService {
 	 * 
 	 * @param key
 	 * @param value
-	 * @param second
-	 *            失效时间
+	 * @param second  失效时间（秒）
+	 *
 	 */
 	void sadd(String key, Object value, int second);
 
@@ -222,8 +222,8 @@ public interface IRedisService {
 	 * 
 	 * @param key
 	 * @param par
-	 * @param second
-	 *            失效时间
+	 * @param second 失效时间(秒)
+	 *
 	 */
 	void madd(String key, Map<String, Object> par, int second);
 
@@ -245,10 +245,8 @@ public interface IRedisService {
 
 	/**
 	 * 获取map中的value
-	 * 
 	 * @param key
-	 * @param filed
-	 *            map中key
+	 * @param field map中key
 	 * @return
 	 */
 	Object mget(String key, String field);
