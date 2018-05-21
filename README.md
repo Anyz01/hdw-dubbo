@@ -12,4 +12,4 @@
 用户名：admin
 密码：12345678
 
-3.启动本新项目需要安装Redis、zookeeper.
+3.启动本新项目需要安装Redis、zookeeper，然后启动Redis 、zookeeper
