@@ -20,20 +20,20 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @EnableAspectJAutoProxy
 @EnableAsync
-public class UpmsServerApplication extends SpringBootServletInitializer {
+public class UpmsWebApplication extends SpringBootServletInitializer {
 
-	protected final static Logger logger = LoggerFactory.getLogger(UpmsServerApplication.class);
+	protected final static Logger logger = LoggerFactory.getLogger(UpmsWebApplication.class);
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		logger.info("----UpmsServerApplication 启动----");
-		return application.sources(UpmsServerApplication.class);
+		logger.info("----UpmsWebApplication 启动----");
+		return application.sources(UpmsWebApplication.class);
 		
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(UpmsServerApplication.class, args);
-		logger.info("----UpmsServerApplication 启动----");
+		SpringApplication.run(UpmsWebApplication.class, args);
+		logger.info("----UpmsWebApplication 启动----");
 	}
 
 }

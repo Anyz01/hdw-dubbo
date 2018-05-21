@@ -53,7 +53,6 @@
 		<zxing.core.version>3.3.1</zxing.core.version>
 		<poi.version>3.17</poi.version>
 		<jxl.version>2.6.12</jxl.version>
-		<xfire.version>1.2.6</xfire.version>
 		<!-- pdfbox -->
 		<pdfbox.version>2.0.7</pdfbox.version>
 		<!-- guava -->
@@ -167,11 +166,6 @@
 				<artifactId>pinyin4j</artifactId>
 				<version>${pinyin4j.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.codehaus.xfire</groupId>
-				<artifactId>xfire-core</artifactId>
-				<version>${xfire.version}</version>
-			</dependency>
 			<!-- pinyin4j end -->
 
 			<!-- excel begin -->
@@ -262,6 +256,10 @@
 					<exclusion>
 						<groupId>ch.qos.logback</groupId>
 						<artifactId>logback-classic</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.jboss.netty</groupId>
+						<artifactId>netty</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
