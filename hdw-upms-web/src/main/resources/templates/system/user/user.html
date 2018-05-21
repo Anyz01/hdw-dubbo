@@ -26,34 +26,36 @@
                                 </div>
                                 <div class="col-lg-10 col-sm-9">
                                     <div class="row">
-                                        <div class="col-lg-10 col-sm-9">
+                                        <div class="col-lg-5 col-sm-5">
                                             <div class="row">
-                                                <div class="col-lg-4 col-sm-12">
+                                                <div class="col-lg-8 col-sm-12">
                                                     <input type="text" class="form-control" id="name" name="name" placeholder="登录名/用户名" />
                                                 </div>
-                                                <div class="col-lg-4 col-sm-6">
-                                                    <input type="text" class="form-control laydate" id="startTime" name="startTime" placeholder="注册开始日期" onclick="laydate({istime:false,format:'YYYY-MM-DD'})"
-                                                    />
-
-                                                </div>
-                                                <div class="col-lg-4 col-sm-6">
-                                                    <input type="text" class="form-control laydate" id="endTime" name="endTime" placeholder="注册结束日期" onclick="laydate({istime:false,format:'YYYY-MM-DD'})"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2 col-sm-3">
-                                            <div class="row">
-                                                <div class="col-lg-12 col-sm-12">
+                                                <div class="col-sm-3">
                                                     <button type="submit" class="btn btn-sm btn-primary" onclick="MgrUser.search()">
                                                         <i class="fa fa-search">搜索</i>
                                                     </button>
-                                                    <button type="submit" class="btn btn-sm btn-primary" onclick=" MgrUser.resetSearch()">
-                                                        <i class="fa fa-fa-trash">重置</i>
-                                                    </button>
                                                 </div>
+                                                <!--<div class="col-lg-4 col-sm-6">-->
+                                                    <!--<input type="text" class="form-control laydate" id="startTime" name="startTime" placeholder="注册开始日期" onclick="laydate({istime:false,format:'YYYY-MM-DD'})"-->
+                                                    <!--/>-->
+
+                                                <!--</div>-->
+                                                <!--<div class="col-lg-4 col-sm-6">-->
+                                                    <!--<input type="text" class="form-control laydate" id="endTime" name="endTime" placeholder="注册结束日期" onclick="laydate({istime:false,format:'YYYY-MM-DD'})"-->
+                                                    <!--/>-->
+                                                <!--</div>-->
                                             </div>
                                         </div>
+                                        <!--<div class="col-lg-2 col-sm-3">-->
+                                            <!--<div class="row">-->
+                                                <!--<div class="col-lg-12 col-sm-12">-->
+                                                    <!--<button type="submit" class="btn btn-sm btn-primary" onclick=" MgrUser.resetSearch()">-->
+                                                        <!--<i class="fa fa-fa-trash">重置</i>-->
+                                                    <!--</button>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
                                     </div>
                                     <div class="hidden-xs" id="managerTableToolbar" role="group">
                                         <button class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.openAddMgr()">
@@ -174,7 +176,7 @@
             var index = layer.open({
                 type: 2,
                 title: '添加管理员',
-                area: ['800px', '560px'], //宽高
+                area: ['35%', '90%'], //宽高
                 fix: false, //不固定
                 maxmin: true,
                 content: basePath + 'user/addPage'
@@ -191,7 +193,7 @@
                 var index = layer.open({
                     type: 2,
                     title: '编辑管理员',
-                    area: ['800px', '450px'], //宽高
+                    area: ['35%', '90%'], //宽高
                     fix: false, //不固定
                     maxmin: true,
                     content: basePath + 'user/editPage/' + this.seItem.id
@@ -209,7 +211,7 @@
                 var index = layer.open({
                     type: 2,
                     title: '角色分配',
-                    area: ['300px', '400px'], //宽高
+                    area: ['300px', '300px'], //宽高
                     fix: false, //不固定
                     maxmin: true,
                     content: basePath + 'user/roleAssign/' + this.seItem.id
@@ -226,7 +228,7 @@
 
                 var operation = function () {
                     var userId = MgrUser.seItem.id;
-                    var ajax = new $ax(basePath + "user/delete", function () {
+                    var ajax = new $ax(basePath + "user/delete", function (data) {
                         if (data.success) {
                             hdw.success("删除成功!");
                         } else {
@@ -240,7 +242,7 @@
                     ajax.start();
                 };
 
-                hdw.confirm("是否删除用户" + MgrUser.seItem.account + "?", operation);
+                hdw.confirm("是否删除用户" + MgrUser.seItem.loginName + "?", operation);
             }
         };
 
@@ -312,7 +314,7 @@
                 });
             }
         };
-
+        //重置
         MgrUser.resetSearch = function () {
             $("#name").val("");
             $("#startTime").val("");
@@ -320,7 +322,7 @@
 
             MgrUser.search();
         }
-
+        //搜索
         MgrUser.search = function () {
             var queryData = {};
 
@@ -329,6 +331,7 @@
             queryData['startTime'] = $("#startTime").val();
             queryData['endTime'] = $("#endTime").val();
             queryData['sort'] = "id";
+            console.log(queryData);
 
             MgrUser.table.refresh({ query: queryData });
         }

@@ -17,7 +17,7 @@
                         <div class="col-sm-12">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="resourceName" placeholder="菜单名称" />
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="菜单名称" />
                                 </div>
                                 <div class="col-sm-3">
                                     <button type="submit" class="btn btn-sm btn-primary" onclick="Resource.search()">
@@ -96,7 +96,7 @@
             var index = layer.open({
                 type: 2,
                 title: '添加菜单',
-                area: ['830px', '450px'], //宽高
+                area: ['35%', '90%'], //宽高
                 fix: false, //不固定
                 maxmin: true,
                 content: basePath + 'resource/addPage'
@@ -112,7 +112,7 @@
                 var index = layer.open({
                     type: 2,
                     title: '修改菜单',
-                    area: ['800px', '450px'], //宽高
+                    area: ['35%', '90%'], //宽高
                     fix: false, //不固定
                     maxmin: true,
                     content: basePath + 'resource/editPage/' + this.seItem.id
@@ -151,7 +151,7 @@
         Resource.search = function () {
             var queryData = {};
 
-            queryData['resourceName'] = $("#resourceName").val();
+            queryData['menuName'] = $("#name").val();
 
             Resource.table.refresh({ query: queryData });
         }

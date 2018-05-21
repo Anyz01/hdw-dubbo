@@ -91,6 +91,14 @@
 				</div>
 				<div class="hr-line-dashed"></div>
 				<div class="form-group">
+					<label class="col-sm-3 control-label">所属企业</label>
+					<div class="col-sm-8">
+						<select id="enterpriseId" class="form-control" name="enterpriseId" data-rule="所属企业:required;">
+						</select>
+					</div>
+				</div>
+				<div class="hr-line-dashed"></div>
+				<div class="form-group">
 					<div class="text-center">
 						<button class="btn btn-primary" type="submit">保存</button>
 						<button class="btn btn-white" type="reset">重置</button>
@@ -106,6 +114,12 @@
 	</div>
 	<div th:include="/footer"></div>
 	<script type="text/javascript" th:inline="javascript">
+        //获取企业下拉框的值
+        $(function(){
+            var S2L=new $Select2List("enterpriseId",basePath+"enterprise/select2Tree");
+            S2L.init();
+        })
+
 		var UserInfoDlg = {};
 		/**
 		 * 点击部门input框时
@@ -171,7 +185,7 @@
 	                            var index = parent.layer.getFrameIndex(window.name);
 	                            parent.layer.msg(data.msg,{
 	                            	  icon: 1,
-	                            	  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	                            	  time: 1000 //1秒关闭（如果不配置，默认是3秒）
 	                            	},function () {
 	                            	window.parent.location.reload();
 	                                parent.layer.close(index);
@@ -180,7 +194,7 @@
 	                        } else {
 	                        	parent.layer.msg(data.msg,{
 	                          	  icon: 2,
-	                        	  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	                        	  time: 1000 //1秒关闭（如果不配置，默认是3秒）
 	                        	});
 	                            me.holdSubmit(false);
 	                        }

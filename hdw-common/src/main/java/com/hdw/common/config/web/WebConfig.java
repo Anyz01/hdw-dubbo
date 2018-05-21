@@ -1,16 +1,5 @@
 package com.hdw.common.config.web;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -19,6 +8,18 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.hdw.common.csrf.CsrfInterceptor;
 import com.hdw.common.interceptor.FileUploadTypeInterceptor;
+import com.hdw.common.util.Charsets;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.*;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import java.util.List;
 
 /**
  * 
@@ -39,6 +40,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
 		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+
 	}
 
 	@Override
@@ -51,6 +53,15 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		objectMapper.registerModule(simpleModule);
 		objectMapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);// 忽略 transient 修饰的属性
 		converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
+
+		converters.add(new StringHttpMessageConverter(Charsets.UTF_8));
+
+		converters.add(new ByteArrayHttpMessageConverter());
+
+		converters.add(new ResourceHttpMessageConverter());
+
+		converters.add(new ResourceRegionHttpMessageConverter());
+
 		super.configureMessageConverters(converters);
 	}
 
@@ -64,5 +75,4 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 		super.addInterceptors(registry);
 	}
-
 }

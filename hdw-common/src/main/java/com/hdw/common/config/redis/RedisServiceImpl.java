@@ -126,7 +126,8 @@ public class RedisServiceImpl implements IRedisService {
         return this.lget(key,0l,-1l);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public <T> List<T> lget(String key, Long start, Long end) {
         return (List<T>) jsonRedisTemplate.opsForList().range(key,start,end);
     }

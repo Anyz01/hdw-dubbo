@@ -103,7 +103,7 @@
                     // 提交表单之前，hold住表单，防止重复提交
                     me.holdSubmit();
                     $.ajax({
-                        url: basePath + "/login",
+                        url: basePath + "login",
                         data: $(form).serializeArray(),
                         type: "POST",
                         dataType: 'json',

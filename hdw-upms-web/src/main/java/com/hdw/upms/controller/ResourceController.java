@@ -82,7 +82,7 @@ public class ResourceController extends BaseController {
 	public Object treeGrid(@RequestParam(required = false) String menuName) {
 		Map<String, Object> par = new HashMap<>();
 		if (StringUtils.isNotBlank(menuName)) {
-			par.put("name", "menuName");
+			par.put("name", menuName);
 		}
 		return resourceService.selectTreeGrid(par);
 	}

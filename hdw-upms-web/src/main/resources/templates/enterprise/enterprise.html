@@ -33,9 +33,6 @@
                                         <button type="submit" class="btn btn-sm btn-primary" onclick="Enterprise.search()">
                                             <i class="fa fa-search">搜索</i>
                                         </button>
-                                        <button type="submit" class="btn btn-sm btn-primary" onclick=" Enterprise.resetSearch()">
-                                            <i class="fa fa-fa-trash">重置</i>
-                                        </button>
                                     </div>
                                 </div>
                                 <div class="hidden-xs" id="enterpriseTableToolbar" Enterprise="group">
@@ -76,18 +73,18 @@
                 { title: 'id', field: 'id', visible: false, align: 'center', valign: 'middle' },
                 { title: '企业名', field: 'enterpriseName', align: 'center', valign: 'middle', sortable: true },
                 { title: '所属行业', field: 'industryName', align: 'center', valign: 'middle', sortable: true },
-                { title: '所属区域', field: 'areaName', align: 'center', valign: 'middle', sortable: true },
-                { title: '风险清单', field: 'riskModelList', align: 'center', valign: 'middle', sortable: true },
+                { title: '所属区域', field: 'areaName', align: 'center', valign: 'middle', sortable: true },               
                 { title: '负责人姓名', field: 'mainPerson', align: 'center', valign: 'middle', sortable: true },
                 { title: '企业负责人移动电话号码', field: 'mainPersonMobile', align: 'center', valign: 'middle', sortable: true },
                 { title: '安全负责人姓名', field: 'safePerson', align: 'center', valign: 'middle', sortable: true },
                 { title: '安全负责人移动电话号码', field: 'safePersonMobile', align: 'center', valign: 'middle', sortable: true },
+                { title: '风险模型类型', field: 'riskModel', align: 'center', valign: 'middle', sortable: true },
                 {
                     title: '创建时间', field: 'createTime', align: 'center', valign: 'middle', sortable: true, formatter: function (value, row, index) {
                         return hdw.formatDate(value);
                     }
                 }, {
-                    title: '创建时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, formatter: function (value, row, index) {
+                    title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, formatter: function (value, row, index) {
                         return hdw.formatDate(value);
                     }
                 }]
@@ -116,7 +113,7 @@
             var index = layer.open({
                 type: 2,
                 title: '添加企业',
-                area: ['830px', '450px'], //宽高
+                area: ['850px', '600px'], //宽高
                 fix: false, //不固定
                 maxmin: true,
                 content: basePath + 'enterprise/addPage'
@@ -132,7 +129,7 @@
                 var index = layer.open({
                     type: 2,
                     title: '修改企业',
-                    area: ['800px', '450px'], //宽高
+                    area: ['850px', '600px'], //宽高
                     fix: false, //不固定
                     maxmin: true,
                     content: basePath + 'enterprise/editPage/' + this.seItem.id
@@ -157,7 +154,7 @@
                     }, function (data) {
                         hdw.error("删除失败!" + data.responseJSON.message + "!");
                     });
-                    ajax.set("dicId", Enterprise.seItem.id);
+                    ajax.set("enterpriseId", Enterprise.seItem.id);
                     ajax.start();
                 };
 
@@ -170,11 +167,10 @@
          */
         Enterprise.resetSearch = function () {
             $("#sel_menu1").val("");
-            $("#sel_menu1").val("");
-            $("#sel_menu1").val("");
+            $("#sel_menu2").val("");
+            $("#sel_menu3").val("");
             Enterprise.search();
         }
-
         /**
          * 搜索
          */
@@ -193,7 +189,6 @@
             table.init();
             Enterprise.table = table;
 
-
             var S2L = new $Select2List("sel_menu1", basePath + "dic/select2Tree/9");
             S2L.init();
             var S2L2 = new $Select2List("sel_menu2", basePath + "dic/select2Tree/16");
@@ -205,38 +200,18 @@
             var industryCode = "";
             var areaCode = "";
             $("#sel_menu1").on("change", function (e) {
-                url = basePath + "enterprise/select2Tree";
                 industryCode = $("#sel_menu1").val();
                 areaCode = $("#sel_menu2").val();
-                console.log("到这里：" + industryCode + " " + areaCode);
-                if (industryCode != '') {
-                    url += "?industryCode=" + industryCode;
-                }
-                if (areaCode != '') {
-                    url += "?areaCode=" + areaCode;
-                }
-                if (industryCode != '' && areaCode != '') {
-                    url += "?industryCode=" + industryCode + "&areaCode=" + areaCode;
-                }
+                url = basePath + "enterprise/select2Tree?industryCode=" + industryCode + "&areaCode=" + areaCode;
                 S2L3 = new $Select2List("sel_menu3", url);
                 S2L3.init();
             });
             $("#sel_menu2").on("change", function (e) {
-                url = basePath + "enterprise/select2Tree";
-                industryCode = $("#sel_menu1").val();
-                areaCode = $("#sel_menu2").val();
-                console.log("到这里2：" + industryCode + " " + areaCode);
-                if (industryCode != '') {
-                    url += "?industryCode=" + industryCode;
-                }
-                if (areaCode != '') {
-                    url += "?areaCode=" + areaCode;
-                }
-                if (industryCode != '' && areaCode != '') {
-                    url += "?industryCode=" + industryCode + "&areaCode=" + areaCode;
-                }
-                S2L3 = new $Select2List("sel_menu3", url);
-                S2L3.init();
+            	 industryCode = $("#sel_menu1").val();
+                 areaCode = $("#sel_menu2").val();
+                 url = basePath + "enterprise/select2Tree?industryCode=" + industryCode + "&areaCode=" + areaCode;
+                 S2L3 = new $Select2List("sel_menu3", url);
+                 S2L3.init();
             });
         });
     </script>

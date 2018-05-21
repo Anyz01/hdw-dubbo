@@ -1,12 +1,9 @@
 package com.hdw.upms.controller;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.google.common.base.Charsets;
+import com.hdw.common.base.BaseController;
+import com.hdw.common.util.DateUtil;
+import com.hdw.common.util.URLUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -19,10 +16,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.common.base.Charsets;
-import com.hdw.common.base.BaseController;
-import com.hdw.common.util.DateUtil;
-import com.hdw.common.util.URLUtils;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -37,6 +35,14 @@ public abstract class UpLoadController extends BaseController {
 	 */
 	@Value("${hdw.file-upload.prefix}")
 	private String fileUploadPrefix;
+
+	public String getFileUploadPrefix() {
+		return fileUploadPrefix;
+	}
+
+	public String getFileUploadServer() {
+		return fileUploadServer;
+	}
 
 	/**
 	 * 文件上传服务器名称
@@ -147,7 +153,6 @@ public abstract class UpLoadController extends BaseController {
 	 *            前台传过来文件路径
 	 * @param dir
 	 *            保存文件的相对路径
-	 * @param request
 	 * @return
 	 * @throws Exception
 	 */

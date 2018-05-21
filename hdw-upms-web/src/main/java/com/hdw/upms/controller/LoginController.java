@@ -63,12 +63,19 @@ public class LoginController extends BaseController {
 	@GetMapping("/index")
 	public String index(Model model) {
 		ShiroUser shiroUser = ShiroKit.getUser();
+		if (shiroUser == null) {
+			return "error/403";
+		}
 		UserVo userVo=upmsApiService.selectByLoginName(shiroUser.getLoginName());
-		List<MenuNode> list = resourceService.selectTree(userVo);
-		model.addAttribute("loginName", userVo.getLoginName());
-		model.addAttribute("roleName", userVo.getRolesList().get(0).getDescription());
-		model.addAttribute("resource", list);
-		return "index";
+		if(shiroUser.getRoles().isEmpty() && userVo.getRolesList().isEmpty()){
+			return "error/403";
+		}else{
+			List<MenuNode> list = resourceService.selectTree(userVo);
+			model.addAttribute("loginName", userVo.getLoginName());
+			model.addAttribute("roleName", userVo.getRolesList().get(0).getDescription());
+			model.addAttribute("resource", list);
+			return "index";
+		}
 	}
 
 	
@@ -153,7 +160,7 @@ public class LoginController extends BaseController {
 		if (SecurityUtils.getSubject().isAuthenticated() == false) {
 			return "redirect:/login";
 		}
-		return "403";
+		return "error/403";
 	}
 
 	

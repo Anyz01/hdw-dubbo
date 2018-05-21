@@ -258,6 +258,5 @@
 			<artifactId>velocity-engine-core</artifactId>
 		</dependency>
         <!-- velocity end -->
-
 	</dependencies>
 </project>

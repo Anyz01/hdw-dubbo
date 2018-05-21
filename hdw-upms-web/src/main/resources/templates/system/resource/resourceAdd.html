@@ -9,7 +9,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-                <form class="form-horizontal" id="fm" data-validator-option="{timely:3, focusCleanup:true}">
+                <form class="form-horizontal" id="fm" data-validator-option="{timely:3, focusCleanup:true, theme:'simple_bottom'}">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <input type="hidden" id="id" name="id" value="">
                     <div class="form-group">
@@ -70,7 +70,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">父级菜单：</label>
                         <div class="col-sm-8">
-                            <input type="hidden" id="pid" name="id" value="">
+                            <input type="hidden" id="pid" name="pid" value="">
                             <input id="pidName"  class="form-control" readonly="readonly" onclick="MenuInfoDlg.showMenuSelectTree(); return false;"/>
                         </div>
                     </div>
@@ -117,6 +117,7 @@
          */
         MenuInfoDlg.onClickMenu = function (e, treeId, treeNode) {
             $("#pid").attr("value", treeNode.id);
+
             $("#pidName").attr("value", instance.getSelectedVal());
         };
 

@@ -72,7 +72,7 @@ public class SysLogController extends BaseController{
 			@RequestParam(required = false) String endTime) {
 	
 		Map<String, Object> condition = new HashMap<String, Object>();
-		if (StringUtils.isNotBlank(startTime)) {
+		if (StringUtils.isNotBlank(loginName)) {
 			condition.put("loginName", loginName);
 		}
 		if (StringUtils.isNotBlank(startTime)) {

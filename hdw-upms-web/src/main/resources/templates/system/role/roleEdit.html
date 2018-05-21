@@ -35,9 +35,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">角色状态</label>
                     <div class="col-sm-6">
-                        <select class="form-control" name="status">
-                            <option value="0" th:if="${role.status==0}">正常</option>
-                            <option value="1" th:unless="${role.status==0}">停用</option>
+                        <select id="status" class="form-control" name="status">
                             <option value="0">正常</option>
                             <option value="1">停用</option>
                         </select>
@@ -55,6 +53,16 @@
     </div>
     <div th:include="/footer"></div>
     <script type="text/javascript" th:inline="javascript">
+        //状态下拉框选取
+        $(function () {
+            var status = [[${role.status}]];
+            if (status == 0) {
+                $("#status option[value='" + status + "']").attr("selected", "selected");
+            }else {
+                $("#status option[value='" + status + "']").attr("selected", "selected");
+            }
+        });
+
         $("#fm").validator({
             valid: function (form) {
                 var me = this;

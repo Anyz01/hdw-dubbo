@@ -19,9 +19,9 @@
                                     <div class="col-sm-3">
                                         <input type="text" class="form-control" id="deptName" placeholder="部门名称" />
                                     </div>
-                                    <div class="col-sm-3">
-                                        <input type="text" class="form-control" id="deptAddrees" placeholder="部门地址" />
-                                    </div>
+                                    <!--<div class="col-sm-3">-->
+                                        <!--<input type="text" class="form-control" id="deptAddrees" placeholder="部门地址" />-->
+                                    <!--</div>-->
                                     <div class="col-sm-3">
                                         <button type="submit" class="btn btn-sm btn-primary" onclick="Dept.search()">
                                             <i class="fa fa-search">搜索</i>
@@ -95,7 +95,7 @@
             var index = layer.open({
                 type: 2,
                 title: '添加菜单',
-                area: ['830px', '450px'], //宽高
+                area: ['35%', '90%'], //宽高
                 fix: false, //不固定
                 maxmin: true,
                 content: basePath+ 'organization/addPage'
@@ -111,7 +111,7 @@
                 var index = layer.open({
                     type: 2,
                     title: '修改菜单',
-                    area: ['800px', '450px'], //宽高
+                    area: ['35%', '90%'], //宽高
                     fix: false, //不固定
                     maxmin: true,
                     content: basePath+ 'organization/editPage/' + this.seItem.id

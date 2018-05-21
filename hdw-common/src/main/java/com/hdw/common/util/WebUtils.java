@@ -36,7 +36,7 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
 	/**
 	 * 读取cookie
 	 * @param request
-	 * @param key
+	 * @param name
 	 * @return
 	 */
 	public static String getCookieValue(HttpServletRequest request, String name) {

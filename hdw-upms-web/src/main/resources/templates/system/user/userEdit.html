@@ -28,7 +28,7 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label">密码</label>
 					<div class="col-sm-8">
-						<input type="password" class="form-control" name="password" data-rule="密码:required;length(2~16)">
+						<input type="password" class="form-control" name="password" data-rule="密码:length(2~16)">
 					</div>
 				</div>
 				<div class="hr-line-dashed"></div>
@@ -49,9 +49,7 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label">性别</label>
 					<div class="col-sm-8">
-						<select class="form-control" name="sex" data-rule="性别:required;">
-							<option value="0" selected="selected" th:if="${user.sex==0}">男</option>
-							<option value="1" selected="selected" th:if="${user.sex==1}">女</option>
+						<select id="sex" class="form-control" name="sex" data-rule="性别:required;">
 							<option value="0">男</option>
 							<option value="1">女</option>
 						</select>
@@ -68,9 +66,7 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label">用户类型</label>
 					<div class="col-sm-8">
-						<select class="form-control" name="userType" data-rule="用户类型:required;">
-							<option value="0" selected="selected" th:if="${user.userType==0}">超级用户</option>
-							<option value="1" selected="selected" th:if="${user.userType==1}">企业用户</option>
+						<select id="userType" class="form-control" name="userType" data-rule="用户类型:required;">
 							<option value="0">超级用户</option>
 							<option value="1">企业用户</option>
 						</select>
@@ -98,6 +94,14 @@
 				</div>
 				<div class="hr-line-dashed"></div>
 				<div class="form-group">
+					<label class="col-sm-3 control-label">所属企业</label>
+					<div class="col-sm-8">
+						<select id="enterpriseId" class="form-control" name="enterpriseId" data-rule="所属企业:required;">
+						</select>
+					</div>
+				</div>
+				<div class="hr-line-dashed"></div>
+				<div class="form-group">
 					<div class="text-center">
 						<button class="btn btn-primary" type="submit">保存</button>
 						<button class="btn btn-white" type="reset">重置</button>
@@ -113,7 +117,29 @@
 	</div>
 	<div th:include="/footer"></div>
 	<script type="text/javascript" th:inline="javascript">
-		var UserInfoDlg = {};
+        $(function(){
+            var enterpriseId = [[${user.enterpriseId}]];
+            BindSelect("enterpriseId",basePath+"enterprise/select2Tree",enterpriseId);
+        });
+
+        $(function(){
+            var sex = [[${user.sex}]];
+            var userType = [[${user.userType}]];
+            //性别下拉框选择
+            if (sex == 0) {
+                $("#sex option[value='" + sex + "']").attr("selected", "selected");
+            }else {
+                $("#sex option[value='" + sex + "']").attr("selected", "selected");
+            }
+            //用户类型下拉框选择
+            if (userType == 0) {
+                $("#userType option[value='" + userType + "']").attr("selected", "selected");
+            } else {
+                $("#userType option[value='" + userType + "']").attr("selected", "selected");
+            }
+
+        });
+        var UserInfoDlg = {};
 		/**
 		 * 点击部门input框时
 		 *
@@ -124,6 +150,7 @@
 		 */
 		UserInfoDlg.onClickDept = function (e, treeId, treeNode) {
 			$("#organizationId").attr("value", treeNode.id);
+            console.log(treeNode.id);
 		};
 
 		/**
@@ -132,8 +159,8 @@
 		 * @returns
 		 */
 		UserInfoDlg.showDeptSelectTree = function () {
-			var cityObj = $("#citySel");
-			var cityOffset = $("#citySel").offset();
+			var cityObj = $("#organizationId");
+			var cityOffset = $("#organizationId").offset();
 			$("#menuContent").css({
 				left: cityOffset.left + "px",
 				top: cityOffset.top + cityObj.outerHeight() + "px"
@@ -158,10 +185,10 @@
 		}
 
 		$(function () {
-			var ztree = new $ZTree("deptTree", basePath + "organization/tree");
-			ztree.bindOnClick(UserInfoDlg.onClickDept);
-			ztree.init();
-			instance = ztree;
+            var ztree = new $ZTree("deptTree", basePath + "organization/tree");
+            ztree.bindOnClick(UserInfoDlg.onClickDept);
+            ztree.init();
+            instance = ztree;
 
 			$("#fm").validator({
 				valid: function (form) {
@@ -197,6 +224,39 @@
 			});
 
 		});
+
+        /**
+         * 绑定字典内容到指定的Select控件
+         * ctrlName ID
+         * url 后台服务地址
+         * arryObj 被选中的ID
+         */
+        function BindSelect(ctrlName, url,enterpriseId) {
+            var control = $('#' + ctrlName);
+            $.ajax({
+                url: url,
+                type: 'get',
+                dataType: 'json',
+                cache: true,
+                success: function (data) {
+                    control.empty();
+                    $.each(data, function (i, item) {
+                        if (item.id == enterpriseId) {
+                            control.append("<option value='" + item.id + "' selected='selected'>&nbsp;" + item.text + "</option>");
+                        } else {
+                            control.append("<option value='" + item.id + "'>&nbsp;" + item.text + "</option>");
+                        }
+                    });
+                }
+            });
+            //设置Select2的处理
+            control.select2({
+                allowClear: true,
+                placeholder: "请选择",
+                language: "zh-CN",
+                escapeMarkup: function (m) { return m; }
+            });
+        }
 	</script>
 </body>
 

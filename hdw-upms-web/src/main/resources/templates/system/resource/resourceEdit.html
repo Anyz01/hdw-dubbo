@@ -9,7 +9,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-                <form class="form-horizontal" id="fm" data-validator-option="{timely:3, focusCleanup:true}">
+                <form class="form-horizontal" id="fm" data-validator-option="{timely:3, focusCleanup:true, theme:'simple_bottom'}">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                     <input type="hidden" name="id" th:value="${resource.id}">
                     <div class="form-group">
@@ -50,9 +50,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">状态：</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="status">
-                                <option value="0" th:if="${resource.status==0}">正常</option>
-                                <option value="1" th:unless="${resource.status==0}">停用</option>
+                            <select id="status" class="form-control" name="status">
                                 <option value="0">正常</option>
                                 <option value="1">停用</option>
                             </select>
@@ -62,9 +60,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">菜单类型：</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="resourceType">
-                                <option value="0" th:if="${resource.resourceType==0}">菜单</option>
-                                <option value="1" th:unless="${resource.resourceType==0}">按钮</option>
+                            <select id="resourceType" class="form-control" name="resourceType">
                                 <option value="0">菜单</option>
                                 <option value="1">按钮</option>
                             </select>
@@ -83,9 +79,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">打开方式：</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="openMode">
-                                <option value="ajax" th:if="${resource.openMode=='ajax'}">ajax</option>
-                                <option value="iframe" th:unless="${resource.openMode=='iframe'}">iframe</option>
+                            <select id="openMode" class="form-control" name="openMode">
                                 <option value="ajax">ajax</option>
                                 <option value="iframe">iframe</option>
                             </select>
@@ -95,9 +89,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">打开状态：</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="opened">
-                                <option value="0" th:if="${resource.opened==0}">开启</option>
-                                <option value="1" th:unless="${resource.opened==0}">关闭</option>
+                            <select id="opened" class="form-control" name="opened">
                                 <option value="0">开启</option>
                                 <option value="1">关闭</option>
                             </select>
@@ -120,6 +112,38 @@
     </div>
     <div th:include="/footer"></div>
     <script type="text/javascript" th:inline="javascript">
+        //下拉框默认值显示
+        $(function(){
+            var status = [[${resource.status}]];
+            var resourceType = [[${resource.resourceType}]];
+            var openMode = [[${resource.openMode}]];
+            var opened = [[${resource.opened}]];
+            //状态
+            if (status == 0) {
+                $("#status option[value='" + status + "']").attr("selected", "selected");
+            }else {
+                $("#status option[value='" + status + "']").attr("selected", "selected");
+            }
+            //菜单类型
+            if (resourceType == 0) {
+                $("#resourceType option[value='" + resourceType + "']").attr("selected", "selected");
+            } else {
+                $("#resourceType option[value='" + resourceType + "']").attr("selected", "selected");
+            }
+            //打开方式
+            if (openMode == "ajax") {
+                $("#openMode option[value='" + openMode + "']").attr("selected", "selected");
+            } else {
+                $("#openMode option[value='" + openMode + "']").attr("selected", "selected");
+            }
+            //打开状态
+            if (opened == 0) {
+                $("#opened option[value='" + opened + "']").attr("selected", "selected");
+            } else {
+                $("#opened option[value='" + opened + "']").attr("selected", "selected");
+            }
+
+        });
         var MenuInfoDlg = {};
         /**
          * 点击父级编号input框时
