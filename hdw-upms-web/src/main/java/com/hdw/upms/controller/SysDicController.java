@@ -129,10 +129,8 @@ public class SysDicController extends BaseController {
 	 * @param limit
 	 * @param sort
 	 * @param order
-	 * @param name
-	 * @param startTime
-	 * @param endTime
-	 * @param deptId
+	 * @param dicName
+	 * @param dicCode
 	 * @return
 	 */
 	@ApiOperation(value = "获取数据列表", notes = "获取数据列表")
@@ -275,7 +273,7 @@ public class SysDicController extends BaseController {
 	/**
 	 * 删除
 	 * 
-	 * @param id
+	 * @param dicId
 	 * @return
 	 */
 	@ApiOperation(value = "删除数据字典信息", notes = "删除数据字典信息")
@@ -285,7 +283,10 @@ public class SysDicController extends BaseController {
 	@ResponseBody
 	public Object delete(Long dicId) throws RuntimeException {
 		try {
+			Map<String,Object> par=new HashMap<>();
 			sysDicService.deleteById(dicId);
+			par.put("parent_id",dicId);
+			sysDicService.deleteByMap(par);
 			return renderSuccess("删除成功！");
 		} catch (Exception e) {
 			logger.error(e.getMessage());

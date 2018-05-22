@@ -135,7 +135,7 @@ public class ResourceController extends BaseController {
 	 * 编辑资源页
 	 *
 	 * @param model
-	 * @param id
+	 * @param resourceId
 	 * @return
 	 */
 	@GetMapping("/editPage/{resourceId}")
@@ -178,16 +178,19 @@ public class ResourceController extends BaseController {
 	/**
 	 * 删除资源
 	 *
-	 * @param id
+	 * @param resourceId
 	 * @return
 	 */
 	@ApiOperation(value = "删除资源信息", notes = "删除资源信息")
-	@ApiImplicitParam(name = "id", value = "资源ID", dataType = "Long", required = true)
+	@ApiImplicitParam(name = "resourceId", value = "资源ID", dataType = "Long", required = true)
 	@PostMapping("/delete")
 	@ResponseBody
 	public Object delete(Long resourceId) throws RuntimeException {
 		try {
+			Map<String,Object> par=new HashMap<>();
 			resourceService.deleteById(resourceId);
+			par.put("pid",resourceId);
+			resourceService.deleteByMap(par);
 			return renderSuccess("删除成功！");
 		} catch (Exception e) {
 			logger.error(e.getMessage());

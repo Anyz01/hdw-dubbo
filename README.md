@@ -5,7 +5,7 @@
 
 1.启动顺序
 
-先启动UpmsServiceApplication,然后启动UpmsServerApplication
+先启动UpmsServiceApplication,然后启动UpmsWebApplication
 
 2.默认用户
 
