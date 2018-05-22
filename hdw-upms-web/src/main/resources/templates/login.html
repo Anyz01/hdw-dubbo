@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <title>风险计算系统 - 登录</title>
+    <title>系统 - 登录</title>
     <link rel="shortcut icon" th:href="@{'/favicon.ico'}">
     <link th:href="@{'/css/bootstrap.min.css?v=3.3.6'}" rel="stylesheet"/>
     <link th:href="@{'/css/font-awesome.min.css?v=4.4.0'}" rel="stylesheet">
@@ -38,11 +38,11 @@
             <div class="col-sm-7">
                 <div class="signin-info">
                     <div class="logopanel m-b">
-                        <h1>风险计算系统</h1>
+                        <h1>系统</h1>
                     </div>
                     <div class="m-b"></div>
                     <h4>欢迎使用
-                        <strong>风险计算系统</strong>
+                        <strong>系统</strong>
                     </h4>
                     <ul class="m-b">
 
@@ -53,7 +53,7 @@
             <div class="col-sm-5">
                 <form id="fm" data-validator-option="{timely:8,theme:'yellow_top'}">
                     <h4 class="no-margins">登录：</h4>
-                    <p class="m-t-md">登录到风险计算系统</p>
+                    <p class="m-t-md">登录到系统</p>
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <input type="text" class="form-control uname" name="username" placeholder="输入用户名（至少 4 个字符）" data-rule="required;length(3~)" />
                     <input type="password" class="form-control pword m-b" name="password" placeholder="输入密码（6~16 个字符）" data-rule="required;length(6~16)"
@@ -81,7 +81,7 @@
         <div class="signup-footer">
             <div class="pull-left">
                 &copy; 1999-2018 All Rights Reserved.
-                <a href="http://www.xy-worldway.com" target="_blank">湖北兴业华德威安全信息技术股份有限公司</a>
+                <a href="http://www.xy-worldway.com" target="_blank">XX信息技术股份有限公司</a>
             </div>
         </div>
     </div>

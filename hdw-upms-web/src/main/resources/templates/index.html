@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="header">
-    <title>风险计算系统-主页</title>
+    <title>数据汇集系统-主页</title>
 </head>
 
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
@@ -31,7 +31,7 @@
                         </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <li>
-                                <a class="J_menuItem" onclick="resetPwd()">重置密码</a>
+                                <a class="J_menuItem" onclick="resetPwd()">修改密码</a>
                             </li>
                             <li class="divider"></li>
                             <li>
@@ -163,7 +163,7 @@
         </div>
         <div class="footer">
             <div class="pull-right">&copy; 1999-2018
-                <a href="http://www.xy-worldway.com" target="_blank">湖北兴业华德威安全信息技术股份有限公司</a>
+                <a href="" target="_blank">XX信息技术股份有限公司</a>
             </div>
         </div>
     </div>
@@ -281,21 +281,34 @@
     });
 
     function resetPwd() {
-        parent.layer.confirm('是否重置密码为123456？', {
+        parent.layer.confirm( "<div><label>输入新密码</label><input id='password' name='password' type='password'/></div>" +
+            "<div><label>再次输入新密码</label><input id='pwd' name='pwd' type='password'/></div>", {
             btn: ['确定', '取消'],
+            area:['200px', '250px'],
+            title: '修改密码',
             shade: false //不显示遮罩
         }, function () {
-            var ajax = new $ax(basePath + "user/reset", function (data) {
-                if (data.success) {
-                    hdw.success("重置密码成功!");
-                } else {
-                    hdw.error("重置密码失败!" + data.msg + "!");
-                }
-            }, function (data) {
-                hdw.error("重置密码失败!");
-            });
-            ajax.set("loginName", loginName);
-            ajax.start();
+            var password = $("#password").val();
+            var pwd = $("#pwd").val();
+            if (pwd.length < 6 || pwd.length > 16) {
+                layer.msg('请输入6-16位密码', {icon: 5});
+            }else if (password != pwd ) {
+                parent.layer.msg('密码不一致。。', {icon: 5});
+            } else {
+                var ajax = new $ax(basePath + "user/reset", function (data) {
+                    if (data.success) {
+                        hdw.success("重置密码成功!");
+                    } else {
+                        hdw.error("重置密码失败!" + data.msg + "!");
+                    }
+                }, function (data) {
+                    hdw.error("重置密码失败!");
+                });
+                ajax.set("loginName", loginName);
+                ajax.set("pwd", pwd);
+                ajax.start();
+            }
+
         });
     }
 </script>
