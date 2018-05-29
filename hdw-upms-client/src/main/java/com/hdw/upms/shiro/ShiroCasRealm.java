@@ -8,6 +8,7 @@ import com.hdw.upms.service.IUpmsApiService;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -137,7 +138,9 @@ public class ShiroCasRealm extends Pac4jRealm {
 					List<Resource> rList = rv.getPermissions();
 					if (rList != null && !rList.isEmpty()) {
 						for (Resource r : rList) {
-							urlSet.add(r.getUrl());
+							if(StringUtils.isNotBlank(r.getUrl())){
+								urlSet.add(r.getUrl());
+							}
 						}
 					}
 				}

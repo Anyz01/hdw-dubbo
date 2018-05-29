@@ -58,19 +58,19 @@
                                         <!--</div>-->
                                     </div>
                                     <div class="hidden-xs" id="managerTableToolbar" role="group">
-                                        <button class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.openAddMgr()">
+                                        <button shiro:hasPermission="/user/add" class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.openAddMgr()">
                                             <i class="fa fa-pencil"></i>添加</button>
-                                        <button class="btn btn-sm btn-info" type="submit" onclick="MgrUser.openChangeUser()">
+                                        <button shiro:hasPermission="/user/edit" class="btn btn-sm btn-info" type="submit" onclick="MgrUser.openChangeUser()">
                                             <i class="fa fa-paste"></i>修改</button>
-                                        <button class="btn btn-sm btn-danger" type="submit" onclick="MgrUser.delMgrUser()">
+                                        <button shiro:hasPermission="/user/delete" class="btn btn-sm btn-danger" type="submit" onclick="MgrUser.delMgrUser()">
                                             <i class="fa fa-cut"></i>删除</button>
-                                        <button class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.resetPwd()">
+                                        <button shiro:hasPermission="/user/reset" class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.resetPwd()">
                                             <i class="fa fa-pencil"></i>重置密码</button>
-                                        <button class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.freezeAccount()">
+                                        <button  shiro:hasRole="admin" class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.freezeAccount()">
                                             <i class="fa fa-pencil"></i>冻结</button>
-                                        <button class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.unfreeze()">
+                                        <button shiro:hasRole="admin" class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.unfreeze()">
                                             <i class="fa fa-pencil"></i>解除冻结</button>
-                                        <button class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.roleAssign()">
+                                        <button shiro:hasRole="admin" class="btn btn-sm btn-primary" type="submit" onclick="MgrUser.roleAssign()">
                                             <i class="fa fa-pencil"></i>角色分配</button>
                                     </div>
                                     <table id="managerTable" />

@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -163,7 +164,9 @@ public class ShiroDBRealm extends AuthorizingRealm {
 					List<Resource> rList = rv.getPermissions();
 					if (rList != null && !rList.isEmpty()) {
 						for (Resource r : rList) {
-							urlSet.add(r.getUrl());
+							if(StringUtils.isNotBlank(r.getUrl())){
+								urlSet.add(r.getUrl());
+							}
 						}
 					}
 				}
