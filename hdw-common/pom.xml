@@ -258,6 +258,20 @@
 		</dependency>
 		<!-- zxing end -->
 
+		<!-- dom4j begin-->
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+		</dependency>
+		<!-- dom4j end -->
+
+		<!-- hutool begin -->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+		</dependency>
+		<!-- hutool end -->
+
 		<!-- velocity begin -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>

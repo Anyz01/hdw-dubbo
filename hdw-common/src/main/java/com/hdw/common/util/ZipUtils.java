@@ -13,8 +13,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
- * 文件压缩工具类
- * @description ZipUtils
+ * @description 文件压缩工具类
  * @author TuMinglong
  * @date 2017年9月29日 下午4:03:42
  *
@@ -22,7 +21,7 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
    
 	/**
-	 * 单文件或目录压缩
+	 * 功能：单文件或目录压缩
 	 * @param srcFile 待压缩的文件或目录的路径
 	 * @param zipFile 压缩后文件路径
 	 * @return true false
@@ -127,7 +126,7 @@ public class ZipUtils {
 
        
     /** 
-    * 复制单个文件 
+    * 功能：复制单个文件
     * @param oldPath String 原文件路径 如：c:/fqf.txt 
     * @param newPath String 复制后路径 如：f:/fqf.txt 
     * @return boolean 
@@ -157,7 +156,7 @@ public class ZipUtils {
     } 
 
     /** 
-    * 复制整个文件夹内容 
+    * 功能：复制整个文件夹内容
     * @param oldPath String 原文件路径 如：c:/fqf 
     * @param newPath String 复制后路径 如：f:/fqf/ff 
     * @return boolean 
@@ -203,7 +202,7 @@ public class ZipUtils {
     
     
     /**
-     * 删除文件，可以是文件或文件夹
+     * 功能：删除文件，可以是文件或文件夹
      *
      * @param fileName
      *            要删除的文件名
@@ -223,7 +222,7 @@ public class ZipUtils {
     }
 
     /**
-     * 删除单个文件
+     * 功能：删除单个文件
      *
      * @param fileName
      *            要删除的文件的文件名
@@ -247,7 +246,7 @@ public class ZipUtils {
     }
 
     /**
-     * 删除目录及目录下的文件
+     * 功能：删除目录及目录下的文件
      *
      * @param dir
      *            要删除的目录的文件路径

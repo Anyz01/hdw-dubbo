@@ -5,12 +5,12 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 
-
-
 /**
- * 16进制值与String/Byte之间的转换
-
- * */
+ *
+ * @description 16进制值与String/Byte之间的转换
+ * @author TuMinglong
+ * @date 2017年11月15日上午10:49:01
+ */
 public class CHexConver
 {
 	private final static char[] mChars = "0123456789ABCDEF".toCharArray();
