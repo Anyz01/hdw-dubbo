@@ -55,7 +55,6 @@
         <!-- cache INFO -->
         <logger name="net.sf.ehcache" level="INFO"/>
         <logger name="org.springframework.cache" level="INFO"/>
-        <logger name="com.gbicc.common.shiro.cache" level="INFO"/>
         
         <!-- 业务debug日志 -->
         <logger name="com.hdw" level="DEBUG"/>
