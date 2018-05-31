@@ -278,17 +278,5 @@
 			<artifactId>velocity-engine-core</artifactId>
 		</dependency>
 		<!-- velocity end -->
-
-		<!-- solr客户端 -->
-		<!--  
-		<dependency>
-			<groupId>org.apache.solr</groupId>
-			<artifactId>solr-solrj</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-solr</artifactId>
-		</dependency>
-		-->
 	</dependencies>
 </project>
