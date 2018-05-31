@@ -18,7 +18,8 @@ import com.hdw.upms.service.IUserRoleService;
         version = "1.0.0",
         application = "${dubbo.application.id}",
         protocol = "${dubbo.protocol.id}",
-        registry = "${dubbo.registry.id}"
+        registry = "${dubbo.registry.id}",
+        group = "hdw-upms"
 )
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements IUserRoleService {
 

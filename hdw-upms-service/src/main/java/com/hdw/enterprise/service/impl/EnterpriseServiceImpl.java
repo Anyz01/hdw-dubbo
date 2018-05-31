@@ -23,7 +23,7 @@ import java.util.Map;
  * @author TuMinglong
  * @since 2018-04-26
  */
-@Service(version = "1.0.0", application = "${dubbo.application.id}", protocol = "${dubbo.protocol.id}", registry = "${dubbo.registry.id}")
+@Service(version = "1.0.0", application = "${dubbo.application.id}", protocol = "${dubbo.protocol.id}", registry = "${dubbo.registry.id}", group = "hdw-upms",timeout = 60000)
 public class EnterpriseServiceImpl extends ServiceImpl<EnterpriseMapper, Enterprise> implements IEnterpriseService {
 
 	@Autowired
@@ -66,5 +66,11 @@ public class EnterpriseServiceImpl extends ServiceImpl<EnterpriseMapper, Enterpr
 	@Override
 	public List<Enterprise> selectEnterpriseListByMap(Map<String, Object> par) {
 		return enterpriseMapper.selectEnterpriseListByMap(par);
+	}
+
+	@Override
+	public List<Long> selectEnterpriseListByIndustryIds(Map<String,Object> par) {
+		
+		return enterpriseMapper.selectEnterpriseListByIndustryIds(par);
 	}
 }

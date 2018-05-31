@@ -7,6 +7,8 @@ import com.hdw.enterprise.entity.Enterprise;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 /**
  * <p>
   * 企业信息表 Mapper 接口
@@ -25,12 +27,19 @@ public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 	 * @param par
 	 * @return
 	 */
-	Enterprise selectEnterpriseByMap(Map<String,Object> par);
+	Enterprise selectEnterpriseByMap(Map<String, Object> par);
 
 	/**
 	 * 根据Id、名称、行业、区域、用户名查询企业信息
 	 * @param par
 	 * @return
 	 */
-	List<Enterprise> selectEnterpriseListByMap(Map<String,Object> par);
+	List<Enterprise> selectEnterpriseListByMap(Map<String, Object> par);
+	
+	/**
+	 * 根据多行业查询企业Id
+	 * @param Ids
+	 * @return
+	 */
+	List<Long> selectEnterpriseListByIndustryIds(Map<String, Object> par);
 }

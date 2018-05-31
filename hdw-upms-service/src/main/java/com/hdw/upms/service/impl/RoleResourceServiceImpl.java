@@ -18,6 +18,7 @@ import com.hdw.upms.service.IRoleResourceService;
         application = "${dubbo.application.id}",
         protocol = "${dubbo.protocol.id}",
         registry = "${dubbo.registry.id}"
+        ,group = "hdw-upms"
 )
 public class RoleResourceServiceImpl extends ServiceImpl<RoleResourceMapper, RoleResource> implements IRoleResourceService {
 

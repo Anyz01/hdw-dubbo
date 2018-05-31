@@ -23,7 +23,8 @@ import com.hdw.upms.service.ISysLogService;
         version = "1.0.0",
         application = "${dubbo.application.id}",
         protocol = "${dubbo.protocol.id}",
-        registry = "${dubbo.registry.id}"
+        registry = "${dubbo.registry.id}",
+        group = "hdw-upms"
 )
 public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> implements ISysLogService {
 	

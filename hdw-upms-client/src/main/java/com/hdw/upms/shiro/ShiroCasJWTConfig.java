@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 
- * @description  CAS JWT配置
+ * @description CAS JWT配置
  * @author TuMinglong
  * @date 2018年4月25日上午10:15:50
  * @version v1.0.0

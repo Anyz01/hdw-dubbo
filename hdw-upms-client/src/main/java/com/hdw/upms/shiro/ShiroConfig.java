@@ -22,11 +22,9 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 
 /**
  * 
@@ -117,8 +115,8 @@ public class ShiroConfig {
 		filtersMap.put("user", ajaxSessionFilter());
 		
 		// 实现自己规则roles,这是为了实现or的效果
-//		RoleFilter roleFilter = new RoleFilter();
-//		filtersMap.put("roles", roleFilter);
+		// RoleFilter roleFilter = new RoleFilter();
+		// filtersMap.put("roles", roleFilter);
 		shiroFilterFactoryBean.setFilters(filtersMap);
 		// 拦截器
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
@@ -148,7 +146,6 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/doc.html", "anon");
 
 		// 其他的
-		filterChainDefinitionMap.put("/solr/**", "anon");
 		filterChainDefinitionMap.put("/test/**", "anon");
 		filterChainDefinitionMap.put("/login", "anon");
 		filterChainDefinitionMap.put("/**", "authc");
@@ -241,7 +238,7 @@ public class ShiroConfig {
 	public SimpleCookie rememberMeCookie() {
 		SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
 		simpleCookie.setHttpOnly(true);
-		// 记住我cookie生效时间1小时 ,单位秒
+		// 记住我cookie生效时间7天 ,单位秒
 		simpleCookie.setMaxAge(60*60*1*1);
 		return simpleCookie;
 	}

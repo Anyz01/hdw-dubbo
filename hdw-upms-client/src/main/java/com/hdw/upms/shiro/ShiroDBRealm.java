@@ -1,16 +1,11 @@
 package com.hdw.upms.shiro;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.hdw.common.util.JacksonUtils;
 import com.hdw.upms.entity.Resource;
 import com.hdw.upms.entity.vo.RoleVo;
 import com.hdw.upms.entity.vo.UserVo;
 import com.hdw.upms.service.IUpmsApiService;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -27,6 +22,11 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * 
  * @Descriptin 身份校验核心类
@@ -37,7 +37,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
 
 	private static final Logger logger = LoggerFactory.getLogger(ShiroDBRealm.class);
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}", group = "hdw-upms")
 	private IUpmsApiService upmsApiService;
 
 	/**
@@ -85,13 +85,9 @@ public class ShiroDBRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		/*
-		 * 当没有使用缓存的时候，不断刷新页面的话，这个代码会不断执行， 当其实没有必要每次都重新设置权限信息，所以我们需要放到缓存中进行管理；
-		 * 当放到缓存中时，这样的话，doGetAuthorizationInfo就只会执行一次了， 缓存过期之后会再次执行。
-		 */
-		logger.info("Shiro开始权限配置");
 
-		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
+		logger.info("Shiro开始权限配置");
+		ShiroUser shiroUser = JacksonUtils.toObject(principals.getPrimaryPrincipal().toString(),ShiroUser.class);
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		Set<String> roles=new HashSet<>();
 		List<String> roleList=shiroUser.getRoles();
@@ -164,7 +160,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
 					List<Resource> rList = rv.getPermissions();
 					if (rList != null && !rList.isEmpty()) {
 						for (Resource r : rList) {
-							if(StringUtils.isNotBlank(r.getUrl())){
+							if (StringUtils.isNotBlank(r.getUrl())) {
 								urlSet.add(r.getUrl());
 							}
 						}

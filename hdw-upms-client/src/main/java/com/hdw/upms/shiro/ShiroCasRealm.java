@@ -30,7 +30,7 @@ public class ShiroCasRealm extends Pac4jRealm {
 
 	private static final Logger LOGGER = LogManager.getLogger(ShiroCasRealm.class);
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}", group = "hdw-upms")
 	private IUpmsApiService upmsApiService;
 	
 	public ShiroCasRealm() {
@@ -138,9 +138,9 @@ public class ShiroCasRealm extends Pac4jRealm {
 					List<Resource> rList = rv.getPermissions();
 					if (rList != null && !rList.isEmpty()) {
 						for (Resource r : rList) {
-							if(StringUtils.isNotBlank(r.getUrl())){
-								urlSet.add(r.getUrl());
-							}
+                            if (StringUtils.isNotBlank(r.getUrl())) {
+                                urlSet.add(r.getUrl());
+                            }
 						}
 					}
 				}

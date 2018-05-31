@@ -61,7 +61,7 @@
 		<hutool.version>4.0.12</hutool.version>
 		<!-- guava -->
 		<guava.version>20.0</guava.version>
-
+		<quartz.version>2.2.3</quartz.version>
 		<dubbo.version>2.6.1</dubbo.version>
 		<dubbo-spring-boot-starter.version>0.1.0</dubbo-spring-boot-starter.version>
 		<zkclient.version>0.10</zkclient.version>
@@ -261,6 +261,19 @@
 				<version>${hutool.version}</version>
 			</dependency>
 			<!-- hutool end -->
+
+			<!-- quartz begin -->
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz</artifactId>
+				<version>${quartz.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.quartz-scheduler</groupId>
+				<artifactId>quartz-jobs</artifactId>
+				<version>${quartz.version}</version>
+			</dependency>
+			<!-- quartz end -->
 
 			<!-- dubbo begin -->
 			<dependency>

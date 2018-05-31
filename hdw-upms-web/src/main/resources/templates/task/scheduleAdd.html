@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+
+<head th:include="/header">
+    <title>定时任务-添加</title>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox-content">
+        <form id="fm" class="form-horizontal"
+              data-validator-option="{timely:8, focusCleanup:true, theme:'simple_bottom'}">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">任务组</label>
+                <div class="col-sm-6">
+                    <input type="text" name="jobGroup" class="form-control" placeholder="请输入任务组"
+                           data-rule="required"></input>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">任务名</label>
+                <div class="col-sm-6">
+                    <input type="text" name="jobName" class="form-control" placeholder="请输入任务名"
+                           data-rule="required"></input>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">cron表达式</label>
+                <div class="col-sm-6">
+                    <input type="text" name="cronExpression" class="form-control" placeholder="请输入cron表达式"
+                           data-rule="required"></input>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">任务执行类名称</label>
+                <div class="col-sm-6">
+                    <input type="text" name="className" class="form-control" placeholder="任务执行类名称"
+                           data-rule="required"></input>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">任务执行类方法</label>
+                <div class="col-sm-6">
+                    <input type="text" name="methodName" class="form-control" placeholder="任务执行类方法"
+                           data-rule="required"></input>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="text-center">
+                    <button class="btn btn-primary" type="submit">保存</button>
+                    <button class="btn btn-white" type="reset">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div th:include="/footer"></div>
+<script type="text/javascript" th:inline="javascript">
+
+
+    $("#fm").validator({
+        valid: function (form) {
+            var me = this;
+            // 提交表单之前，hold住表单，防止重复提交
+            me.holdSubmit();
+            $.ajax({
+                url: basePath + "schedule/add",
+                data: $(form).serialize(),
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    if (data.success) {
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.msg(data.msg, {
+                            icon: 1,
+                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            window.parent.location.reload();
+                            parent.layer.close(index);
+                        });
+
+                    } else {
+                        parent.layer.msg(data.msg, {
+                            icon: 2,
+                            time: 1000 //1秒关闭（如果不配置，默认是3秒）
+                        });
+                        me.holdSubmit(false);
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+
+</html>

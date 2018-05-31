@@ -1,4 +1,4 @@
-package com.hdw.upms.task;
+package com.hdw.task.config;
 
 import java.util.Random;
 import java.util.concurrent.Future;
@@ -10,12 +10,11 @@ import org.springframework.stereotype.Component;
 /**
  * @description 异步任务测试
  * @author TuMinglong
- *
+ *@Date 2018/5/31 19:18
  */
 @Component
 public class AsyncTask {
 	private static Random random = new Random();
-
     @Async
     public Future<String> doTaskOne() throws Exception {
         System.out.println("开始做任务一");

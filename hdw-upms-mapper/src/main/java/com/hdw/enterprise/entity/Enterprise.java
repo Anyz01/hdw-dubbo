@@ -2,7 +2,9 @@ package com.hdw.enterprise.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,7 +21,7 @@ import java.util.Date;
 public class Enterprise extends Model<Enterprise> {
 
     private static final long serialVersionUID = 1L;
-
+    @TableId(value="id", type= IdType.AUTO)
 	private Long id;
     /**
      * 企业名称
@@ -31,11 +33,6 @@ public class Enterprise extends Model<Enterprise> {
      */
 	@TableField("industry_code")
 	private String industryCode;
-    /**
-     * 拥有的风险清单列表
-     */
-	@TableField("risk_model_list")
-	private String riskModelList;
     /**
      * 所属区域
      */
@@ -93,7 +90,13 @@ public class Enterprise extends Model<Enterprise> {
 	 */
 	@TableField(exist = false)
 	private String areaName;
-
+	
+	/**
+	 *风险模型类型 
+	 */
+	@TableField("risk_model")
+	private String riskModel;
+	
 	public Long getId() {
 		return id;
 	}
@@ -116,14 +119,6 @@ public class Enterprise extends Model<Enterprise> {
 
 	public void setIndustryCode(String industryCode) {
 		this.industryCode = industryCode;
-	}
-
-	public String getRiskModelList() {
-		return riskModelList;
-	}
-
-	public void setRiskModelList(String riskModelList) {
-		this.riskModelList = riskModelList;
 	}
 
 	public String getAreaCode() {
@@ -212,6 +207,14 @@ public class Enterprise extends Model<Enterprise> {
 
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
+	}
+
+	public String getRiskModel() {
+		return riskModel;
+	}
+
+	public void setRiskModel(String riskModel) {
+		this.riskModel = riskModel;
 	}
 
 	@Override

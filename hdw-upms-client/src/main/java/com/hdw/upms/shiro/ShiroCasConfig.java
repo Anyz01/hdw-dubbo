@@ -38,7 +38,7 @@ import java.util.Map;
 
 /**
  * 
- * @description Shiro CAS配置
+ * @description Shiro CAS 配置
  * @author TuMinglong
  * @date 2018年3月5日 上午11:22:21
  */
@@ -117,10 +117,9 @@ public class ShiroCasConfig {
 		filterChainDefinitionMap.put("/js/**", "anon");
 		filterChainDefinitionMap.put("/plugins/**", "anon");
 		filterChainDefinitionMap.put("/kaptcha.jpg", "anon");// 图片验证码(kaptcha框架)
-		filterChainDefinitionMap.put("/api/**", "anon");// API接口
 		filterChainDefinitionMap.put("/xlsFile/**", "anon");
 		filterChainDefinitionMap.put("/upload/**", "anon");
-		filterChainDefinitionMap.put("/solr/**", "anon");
+		filterChainDefinitionMap.put("/api/**", "anon");// API接口
 
 		// swagger接口文档
 		filterChainDefinitionMap.put("/v2/api-docs", "anon");
@@ -233,7 +232,7 @@ public class ShiroCasConfig {
 	@Bean(name = "sessionValidationScheduler")
 	public ExecutorServiceSessionValidationScheduler getExecutorServiceSessionValidationScheduler() {
 		ExecutorServiceSessionValidationScheduler scheduler = new ExecutorServiceSessionValidationScheduler();
-		scheduler.setInterval(900000);
+		scheduler.setInterval(60 * 60 * 1 * 1);
 		return scheduler;
 	}
 

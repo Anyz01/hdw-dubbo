@@ -21,7 +21,8 @@ import com.hdw.upms.service.IUpmsApiService;
         version = "1.0.0",
         application = "${dubbo.application.id}",
         protocol = "${dubbo.protocol.id}",
-        registry = "${dubbo.registry.id}"
+        registry = "${dubbo.registry.id}",
+		group = "hdw-upms"
 )
 public class UpmsApiServiceImpl implements IUpmsApiService {
 

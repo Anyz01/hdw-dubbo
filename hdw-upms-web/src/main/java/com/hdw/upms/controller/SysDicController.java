@@ -33,7 +33,7 @@ import java.util.*;
 @RequestMapping("/dic")
 public class SysDicController extends BaseController {
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}",group = "hdw-upms")
 	private ISysDicService sysDicService;
 
 

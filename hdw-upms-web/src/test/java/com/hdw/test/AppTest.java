@@ -20,7 +20,7 @@ public class AppTest {
 	
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());  
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}",group = "hdw-upms")
 	private IUpmsApiService upmsApiService;
 
 	@Test

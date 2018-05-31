@@ -7,12 +7,9 @@ import com.hdw.common.result.Select2Node;
 import com.hdw.common.result.ZTreeNode;
 import com.hdw.enterprise.entity.Enterprise;
 import com.hdw.enterprise.service.IEnterpriseService;
+import com.hdw.upms.entity.SysDic;
 import com.hdw.upms.service.ISysDicService;
 import com.hdw.upms.shiro.ShiroKit;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,20 +22,19 @@ import javax.validation.Valid;
 import java.util.*;
 
 /**
- * @author WangRui
+ * @author TuMinglong
  * @description 企业信息 前端控制器
  * @date 2018年5月4日
  */
 
-@Api(value = " 企业信息类", tags = {" 企业信息接口"})
 @Controller
 @RequestMapping("/enterprise")
 public class EnterpriseController extends BaseController {
 
-    @Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20881")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}", group = "hdw-upms")
     private IEnterpriseService enterpriseService;
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}", url = "dubbo://localhost:20880")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}", group = "hdw-upms")
 	private ISysDicService sysDicService;
 
 	/**
@@ -62,15 +58,6 @@ public class EnterpriseController extends BaseController {
 	 * @param areaCode
 	 * @return
 	 */
-    @ApiOperation(value = "获取企业列表", notes = "获取企业列表")
-	@ApiImplicitParams({ @ApiImplicitParam(name = "offset", value = "页数", dataType = "int", required = true),
-			@ApiImplicitParam(name = "limit", value = "行数", dataType = "int", required = true),
-			@ApiImplicitParam(name = "sort", value = "根据某属性排序", dataType = "string"),
-			@ApiImplicitParam(name = "order", value = "升降序", dataType = "string"),
-			@ApiImplicitParam(name = "enterpriseId", value = "企业Id", dataType = "int"),
-			@ApiImplicitParam(name = "enterpriseName", value = "企业名称", dataType = "string"),
-	        @ApiImplicitParam(name = "industryCode", value = "行业Id", dataType = "string"),
-	        @ApiImplicitParam(name = "areaCode", value = "区域Id", dataType = "string")})
 	@RequestMapping("/dataGrid")
 	@ResponseBody
 	public Object dataGrid(Integer offset, Integer limit, String sort, String order, 
@@ -90,7 +77,26 @@ public class EnterpriseController extends BaseController {
             condition.put("areaCode", areaCode);
         }
         pageInfo.setCondition(condition);
-        PageInfo page=enterpriseService.selectDataGrid(pageInfo);
+        PageInfo page=enterpriseService.selectDataGrid(pageInfo);       
+    	@SuppressWarnings("unchecked")
+		List<Enterprise> list=page.getRows();
+    	for(int y=0;y<list.size();y++) {
+    		String riskModelName="";
+    		String s=list.get(y).getRiskModel();
+    		if(StringUtils.isNotBlank(s)){
+				String[] param=s.split(",");
+				for(int z=0;z<param.length;z++) {
+					SysDic sysDic=sysDicService.selectById(param[z]);
+					if(z<param.length-1) {
+						riskModelName+=sysDic.getVarName()+",";
+					}else {
+						riskModelName+=sysDic.getVarName();
+					}
+				}
+			}
+    		list.get(y).setRiskModel(riskModelName);
+    	}
+        page.setRows(list);
         return page;
     }
 
@@ -100,7 +106,6 @@ public class EnterpriseController extends BaseController {
 	 *
 	 * @return
 	 */
-	@ApiOperation(value = "根据行业Id或者区域Id获取企业select2树", notes = "根据行业Id或者区域Id获取企业select2树")
 	@RequestMapping("/select2Tree")
 	@ResponseBody
 	public Object select2Tree(String areaCode,String industryCode) {
@@ -129,7 +134,6 @@ public class EnterpriseController extends BaseController {
 	 *
 	 * @return
 	 */
-	@ApiOperation(value = "根据行业Id或者区域Id获取企业树", notes = "根据行业Id或者区域Id获取企业树")
 	@PostMapping("/tree")
 	@ResponseBody
 	public List<ZTreeNode> tree(String areaCode,String industryCode) {
@@ -150,7 +154,6 @@ public class EnterpriseController extends BaseController {
 	 *
 	 * @return
 	 */
-	@ApiOperation(value = "根据区域父Id获取企业树", notes = "根据区域父Id获取企业树")
 	@PostMapping("/selectTreeByAreaCode/{areaCode}")
 	@ResponseBody
 	public List<ZTreeNode> selectTreeByAreaCodePid(@PathVariable("areaCodePid") String areaCodePid) {
@@ -190,7 +193,6 @@ public class EnterpriseController extends BaseController {
 	 *
 	 * @return
 	 */
-	@ApiOperation(value = "根据行业父Id获取企业树", notes = "根据行业父Id获取企业树")
 	@PostMapping("/selectTreeByIndustryCodePid/{industryCodePid}")
 	@ResponseBody
 	public List<ZTreeNode> selectTreeByIndustryCode(@PathVariable("industryCodePid") String industryCodePid) {
@@ -249,7 +251,6 @@ public class EnterpriseController extends BaseController {
 	 * @return
 	 * @throws RuntimeException
 	 */
-	@ApiOperation(value = "编辑企业", notes = "编辑企业")
 	@RequestMapping("/edit")
 	@ResponseBody
 	public Object edit(@Valid Enterprise enterprise) throws RuntimeException {
@@ -264,7 +265,7 @@ public class EnterpriseController extends BaseController {
 				par.put("enterpriseName",enterprise.getEnterpriseName());
 				Enterprise enterprise2=enterpriseService.selectEnterpriseByMap(par);
 				if(enterprise2!=null){
-					return renderError("添加成功！");
+					return renderError("企业存在！");
 				}else{
 					enterprise.setCreateTime(new Date());
 					enterprise.setUpdateTime(new Date());
@@ -285,7 +286,6 @@ public class EnterpriseController extends BaseController {
 	 * @param enterpriseId
 	 * @return
 	 */
-	@ApiOperation(value = "删除企业", notes = "删除企业")
 	@RequestMapping("/delete")
 	@ResponseBody
 	public Object delete(Long enterpriseId) throws  RuntimeException{

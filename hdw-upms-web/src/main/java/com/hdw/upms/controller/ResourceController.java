@@ -41,10 +41,10 @@ import java.util.Map;
 @RequestMapping("/resource")
 public class ResourceController extends BaseController {
 	
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}",group = "hdw-upms")
 	private IUpmsApiService upmsApiService;
 
-	@Reference(version = "1.0.0", application = "${dubbo.application.id}")
+	@Reference(version = "1.0.0", application = "${dubbo.application.id}",group = "hdw-upms")
 	private IResourceService resourceService;
 
 	/**

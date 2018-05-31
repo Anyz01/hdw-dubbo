@@ -32,7 +32,8 @@ import java.util.Set;
         version = "1.0.0",
         application = "${dubbo.application.id}",
         protocol = "${dubbo.protocol.id}",
-        registry = "${dubbo.registry.id}"
+        registry = "${dubbo.registry.id}",
+        group = "hdw-upms"
 )
 public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> implements IResourceService {
     private static final int RESOURCE_MENU = 0; // 菜单
