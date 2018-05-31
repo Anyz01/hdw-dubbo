@@ -38,12 +38,12 @@ import java.util.Map;
 
 /**
  * 
- * @description Shiro配置
+ * @description Shiro CAS配置
  * @author TuMinglong
  * @date 2018年3月5日 上午11:22:21
  */
 //@Configuration
-public class ShiroConfig2 {
+public class ShiroCasConfig {
 
 	@Value("${sso.cas.server.loginUrl}")
 	private String loginUrl;
@@ -118,6 +118,8 @@ public class ShiroConfig2 {
 		filterChainDefinitionMap.put("/plugins/**", "anon");
 		filterChainDefinitionMap.put("/kaptcha.jpg", "anon");// 图片验证码(kaptcha框架)
 		filterChainDefinitionMap.put("/api/**", "anon");// API接口
+		filterChainDefinitionMap.put("/xlsFile/**", "anon");
+		filterChainDefinitionMap.put("/upload/**", "anon");
 		filterChainDefinitionMap.put("/solr/**", "anon");
 
 		// swagger接口文档
@@ -191,8 +193,8 @@ public class ShiroConfig2 {
 	@Bean
 	public SimpleCookie rememberMeCookie() {
 		SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-		// 记住我cookie生效时间7天 ,单位秒
-		simpleCookie.setMaxAge(7*24*60*60);
+		// 记住我cookie生效时间1小时 ,单位秒
+		simpleCookie.setMaxAge(60*60*1*1);
 		return simpleCookie;
 	}
 
@@ -211,7 +213,7 @@ public class ShiroConfig2 {
 	@Bean(name = "sessionManager")
 	public SessionManager sessionManager() {
 		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-		sessionManager.setGlobalSessionTimeout(18000000);
+		sessionManager.setGlobalSessionTimeout(60*60*1*1*1000);
 		sessionManager.setSessionDAO(sessionDAO);
 		sessionManager.setCacheManager(redisCacheManager());
 		// url中是否显示session Id
@@ -219,12 +221,12 @@ public class ShiroConfig2 {
 		// 删除失效的session
 		sessionManager.setDeleteInvalidSessions(true);
 		sessionManager.setSessionValidationSchedulerEnabled(true);
-		sessionManager.setSessionValidationInterval(18000000);
+		sessionManager.setSessionValidationInterval(60*60*1*1*1000);
 		sessionManager.setSessionValidationScheduler(getExecutorServiceSessionValidationScheduler());
 		
 		sessionManager.getSessionIdCookie().setName("session-z-id");
 		sessionManager.getSessionIdCookie().setPath("/");
-		sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 24 * 7);
+		sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 1 * 1);
 		return sessionManager;
 	}
 

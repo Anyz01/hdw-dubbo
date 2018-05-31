@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 
- * @description JWT配置
+ * @description  CAS JWT配置
  * @author TuMinglong
  * @date 2018年4月25日上午10:15:50
  * @version v1.0.0
  */
 @Configuration
-public class JWTConfig {
+public class ShiroCasJWTConfig {
 	
 	@Value("${jwt.salt}")
 	private String salt;

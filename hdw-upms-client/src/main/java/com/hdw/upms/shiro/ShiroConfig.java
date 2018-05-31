@@ -22,16 +22,15 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
 /**
  * 
- * @Description Apache Shiro 核心通过 Filter 来实现，
- * 就好像SpringMvc 通过DispachServlet来主控制一样。 既然是使用 Filter 一般也就能猜到，
- * 是通过URL规则来进行过滤和权限校验，
- * 所以我们需要定义一系列关于URL的规则和访问权限。
+ * @Description Apache Shiro配置类
  * @author TuMinglong
  * @date 2018年5月14日下午7:57:14
  * @version 1.0.0
@@ -118,8 +117,8 @@ public class ShiroConfig {
 		filtersMap.put("user", ajaxSessionFilter());
 		
 		// 实现自己规则roles,这是为了实现or的效果
-		// RoleFilter roleFilter = new RoleFilter();
-		// filtersMap.put("roles", roleFilter);
+//		RoleFilter roleFilter = new RoleFilter();
+//		filtersMap.put("roles", roleFilter);
 		shiroFilterFactoryBean.setFilters(filtersMap);
 		// 拦截器
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
@@ -137,6 +136,8 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/js/**", "anon");
 		filterChainDefinitionMap.put("/plugins/**", "anon");
 		filterChainDefinitionMap.put("/kaptcha.jpg", "anon");// 图片验证码(kaptcha框架)
+		filterChainDefinitionMap.put("/xlsFile/**", "anon");
+		filterChainDefinitionMap.put("/upload/**", "anon");
 		filterChainDefinitionMap.put("/api/**", "anon");// API接口
 
 		// swagger接口文档
@@ -240,8 +241,8 @@ public class ShiroConfig {
 	public SimpleCookie rememberMeCookie() {
 		SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
 		simpleCookie.setHttpOnly(true);
-		// 记住我cookie生效时间7天 ,单位秒
-		simpleCookie.setMaxAge(60*60*24*7);
+		// 记住我cookie生效时间1小时 ,单位秒
+		simpleCookie.setMaxAge(60*60*1*1);
 		return simpleCookie;
 	}
 
@@ -261,19 +262,19 @@ public class ShiroConfig {
 	@Bean(name = "sessionManager")
     public SessionManager sessionManager() {
 		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-		sessionManager.setGlobalSessionTimeout(18000000);
+		sessionManager.setGlobalSessionTimeout(60*60*1*1*1000);
 		sessionManager.setSessionDAO(sessionDAO);
 		// url中是否显示session Id
 		sessionManager.setSessionIdUrlRewritingEnabled(false);
 		// 删除失效的session
 		sessionManager.setDeleteInvalidSessions(true);
 		sessionManager.setSessionValidationSchedulerEnabled(true);
-		sessionManager.setSessionValidationInterval(18000000);
+		sessionManager.setSessionValidationInterval(60*60*1*1*1000);
 		sessionManager.setSessionValidationScheduler(getExecutorServiceSessionValidationScheduler());
 		
 		sessionManager.getSessionIdCookie().setName("session-z-id");
 		sessionManager.getSessionIdCookie().setPath("/");
-		sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 24 * 7);
+		sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 1 * 1);
         sessionManager.getSessionIdCookie().setHttpOnly(true);
 		return sessionManager;
 	}
