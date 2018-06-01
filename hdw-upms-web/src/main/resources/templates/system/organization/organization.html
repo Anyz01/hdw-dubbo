@@ -29,11 +29,11 @@
                                     </div>
                                 </div>
                             <div class="hidden-xs" id="DeptTableToolbar" role="group">
-                                <button class="btn btn-sm btn-primary" type="submit" onclick="Dept.openAddDept()">
+                                <button shiro:hasPermission="/organization/add" class="btn btn-sm btn-primary" type="submit" onclick="Dept.openAddDept()">
                                     <i class="fa fa-pencil"></i>添加</button>
-                                <button class="btn btn-sm btn-info" type="submit" onclick="Dept.openChangeDept()">
+                                <button shiro:hasPermission="/organization/edit"  class="btn btn-sm btn-info" type="submit" onclick="Dept.openChangeDept()">
                                     <i class="fa fa-paste"></i>修改</button>
-                                <button class="btn btn-sm btn-danger" type="submit" onclick="Dept.delDept()">
+                                <button shiro:hasPermission="/organization/delete"  class="btn btn-sm btn-danger" type="submit" onclick="Dept.delDept()">
                                     <i class="fa fa-cut"></i>删除</button>
                             </div>
                             <table id="DeptTable" />

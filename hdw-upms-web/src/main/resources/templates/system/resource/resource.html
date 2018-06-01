@@ -26,11 +26,11 @@
                                 </div>
                             </div>
                             <div class="hidden-xs" id="ResourceTableToolbar" role="group">
-                                <button class="btn btn-sm btn-primary" type="submit" onclick="Resource.openAddResource()">
+                                <button shiro:hasPermission="/resource/add" class="btn btn-sm btn-primary" type="submit" onclick="Resource.openAddResource()">
                                     <i class="fa fa-pencil"></i>添加</button>
-                                <button class="btn btn-sm btn-info" type="submit" onclick="Resource.openChangeResource()">
+                                <button shiro:hasPermission="/resource/edit" class="btn btn-sm btn-info" type="submit" onclick="Resource.openChangeResource()">
                                     <i class="fa fa-paste"></i>修改</button>
-                                <button class="btn btn-sm btn-danger" type="submit" onclick="Resource.delResource()">
+                                <button shiro:hasPermission="/resource/delete" class="btn btn-sm btn-danger" type="submit" onclick="Resource.delResource()">
                                     <i class="fa fa-cut"></i>删除</button>
                             </div>
                             <table id="ResourceTable" />

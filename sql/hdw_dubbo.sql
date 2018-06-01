@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50722
 File Encoding         : 65001
 
-Date: 2018-05-31 20:26:07
+Date: 2018-06-01 16:01:01
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -586,7 +586,7 @@ CREATE TABLE `t_sys_resource` (
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '记录创建时间',
   `update_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=245 DEFAULT CHARSET=utf8 COMMENT='资源';
+) ENGINE=InnoDB AUTO_INCREMENT=250 DEFAULT CHARSET=utf8 COMMENT='资源';
 
 -- ----------------------------
 -- Records of t_sys_resource
@@ -596,23 +596,23 @@ INSERT INTO `t_sys_resource` VALUES ('11', '资源管理', '/resource/manager', 
 INSERT INTO `t_sys_resource` VALUES ('12', '角色管理', '/role/manager', 'ajax', '角色管理', '', '1', '2', '0', '1', '0', '2018-05-07 17:20:38', '2018-05-07 17:20:38');
 INSERT INTO `t_sys_resource` VALUES ('13', '用户管理', '/user/manager', 'ajax', '用户管理', '', '1', '1', '0', '1', '0', '2018-05-07 17:20:39', '2018-05-07 17:20:39');
 INSERT INTO `t_sys_resource` VALUES ('14', '部门管理', '/organization/manager', 'ajax', '部门管理', '', '1', '4', '0', '1', '0', '2018-05-07 17:21:14', '2018-05-07 17:21:14');
-INSERT INTO `t_sys_resource` VALUES ('111', '列表', '/resource/treeGrid', 'ajax', '资源列表', '', '11', '0', '0', '1', '1', '2018-05-07 17:21:33', '2018-05-07 17:21:33');
-INSERT INTO `t_sys_resource` VALUES ('112', '添加', '/resource/add', 'ajax', '资源添加', '', '11', '0', '0', '1', '1', '2018-05-07 17:21:35', '2018-05-07 17:21:35');
-INSERT INTO `t_sys_resource` VALUES ('113', '编辑', '/resource/edit', 'ajax', '资源编辑', '', '11', '0', '0', '1', '1', '2018-05-07 17:21:36', '2018-05-07 17:21:36');
-INSERT INTO `t_sys_resource` VALUES ('114', '删除', '/resource/delete', 'ajax', '资源删除', '', '11', '0', '0', '1', '1', '2018-05-07 17:21:38', '2018-05-07 17:21:38');
-INSERT INTO `t_sys_resource` VALUES ('121', '列表', '/role/dataGrid', 'ajax', '角色列表', '', '12', '0', '0', '1', '1', '2018-05-07 17:21:39', '2018-05-07 17:21:39');
-INSERT INTO `t_sys_resource` VALUES ('122', '添加', '/role/add', 'ajax', '角色添加', '', '12', '0', '0', '1', '1', '2018-05-07 17:21:41', '2018-05-07 17:21:41');
-INSERT INTO `t_sys_resource` VALUES ('123', '编辑', '/role/edit', 'ajax', '角色编辑', '', '12', '0', '0', '1', '1', '2018-05-07 17:21:43', '2018-05-07 17:21:43');
-INSERT INTO `t_sys_resource` VALUES ('124', '删除', '/role/delete', 'ajax', '角色删除', '', '12', '0', '0', '1', '1', '2018-05-07 17:21:42', '2018-05-07 17:21:42');
-INSERT INTO `t_sys_resource` VALUES ('125', '授权', '/role/grant', 'ajax', '角色授权', '', '12', '0', '0', '1', '1', '2018-05-07 17:21:44', '2018-05-07 17:21:44');
-INSERT INTO `t_sys_resource` VALUES ('131', '列表', '/user/dataGrid', 'ajax', '用户列表', '', '13', '0', '0', '1', '1', '2018-05-07 17:21:47', '2018-05-07 17:21:47');
-INSERT INTO `t_sys_resource` VALUES ('132', '添加', '/user/add', 'ajax', '用户添加', '', '13', '0', '0', '1', '1', '2018-05-07 17:21:46', '2018-05-07 17:21:46');
-INSERT INTO `t_sys_resource` VALUES ('133', '编辑', '/user/edit', 'ajax', '用户编辑', '', '13', '0', '0', '1', '1', '2018-05-07 17:21:46', '2018-05-07 17:21:46');
-INSERT INTO `t_sys_resource` VALUES ('134', '删除', '/user/delete', 'ajax', '用户删除', '', '13', '0', '0', '1', '1', '2018-05-07 17:21:48', '2018-05-07 17:21:48');
-INSERT INTO `t_sys_resource` VALUES ('141', '列表', '/organization/treeGrid', 'ajax', '用户列表', '', '14', '0', '0', '1', '1', '2018-05-07 17:21:50', '2018-05-07 17:21:50');
-INSERT INTO `t_sys_resource` VALUES ('142', '添加', '/organization/add', 'ajax', '部门添加', '', '14', '0', '0', '1', '1', '2018-05-07 17:21:49', '2018-05-07 17:21:49');
-INSERT INTO `t_sys_resource` VALUES ('143', '编辑', '/organization/edit', 'ajax', '部门编辑', '', '14', '0', '0', '1', '1', '2018-05-07 17:21:53', '2018-05-07 17:21:53');
-INSERT INTO `t_sys_resource` VALUES ('144', '删除', '/organization/delete', 'ajax', '部门删除', '', '14', '0', '0', '1', '1', '2018-05-07 17:21:53', '2018-05-07 17:21:53');
+INSERT INTO `t_sys_resource` VALUES ('111', '列表', '/resource/treeGrid', 'ajax', '资源列表', '', '11', '1', '0', '1', '1', '2018-06-01 15:56:32', '2018-06-01 15:56:32');
+INSERT INTO `t_sys_resource` VALUES ('112', '添加', '/resource/add', 'ajax', '资源添加', '', '11', '2', '0', '1', '1', '2018-06-01 15:56:34', '2018-06-01 15:56:34');
+INSERT INTO `t_sys_resource` VALUES ('113', '编辑', '/resource/edit', 'ajax', '资源编辑', '', '11', '3', '0', '1', '1', '2018-06-01 15:56:36', '2018-06-01 15:56:36');
+INSERT INTO `t_sys_resource` VALUES ('114', '删除', '/resource/delete', 'ajax', '资源删除', '', '11', '4', '0', '1', '1', '2018-06-01 15:56:38', '2018-06-01 15:56:38');
+INSERT INTO `t_sys_resource` VALUES ('121', '列表', '/role/dataGrid', 'ajax', '角色列表', '', '12', '1', '0', '1', '1', '2018-06-01 15:56:47', '2018-06-01 15:56:47');
+INSERT INTO `t_sys_resource` VALUES ('122', '添加', '/role/add', 'ajax', '角色添加', '', '12', '2', '0', '1', '1', '2018-06-01 15:56:48', '2018-06-01 15:56:48');
+INSERT INTO `t_sys_resource` VALUES ('123', '编辑', '/role/edit', 'ajax', '角色编辑', '', '12', '3', '0', '1', '1', '2018-06-01 15:56:51', '2018-06-01 15:56:51');
+INSERT INTO `t_sys_resource` VALUES ('124', '删除', '/role/delete', 'ajax', '角色删除', '', '12', '4', '0', '1', '1', '2018-06-01 15:56:53', '2018-06-01 15:56:53');
+INSERT INTO `t_sys_resource` VALUES ('125', '授权', '/role/grant', 'ajax', '角色授权', '', '12', '5', '0', '1', '1', '2018-06-01 15:56:55', '2018-06-01 15:56:55');
+INSERT INTO `t_sys_resource` VALUES ('131', '列表', '/user/dataGrid', 'ajax', '用户列表', '', '13', '1', '0', '1', '1', '2018-06-01 15:46:37', '2018-06-01 15:46:37');
+INSERT INTO `t_sys_resource` VALUES ('132', '添加', '/user/add', 'ajax', '用户添加', '', '13', '2', '0', '1', '1', '2018-06-01 15:46:40', '2018-06-01 15:46:40');
+INSERT INTO `t_sys_resource` VALUES ('133', '编辑', '/user/edit', 'ajax', '用户编辑', '', '13', '3', '0', '1', '1', '2018-06-01 15:46:42', '2018-06-01 15:46:42');
+INSERT INTO `t_sys_resource` VALUES ('134', '删除', '/user/delete', 'ajax', '用户删除', '', '13', '4', '0', '1', '1', '2018-06-01 15:46:45', '2018-06-01 15:46:45');
+INSERT INTO `t_sys_resource` VALUES ('141', '列表', '/organization/treeGrid', 'ajax', '用户列表', '', '14', '1', '0', '1', '1', '2018-06-01 15:57:02', '2018-06-01 15:57:02');
+INSERT INTO `t_sys_resource` VALUES ('142', '添加', '/organization/add', 'ajax', '部门添加', '', '14', '2', '0', '1', '1', '2018-06-01 15:57:03', '2018-06-01 15:57:03');
+INSERT INTO `t_sys_resource` VALUES ('143', '编辑', '/organization/edit', 'ajax', '部门编辑', '', '14', '3', '0', '1', '1', '2018-06-01 15:57:05', '2018-06-01 15:57:05');
+INSERT INTO `t_sys_resource` VALUES ('144', '删除', '/organization/delete', 'ajax', '部门删除', '', '14', '4', '0', '1', '1', '2018-06-01 15:57:09', '2018-06-01 15:57:09');
 INSERT INTO `t_sys_resource` VALUES ('227', '操作日志', '/sysLog/manager', 'ajax', '操作日志', '', '1', '7', '0', '1', '0', '2018-05-31 19:01:27', '2018-05-31 19:01:27');
 INSERT INTO `t_sys_resource` VALUES ('228', 'Druid监控', '/druid', 'ajax', 'Druid监控', '', '1', '8', '0', '1', '0', '2018-05-31 19:01:31', '2018-05-31 19:01:31');
 INSERT INTO `t_sys_resource` VALUES ('234', '字典管理', '/dic/manager', 'ajax', '字典管理', '', '1', '5', '0', '1', '0', '2018-05-31 19:01:35', '2018-05-31 19:01:35');
@@ -622,6 +622,11 @@ INSERT INTO `t_sys_resource` VALUES ('237', '编辑', '/dic/edit', 'ajax', '编�
 INSERT INTO `t_sys_resource` VALUES ('238', '删除', '/dic/delete', 'ajax', '删除', '', '234', '3', '0', '1', '1', '2018-05-31 19:01:48', '2018-05-31 19:01:48');
 INSERT INTO `t_sys_resource` VALUES ('243', '企业管理', '/enterprise/manager', 'ajax', '企业管理', 'fa fa fa-bar-chart-o', '0', '1', '0', '1', '0', '2018-05-07 23:05:59', '2018-05-07 23:05:59');
 INSERT INTO `t_sys_resource` VALUES ('244', '定时任务管理', '/schedule/manager', 'ajax', '定时任务管理', null, '1', '6', '0', '1', '0', '2018-05-31 18:59:21', '2018-05-31 18:59:23');
+INSERT INTO `t_sys_resource` VALUES ('245', '添加', '/enterprise/add', 'ajax', '企业添加', null, '243', '1', '0', '1', '1', '2018-06-01 15:41:36', '2018-06-01 15:41:36');
+INSERT INTO `t_sys_resource` VALUES ('246', '编辑', '/enterprise/edit', 'ajax', '企业编辑', null, '243', '2', '0', '1', '1', '2018-06-01 15:41:26', '2018-06-01 15:41:26');
+INSERT INTO `t_sys_resource` VALUES ('247', '删除', '/enterprise/delete', 'ajax', '企业删除', null, '243', '3', '0', '1', '1', '2018-06-01 15:41:32', '2018-06-01 15:41:32');
+INSERT INTO `t_sys_resource` VALUES ('248', '重置密码', '/user/reset', 'ajax', '重置密码', null, '13', '5', '0', '1', '1', '2018-06-01 15:46:51', '2018-06-01 15:46:51');
+INSERT INTO `t_sys_resource` VALUES ('249', '分配角色', 'roleAssign', 'ajax', '分配角色', null, '13', '6', '0', '1', '1', '2018-06-01 15:58:55', '2018-06-01 15:58:57');
 
 -- ----------------------------
 -- Table structure for t_sys_role

@@ -13,8 +13,8 @@
             filePattern="${logdir}/hdw-upms-web.%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %level [%C{36}.%M] - %msg%n" />
             <Filters>
-                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL" />
-                <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY" />
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
             </Filters>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>  

@@ -36,11 +36,11 @@
                                     </div>
                                 </div>
                                 <div class="hidden-xs" id="enterpriseTableToolbar" Enterprise="group">
-                                    <button class="btn btn-sm btn-primary" type="submit" onclick="Enterprise.openAddEnterprise()">
+                                    <button shiro:hasPermission="/enterprise/add" class="btn btn-sm btn-primary" type="submit" onclick="Enterprise.openAddEnterprise()">
                                         <i class="fa fa-pencil"></i>添加</button>
-                                    <button class="btn btn-sm btn-info" type="submit" onclick="Enterprise.openChangeEnterprise()">
+                                    <button shiro:hasPermission="/enterprise/edit" class="btn btn-sm btn-info" type="submit" onclick="Enterprise.openChangeEnterprise()">
                                         <i class="fa fa-paste"></i>修改</button>
-                                    <button class="btn btn-sm btn-danger" type="submit" onclick="Enterprise.delEnterprise()">
+                                    <button shiro:hasPermission="/enterprise/delete" class="btn btn-sm btn-danger" type="submit" onclick="Enterprise.delEnterprise()">
                                         <i class="fa fa-cut"></i>删除</button>
                                 </div>
                                 <table id="enterpriseTable" />

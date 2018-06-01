@@ -29,11 +29,11 @@
                                     </div>
                                 </div>
                             <div class="hidden-xs" id="DicTableToolbar" role="group">
-                                <button class="btn btn-sm btn-primary" type="submit" onclick="Dic.openAddDic()">
+                                <button shiro:hasPermission="/dic/add" class="btn btn-sm btn-primary" type="submit" onclick="Dic.openAddDic()">
                                     <i class="fa fa-pencil"></i>添加</button>
-                                <button class="btn btn-sm btn-info" type="submit" onclick="Dic.openChangeDic()">
+                                <button shiro:hasPermission="/dic/edit" class="btn btn-sm btn-info" type="submit" onclick="Dic.openChangeDic()">
                                     <i class="fa fa-paste"></i>修改</button>
-                                <button class="btn btn-sm btn-danger" type="submit" onclick="Dic.delDic()">
+                                <button shiro:hasPermission="/dic/delete" class="btn btn-sm btn-danger" type="submit" onclick="Dic.delDic()">
                                     <i class="fa fa-cut"></i>删除</button>
                             </div>
                             <table id="DicTable" />

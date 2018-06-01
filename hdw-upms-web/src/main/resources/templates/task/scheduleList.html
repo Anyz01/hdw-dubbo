@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"
->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
 
 <head th:include="/header">
     <title>定时任务管理</title>
@@ -18,33 +18,33 @@
                     <div class="row row-lg">
                         <div class="col-sm-12">
                             <div class="hidden-xs" id="scheduleDataGridToolbar" ScheduleEntity="group">
-                                <button class="btn btn-sm btn-primary" type="submit"
+                                <button shiro:hasRole="admin" class="btn btn-sm btn-primary" type="submit"
                                         onclick="ScheduleEntity.openAddSchedule()">
                                     <i class="fa fa-pencil"></i>添加
                                 </button>
-                                <button class="btn btn-sm btn-info" type="submit"
+                                <button shiro:hasRole="admin" class="btn btn-sm btn-info" type="submit"
                                         onclick="ScheduleEntity.openChangeSchedule()">
                                     <i class="fa fa-paste"></i>更新Cron表达式
                                 </button>
-                                <button class="btn btn-sm btn-danger" type="submit"
+                                <button shiro:hasRole="admin" class="btn btn-sm btn-danger" type="submit"
                                         onclick="ScheduleEntity.delSchedule()">
                                     <i class="fa fa-cut"></i>删除
                                 </button>
-                                <button class="btn btn-sm btn-danger" type="submit" onclick="ScheduleEntity.pauseJob()">
+                                <button shiro:hasRole="admin" class="btn btn-sm btn-danger" type="submit" onclick="ScheduleEntity.pauseJob()">
                                     <i class="fa fa-pause"></i>暂停
                                 </button>
-                                <button class="btn btn-sm btn-danger" type="submit"
+                                <button shiro:hasRole="admin" class="btn btn-sm btn-danger" type="submit"
                                         onclick="ScheduleEntity.resumeJob()">
                                     <i class="fa fa-repeat"></i>恢复
                                 </button>
-                                <button class="btn btn-sm btn-danger" type="submit"
+                                <button shiro:hasRole="admin" class="btn btn-sm btn-danger" type="submit"
                                         onclick="ScheduleEntity.startNowJob()">
                                     <i class="fa fa-star-half"></i>立即执行一次
                                 </button>
-                                <button class="btn btn-sm btn-danger" type="submit" onclick="ScheduleEntity.resetJob()">
+                                <button shiro:hasRole="admin" class="btn btn-sm btn-danger" type="submit" onclick="ScheduleEntity.resetJob()">
                                     <i class="fa fa-repeat"></i>重启所有任务
                                 </button>
-                                <button class="btn btn-sm btn-danger" type="submit" onclick="ScheduleEntity.stopJob()">
+                                <button shiro:hasRole="admin" class="btn btn-sm btn-danger" type="submit" onclick="ScheduleEntity.stopJob()">
                                     <i class="fa fa-stop"></i>停止所有任务
                                 </button>
                             </div>

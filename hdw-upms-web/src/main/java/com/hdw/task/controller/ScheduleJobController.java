@@ -4,6 +4,7 @@ import com.hdw.common.base.BaseController;
 import com.hdw.common.result.PageInfo;
 import com.hdw.task.entity.ScheduleEntity;
 import com.hdw.task.service.ScheduleJobService;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -71,6 +72,7 @@ public class ScheduleJobController extends BaseController {
      * @param scheduleEntity
      * @return
      */
+    @RequiresRoles("admin")
     @PostMapping(value = "add")
     @ResponseBody
     public Object jobSave(ScheduleEntity scheduleEntity) throws Exception {
@@ -110,6 +112,7 @@ public class ScheduleJobController extends BaseController {
      * @param jobGroup
      * @return
      */
+    @RequiresRoles("admin")
     @RequestMapping(value = "stop")
     @ResponseBody
     public Object stopJob(String jobName, String jobGroup) throws Exception {
@@ -129,6 +132,7 @@ public class ScheduleJobController extends BaseController {
      * @param jobGroup
      * @return
      */
+    @RequiresRoles("admin")
     @RequestMapping(value = "delete")
     @ResponseBody
     public Object deleteJob(String jobName, String jobGroup) throws Exception {
@@ -148,6 +152,7 @@ public class ScheduleJobController extends BaseController {
      * @return
      * @throws UnsupportedEncodingException
      */
+    @RequiresRoles("admin")
     @RequestMapping(value = "edit")
     @ResponseBody
     public Map<String, ? extends Object> editJob(@RequestParam("jobName") String jobName,
@@ -175,6 +180,7 @@ public class ScheduleJobController extends BaseController {
      *
      * @return
      */
+    @RequiresRoles("admin")
     @GetMapping("/editPage/{jobName}/{jobGroup}")
     public String editPage(@PathVariable("jobName") String jobName, @PathVariable("jobGroup") String jobGroup, Model model) {
         model.addAttribute("jobGroup", jobGroup);
@@ -188,6 +194,7 @@ public class ScheduleJobController extends BaseController {
      * @param scheduleEntity
      * @return
      */
+    @RequiresRoles("admin")
     @RequestMapping(value = "update")
     @ResponseBody
     public Object updateJob(ScheduleEntity scheduleEntity) throws Exception {
@@ -217,6 +224,7 @@ public class ScheduleJobController extends BaseController {
      * @param jobGroup
      * @return
      */
+    @RequiresRoles("admin")
     @RequestMapping(value = "startNow")
     @ResponseBody
     public Object stratNow(String jobName, String jobGroup) throws Exception {
@@ -239,6 +247,7 @@ public class ScheduleJobController extends BaseController {
      * @param jobGroup
      * @return
      */
+    @RequiresRoles("admin")
     @RequestMapping(value = "resume")
     @ResponseBody
     public Object resumeJob(String jobName, String jobGroup) throws Exception {
@@ -257,6 +266,7 @@ public class ScheduleJobController extends BaseController {
      *
      * @return
      */
+    @RequiresRoles("admin")
     @PostMapping("/restart")
     @ResponseBody
     public Object restartDevices() {
@@ -273,6 +283,7 @@ public class ScheduleJobController extends BaseController {
      *
      * @return
      */
+    @RequiresRoles("admin")
     @PostMapping("/stopAll")
     @ResponseBody
     public Object stopDevices() {
