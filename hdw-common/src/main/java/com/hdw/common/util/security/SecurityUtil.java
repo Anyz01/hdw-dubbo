@@ -2,7 +2,6 @@ package com.hdw.common.util.security;
 
 import java.util.Map;
 
-import com.hdw.common.util.security.coder.AESCoder;
 import com.hdw.common.util.security.coder.DESCoder;
 import com.hdw.common.util.security.coder.HmacCoder;
 import com.hdw.common.util.security.coder.MDCoder;
@@ -246,28 +245,9 @@ public final class SecurityUtil {
 		return encryptMd5(SecurityUtil.encryptSHA(password));
 	}
 	
-	/**
-	 * 数据解密，AES
-	 * @param data 加密数据
-	 * @return
-	 */
-	public static final String decryptAes(String data) {
-		return AESCoder.aesDecode(data);	
-	}
-	/**
-	 * 数据加密， AES
-	 * @param data 待加密数据
-	 * @return
-	 */
-	public static final String encryptAes(String data) {
-		return AESCoder.aesEncode(data);	
-	}
-
 	public static void main(String[] args) throws Exception {
-		System.out.println(encryptAes("123456"));
-		System.out.println(decryptAes("SOe5LfrpIM4RO6/gZuURlw=="));
-		System.out.println(encryptDes("Hdw@2017"));
-		System.out.println(decryptDes("w0A0Gdpt/lhCbNU+agGPz7=="));
+		System.out.println(encryptDes("123456"));
+		System.out.println(decryptDes("7S9yQ5Pm9/e="));
 		System.out.println(encryptMd5("123456"));
 		System.out.println(encryptSHA("1"));
 		Map<String, Object> key = RSACoder.initKey();

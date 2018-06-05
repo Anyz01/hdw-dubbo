@@ -135,7 +135,7 @@ public class DataSourceConfig {
 		DruidDataSource datasource = new DruidDataSource();
 		datasource.setUrl(masterUrl);
 		datasource.setUsername(masterUsername);
-		datasource.setPassword(SecurityUtil.decryptAes(masterPassword));
+		datasource.setPassword(SecurityUtil.decryptDes(masterPassword));
 		datasource.setDriverClassName(masterDriverClassName);
 
 		datasource.setInitialSize(initialSize);
@@ -170,7 +170,7 @@ public class DataSourceConfig {
 		DruidDataSource datasource = new DruidDataSource();
 		datasource.setUrl(slaveUrl);
 		datasource.setUsername(slaveUsername);
-		datasource.setPassword(SecurityUtil.decryptAes(slavePassword));
+		datasource.setPassword(SecurityUtil.decryptDes(slavePassword));
 		datasource.setDriverClassName(slaveDriverClassName);
 
 		datasource.setInitialSize(initialSize);

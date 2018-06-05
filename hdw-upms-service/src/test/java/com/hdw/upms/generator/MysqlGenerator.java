@@ -68,7 +68,7 @@ public class MysqlGenerator {
 		dsc.setTypeConvert(new MySqlTypeConvert());
 		dsc.setDriverName("com.mysql.jdbc.Driver");
 		dsc.setUsername(props.getProperty("spring.datasource.master.username"));
-		dsc.setPassword(SecurityUtil.decryptAes(props.getProperty("spring.datasource.master.password")));
+		dsc.setPassword(SecurityUtil.decryptDes(props.getProperty("spring.datasource.master.password")));
 		dsc.setUrl(props.getProperty("spring.datasource.master.url"));
 		mpg.setDataSource(dsc);
 
