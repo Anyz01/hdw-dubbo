@@ -66,7 +66,7 @@
 		<dubbo-spring-boot-starter.version>0.1.0</dubbo-spring-boot-starter.version>
 		<zkclient.version>0.10</zkclient.version>
 		<solrj.version>7.3.1</solrj.version>
-		<fastdfs.version>1.24</fastdfs.version>
+		<fastdfs-spring-boot-starter.version>0.2.0</fastdfs-spring-boot-starter.version>
 		<springfox.swagger2.version>2.8.0</springfox.swagger2.version>
 		<lombok.version>1.16.16</lombok.version>
 		<shiro.version>1.4.0</shiro.version>
@@ -312,9 +312,19 @@
 
 			<!-- fastdfs -->
 			<dependency>
-				<groupId>org.csource</groupId>
-				<artifactId>fastdfs</artifactId>
-				<version>${fastdfs.version}</version>
+				<groupId>com.luhuiguo</groupId>
+				<artifactId>fastdfs-spring-boot-starter</artifactId>
+				<version>${fastdfs-spring-boot-starter.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.logging.log4j</groupId>
+						<artifactId>log4j-slf4j-impl</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<!-- swagger2 -->
