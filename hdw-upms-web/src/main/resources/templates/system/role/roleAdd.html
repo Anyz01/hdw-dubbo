@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 
-<head th:include="/header">
+<head th:include="header">
     <title>角色管理-添加</title>
 </head>
 
@@ -50,7 +50,7 @@
             </form>
         </div>
     </div>
-    <div th:include="/footer"></div>
+    <div th:include="footer"></div>
     <script type="text/javascript" th:inline="javascript">
         $("#fm").validator({
             valid: function (form) {
