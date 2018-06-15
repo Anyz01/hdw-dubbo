@@ -3,13 +3,14 @@ package com.hdw.task.config;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.quartz.Scheduler;
 import org.quartz.ee.servlet.QuartzInitializerListener;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+
+import javax.sql.DataSource;
 
 
 /**
@@ -23,8 +24,9 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 public class SchedulerConfig {
 
 	@Bean(name = "SchedulerFactory")
-	public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
+	public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource) throws IOException {
 		SchedulerFactoryBean factory = new SchedulerFactoryBean();
+		factory.setDataSource(dataSource);
 		factory.setQuartzProperties(quartzProperties());
 		factory.setApplicationContextSchedulerContextKey("applicationContextKey");
 		return factory;
@@ -46,15 +48,6 @@ public class SchedulerConfig {
 	public QuartzInitializerListener executorListener() {
 		return new QuartzInitializerListener();
 	}
-	
-	/**
-	 * 创建schedule    
-	 * @return
-	 * @throws IOException 
-	 */
-    @Bean(name = "scheduler")  
-    public Scheduler scheduler() throws IOException {  
-      return schedulerFactoryBean().getScheduler();  
-    }  
+
 
 }

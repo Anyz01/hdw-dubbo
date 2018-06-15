@@ -1,5 +1,6 @@
 package com.hdw.common.config.swagger2;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,8 +34,9 @@ public class Swagger2Config {
 				.apiInfo(apiInfo())
 				.forCodeGeneration(true)
 				.useDefaultResponseMessages(false).select()
+				.apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
 				// 指定controller存放的目录路径
-				.apis(RequestHandlerSelectors.basePackage("com.hdw.upms.controller"))
+				//.apis(RequestHandlerSelectors.basePackage("com.hdw.upms.controller"))
 				// .paths(PathSelectors.ant("/api/v1/*"))
 				.paths(PathSelectors.any()).build();
 	}
