@@ -37,7 +37,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 
 	protected final static Logger logger = LoggerFactory.getLogger(RedisConfig.class);
 
-	@Value("${spring.redis.cluster.flag}")
+	@Value("${redis.cluster.flag}")
 	private boolean redisClusterFlag;
 
 	@Autowired

@@ -2,6 +2,7 @@ package com.hdw.common.config.web;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -15,14 +16,17 @@ import org.springframework.http.converter.*;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
- * 
+ *
  * @description WEB 初始化相关配置
  * @author TuMinglong
  * @date 2018年1月24日 下午4:22:28
@@ -52,6 +56,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
 		objectMapper.registerModule(simpleModule);
 		objectMapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);// 忽略 transient 修饰的属性
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		// 设置为中国上海时区
+		objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+
 		converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
 
 		converters.add(new StringHttpMessageConverter(Charsets.UTF_8));
@@ -74,5 +83,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		registry.addInterceptor(fileUploadTypeInterceptor).addPathPatterns("/**");
 
 		super.addInterceptors(registry);
+	}
+
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**")
+				.allowedOrigins("*")
+				.allowCredentials(true)
+				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+				.maxAge(3600);
 	}
 }
