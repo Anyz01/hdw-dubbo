@@ -164,6 +164,11 @@
 		</dependency>
 
 		<dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>dubbo-spring-boot-actuator</artifactId>
+        </dependency>
+
+		<dependency>
 			<groupId>com.101tec</groupId>
 			<artifactId>zkclient</artifactId>
 		</dependency>
@@ -273,5 +278,14 @@
 			<artifactId>velocity-engine-core</artifactId>
 		</dependency>
 		<!-- velocity end -->
+
+		<!-- lombok begin -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <!-- lombok end -->
+		
 	</dependencies>
 </project>
