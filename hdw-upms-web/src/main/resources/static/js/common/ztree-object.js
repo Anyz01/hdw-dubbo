@@ -19,7 +19,8 @@
 			var settings = {
 				view : {
 					dblClickExpand : true,
-					selectedMulti : false
+					selectedMulti : false,
+                    addDiyDom: this.addDiyDomWithCheck
 				},
 				data : {simpleData : {enable : true}},
 				callback : {
@@ -95,7 +96,32 @@
 			var zTree = $.fn.zTree.getZTreeObj(this.id);
 			var nodes = zTree.getCheckedNodes(true);
 			return nodes;
-		}
+		},
+        /**
+		 * zTree 节点文字过多处理方法
+         * @param treeId
+         * @param treeNode
+         */
+        addDiyDomWithCheck:function (treeId, treeNode) {
+        var spaceWidth = 5;
+        var switchObj = $("#" + treeNode.tId + "_switch"),
+            checkObj = $("#" + treeNode.tId + "_check"),
+            icoObj = $("#" + treeNode.tId + "_ico");
+        switchObj.remove();
+        checkObj.remove();
+        icoObj.parent().before(switchObj);
+        icoObj.parent().before(checkObj);
+
+        var spantxt = $("#" + treeNode.tId + "_span").html();
+        $("#" + treeNode.tId + "_span").css({"fontSize":13});
+        $("#" + treeNode.tId + "_span").attr("data-toggle","tooltip");
+        $("#" + treeNode.tId + "_span").attr("data-placement","top");
+        if (spantxt.length > 10) {
+            spantxt = spantxt.substring(0, 10) + "...";
+            $("#" + treeNode.tId + "_span").html(spantxt);
+        }
+
+    }
 	};
 
 	window.$ZTree = $ZTree;
