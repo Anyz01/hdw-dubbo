@@ -11,8 +11,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.credential.CredentialsMatcher;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -95,17 +93,6 @@ public class ShiroDBRealm extends AuthorizingRealm {
 		info.setRoles(roles);
 		info.addStringPermissions(shiroUser.getUrlSet());
 		return info;
-	}
-
-	/**
-	 * 设置认证加密方式
-	 */
-	@Override
-	public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
-		HashedCredentialsMatcher md5CredentialsMatcher = new HashedCredentialsMatcher();
-		md5CredentialsMatcher.setHashAlgorithmName(ShiroKit.HASH_ALGORITHM_NAME);
-		md5CredentialsMatcher.setHashIterations(ShiroKit.HASH_ITERATIONS);
-		super.setCredentialsMatcher(md5CredentialsMatcher);
 	}
 
 	@Override

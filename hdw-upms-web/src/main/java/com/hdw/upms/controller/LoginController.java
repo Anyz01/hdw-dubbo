@@ -143,7 +143,9 @@ public class LoginController extends BaseController {
 			throw new RuntimeException("账号未启用！");
 		} catch (IncorrectCredentialsException e) {
 			throw new RuntimeException("密码错误！", e);
-		} catch (Throwable e) {
+		} catch (ExcessiveAttemptsException e){
+			throw  new RuntimeException(e.getMessage());
+		}catch (Throwable e) {
 			throw new RuntimeException("发生未知错误，请联系管理员");
 		}
 	}
