@@ -380,9 +380,9 @@
 
 			<!--验证码框架 -->
 			<dependency>
-				<groupId>com.github.axet</groupId>
+				<groupId>com.github.penggle</groupId>
 				<artifactId>kaptcha</artifactId>
-				<version>0.0.9</version>
+				<version>2.3.2</version>
 			</dependency>
 			<!-- shiro end -->
 

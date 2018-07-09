@@ -50,9 +50,9 @@
 
 		<!--验证码框架-->
 		<dependency>
-			<groupId>com.github.axet</groupId>
+			<groupId>com.github.penggle</groupId>
 			<artifactId>kaptcha</artifactId>
-			</dependency>
+		</dependency>
 		<!-- shiro end -->
 
 		<!-- thymeleaf模板中shiro标签 begin -->
