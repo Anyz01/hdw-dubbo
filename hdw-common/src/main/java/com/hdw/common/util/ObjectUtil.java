@@ -7,6 +7,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,37 +92,121 @@ public class ObjectUtil {
     }
 
     /**
-     * Map 转换 java bin
+     * Map转Object
      *
-     * @param type
      * @param map
+     * @param beanClass
      * @return
-     * @throws IntrospectionException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws InvocationTargetException
+     * @throws Exception
      */
-    public static Object convertMap(Class type, Map map) throws IntrospectionException, IllegalAccessException,
-            InstantiationException, InvocationTargetException {
-        BeanInfo beanInfo = Introspector.getBeanInfo(type); // 获取类属性
-        Object obj = type.newInstance(); // 创建 JavaBean 对象
-
-        // 给 JavaBean 对象的属性赋值
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-        for (int i = 0; i < propertyDescriptors.length; i++) {
-            PropertyDescriptor descriptor = propertyDescriptors[i];
-            String propertyName = descriptor.getName();
-
-            if (map.containsKey(propertyName)) {
-                // 下面一句可以 try 起来，这样当一个属性赋值失败的时候就不会影响其他属性赋值。
-                Object value = map.get(propertyName);
-
-                Object[] args = new Object[1];
-                args[0] = value;
-
-                descriptor.getWriteMethod().invoke(obj, args);
+    public static Object mapToObject(Map<String, Object> map, Class<?> beanClass){
+        try {
+            if (map == null)
+                return null;
+            Object obj = beanClass.newInstance();
+            BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+            for (PropertyDescriptor property : propertyDescriptors) {
+                Method setter = property.getWriteMethod();
+                if (setter != null) {
+                    setter.invoke(obj, map.get(property.getName()));
+                }
             }
+            return obj;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        return obj;
+
+
     }
+
+    /**
+     * Object转Map
+     *
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    public static Map<String, Object> objectToMap(Object obj){
+        try {
+            if (obj == null)
+                return null;
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+            for (PropertyDescriptor property : propertyDescriptors) {
+                String key = property.getName();
+                if (key.compareToIgnoreCase("class") == 0) {
+                    continue;
+                }
+                Method getter = property.getReadMethod();
+                Object value = getter != null ? getter.invoke(obj) : null;
+                map.put(key, value);
+            }
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+    }
+
+    /**
+     * Map转Object 通过反射
+     *
+     * @param map
+     * @param beanClass
+     * @return
+     * @throws Exception
+     */
+    public static Object mapToObjectByReflect(Map<String, Object> map, Class<?> beanClass) {
+        try {
+            if (map == null)
+                return null;
+            Object obj = beanClass.newInstance();
+            Field[] fields = obj.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                int mod = field.getModifiers();
+                if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                    continue;
+                }
+                field.setAccessible(true);
+                field.set(obj, map.get(field.getName()));
+            }
+            return obj;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Object转Map 通过反射
+     *
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    public static Map<String, Object> objectToMapByReflect(Object obj){
+        try {
+            if (obj == null) {
+                return null;
+            }
+            Map<String, Object> map = new HashMap<String, Object>();
+            Field[] declaredFields = obj.getClass().getDeclaredFields();
+            for (Field field : declaredFields) {
+                field.setAccessible(true);
+                map.put(field.getName(), field.get(obj));
+            }
+            return map;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }
