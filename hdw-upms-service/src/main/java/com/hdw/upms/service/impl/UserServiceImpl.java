@@ -23,7 +23,12 @@ import java.util.Map;
  * User 表数据服务层接口实现类
  *
  */
-@Service(version = "1.0.0", application = "${dubbo.application.id}", protocol = "${dubbo.protocol.id}", registry = "${dubbo.registry.id}",group = "hdw-upms")
+@Service(
+		application = "${dubbo.application.id}",
+		protocol = "${dubbo.protocol.id}",
+		registry = "${dubbo.registry.id}",
+		group = "hdw-upms"
+)
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
 	@Autowired

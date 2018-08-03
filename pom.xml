@@ -21,7 +21,6 @@
 		<module>hdw-upms-mapper</module>
 		<module>hdw-upms-api</module>
 		<module>hdw-upms-service</module>
-		<module>hdw-upms-client</module>
 		<module>hdw-upms-web</module>
 	</modules>
 

@@ -23,10 +23,71 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.hdw</groupId>
-			<artifactId>hdw-upms-client</artifactId>
+			<artifactId>hdw-upms-api</artifactId>
 			<version>1.0.0</version>
 			<type>jar</type>
 		</dependency>
+
+		<!-- shiro begin -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- shiro ehcache (shiro缓存)-->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-ehcache</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!--验证码框架-->
+		<dependency>
+			<groupId>com.github.penggle</groupId>
+			<artifactId>kaptcha</artifactId>
+		</dependency>
+		<!-- shiro end -->
+
+		<!-- thymeleaf模板中shiro标签 begin -->
+		<dependency>
+			<groupId>com.github.theborakompanioni</groupId>
+			<artifactId>thymeleaf-extras-shiro</artifactId>
+			</dependency>
+		<!-- thymeleaf模板中shiro标签 end -->
+
+		<!--  pac4j -->
+		<dependency>
+			<groupId>io.buji</groupId>
+			<artifactId>buji-pac4j</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-core</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-cas</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-jwt</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-http</artifactId>
+			</dependency>
+		<!-- pac4j end -->
+
 
 		<!-- quartz begin -->
 		<dependency>
@@ -54,6 +115,35 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<!-- ActiveMQ begin -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-pool</artifactId>
+        </dependency>
+        <!-- ActiveMQ end -->
+
+        <!-- websocket begin -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- websocket end -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

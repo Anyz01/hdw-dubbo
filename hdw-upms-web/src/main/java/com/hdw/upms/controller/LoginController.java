@@ -124,7 +124,7 @@ public class LoginController extends BaseController {
 		logger.info("session中的图形码字符串:" + sessionCaptcha);
 
 		//比对
-		if (captcha == null || !sessionCaptcha.equalsIgnoreCase(captcha)) {
+		if (captcha == null || sessionCaptcha==null|| !sessionCaptcha.equalsIgnoreCase(captcha)) {
 			throw new RuntimeException("验证码错误");
 		}
 		Subject subject = SecurityUtils.getSubject();

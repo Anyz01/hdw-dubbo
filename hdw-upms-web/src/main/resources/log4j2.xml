@@ -37,10 +37,10 @@
     <Loggers>
         <!-- myibatis log configure -->
         <logger name="com.apache.ibatis" level="INFO"/>
-        <logger name="org.mybatis.spring" level="DEBUG"/>
-        <logger name="java.sql.Connection" level="DEBUG"/>
-        <logger name="java.sql.Statement" level="DEBUG"/>
-        <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+        <logger name="org.mybatis.spring" level="INFO"/>
+        <logger name="java.sql.Connection" level="INFO"/>
+        <logger name="java.sql.Statement" level="INFO"/>
+        <logger name="java.sql.PreparedStatement" level="INFO"/>
         
         <!-- 减少部分debug日志 -->
         <logger name="druid.sql" level="INFO"/>
@@ -57,10 +57,9 @@
         <logger name="org.springframework.cache" level="INFO"/>
         
         <!-- 业务debug日志 -->
-        <logger name="com.hdw" level="DEBUG"/>
+        <logger name="com.hdw" level="INFO"/>
         
-        <Root level="DEBUG">
-            <AppenderRef ref="Console" />
+        <Root level="INFO">
             <AppenderRef ref="RollingFile" />
             <AppenderRef ref="RollingFileError" />
         </Root>
