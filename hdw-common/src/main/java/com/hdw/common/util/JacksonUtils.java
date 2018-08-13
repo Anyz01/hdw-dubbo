@@ -30,7 +30,6 @@ public class JacksonUtils {
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         // 设置为中国上海时区
         objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-        objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
         // 空值不序列化
         objectMapper.setSerializationInclusion(Include.NON_NULL);
         // 反序列化时，属性不存在的兼容处理

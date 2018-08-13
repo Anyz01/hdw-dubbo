@@ -6,29 +6,29 @@ import com.hdw.upms.entity.User;
 import com.hdw.upms.entity.vo.UserVo;
 
 /**
- *
  * User 表数据服务层接口
- *
  */
 public interface IUserService extends IService<User> {
 
-	UserVo selectByLoginName(String loginName);
+    UserVo selectByLoginName(String loginName);
 
-	void insertByVo(UserVo userVo);
+    void insertByVo(UserVo userVo);
 
-	void updateByVo(UserVo userVo);
+    void updateByVo(UserVo userVo);
 
-	UserVo selectVoById(Long id);
-	/**
-	 * 设置角色
-	 * @param userId
-	 * @param roleIds
-	 */
-	void setRoles(Long userId,String roleIds);
+    UserVo selectVoById(Long id);
 
-	void updatePwdByUserId(Long userId, String md5Hex);
+    /**
+     * 设置角色
+     *
+     * @param userId
+     * @param roleIds
+     */
+    void setRoles(Long userId, String roleIds);
 
-	PageInfo selectDataGrid(PageInfo pageInfo);
+    void updatePwdByUserId(Long userId, String md5Hex);
 
-	void deleteUserById(Long id);
+    PageInfo selectDataGrid(PageInfo pageInfo);
+
+    void deleteUserById(Long id);
 }

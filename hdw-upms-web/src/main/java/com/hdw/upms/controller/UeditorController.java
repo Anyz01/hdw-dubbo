@@ -22,7 +22,7 @@ import java.io.PrintWriter;
  */
 @Controller
 @RequestMapping("/ueditor")
-public class UeditorController extends UpLoadController{
+public class UeditorController extends UpLoadController {
 
     /**
      * 文件上传路径前缀
@@ -37,12 +37,11 @@ public class UeditorController extends UpLoadController{
     private String fileUploadServer;
 
     /**
-     *
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value="/config")
+    @RequestMapping(value = "/config")
     public void config(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("application/json");
         String rootPath = request.getSession().getServletContext().getRealPath("/");
@@ -61,7 +60,7 @@ public class UeditorController extends UpLoadController{
     @ResponseBody
     public String imgUpdate(@RequestParam("upfile") MultipartFile upfile) {
         if (upfile.isEmpty()) {
-            return "error";
+            return "error" ;
         }
         // 获取文件名
         String fileName = upfile.getOriginalFilename();
@@ -69,24 +68,24 @@ public class UeditorController extends UpLoadController{
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         // 这里我使用随机字符串来重新命名图片
         fileName = System.currentTimeMillis() + suffixName;
-        File dest = new File(fileUploadPrefix+File.separator +"upload"+File.separator +"ueditor"+File.separator+ fileName);
+        File dest = new File(fileUploadPrefix + File.separator + "upload" + File.separator + "ueditor" + File.separator + fileName);
         // 检测是否存在目录
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();
         }
         try {
             upfile.transferTo(dest);
-            String url=fileUploadServer+"/upload/ueditor/";
+            String url = fileUploadServer + "/upload/ueditor/" ;
             String config = "{\"state\": \"SUCCESS\"," +
                     "\"url\": \"" + url + fileName + "\"," +
                     "\"title\": \"" + fileName + "\"," +
-                    "\"original\": \"" + fileName + "\"}";
+                    "\"original\": \"" + fileName + "\"}" ;
             return config;
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "error";
+        return "error" ;
     }
 }

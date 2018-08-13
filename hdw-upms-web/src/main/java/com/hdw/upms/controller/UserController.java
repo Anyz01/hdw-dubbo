@@ -28,12 +28,12 @@ import java.util.Map;
  * @date：2015/10/1 14:51
  */
 
-@Api(value = "用户管理接口类", tags = {"用户管理接口"})
+@Api(value = "用户管理接口类" , tags = {"用户管理接口"})
 @Controller
 @RequestMapping("/user")
 public class UserController extends BaseController {
 
-    @Reference(version = "1.0.0", application = "${dubbo.application.id}",group = "hdw-upms")
+    @Reference(version = "1.0.0" , application = "${dubbo.application.id}" , group = "hdw-upms")
     private IUserService userService;
 
     /**
@@ -43,7 +43,7 @@ public class UserController extends BaseController {
      */
     @GetMapping("/manager")
     public String manager() {
-        return "system/user/user";
+        return "system/user/user" ;
     }
 
     /**
@@ -59,13 +59,13 @@ public class UserController extends BaseController {
      * @param deptId
      * @return
      */
-    @ApiOperation(value = "获取权限列表", notes = "获取权限列表")
-    @ApiImplicitParams({@ApiImplicitParam(name = "offset", value = "页数", dataType = "int", required = true),
-            @ApiImplicitParam(name = "limit", value = "行数", dataType = "int", required = true),
-            @ApiImplicitParam(name = "sort", value = "根据某属性排序", dataType = "string"),
-            @ApiImplicitParam(name = "order", value = "升降序", dataType = "string"),
-            @ApiImplicitParam(name = "name", value = "账号/姓名", dataType = "string"),
-            @ApiImplicitParam(name = "deptId", value = "部门编号", dataType = "int")
+    @ApiOperation(value = "获取权限列表" , notes = "获取权限列表")
+    @ApiImplicitParams({@ApiImplicitParam(name = "offset" , value = "页数" , dataType = "int" , required = true),
+            @ApiImplicitParam(name = "limit" , value = "行数" , dataType = "int" , required = true),
+            @ApiImplicitParam(name = "sort" , value = "根据某属性排序" , dataType = "string"),
+            @ApiImplicitParam(name = "order" , value = "升降序" , dataType = "string"),
+            @ApiImplicitParam(name = "name" , value = "账号/姓名" , dataType = "string"),
+            @ApiImplicitParam(name = "deptId" , value = "部门编号" , dataType = "int")
     })
 
     @RequestMapping("/dataGrid")
@@ -76,16 +76,16 @@ public class UserController extends BaseController {
         Map<String, Object> condition = new HashMap<String, Object>();
 
         if (StringUtils.isNotBlank(name)) {
-            condition.put("name", name);
+            condition.put("name" , name);
         }
         if (deptId != null) {
-            condition.put("organizationId", deptId);
+            condition.put("organizationId" , deptId);
         }
         if (StringUtils.isNotBlank(startTime)) {
-            condition.put("startTime", startTime);
+            condition.put("startTime" , startTime);
         }
         if (StringUtils.isNotBlank(endTime)) {
-            condition.put("endTime", endTime);
+            condition.put("endTime" , endTime);
         }
         pageInfo.setCondition(condition);
         PageInfo page = userService.selectDataGrid(pageInfo);
@@ -99,7 +99,7 @@ public class UserController extends BaseController {
      */
     @GetMapping("/addPage")
     public String addPage() {
-        return "system/user/userAdd";
+        return "system/user/userAdd" ;
     }
 
     /**
@@ -108,7 +108,7 @@ public class UserController extends BaseController {
      * @param user
      * @return
      */
-    @ApiOperation(value = "添加用户", notes = "添加用户")
+    @ApiOperation(value = "添加用户" , notes = "添加用户")
     @PostMapping("/add")
     @ResponseBody
     public Object add(@Valid User user) throws RuntimeException {
@@ -140,8 +140,8 @@ public class UserController extends BaseController {
     @GetMapping("/editPage/{userId}")
     public String editPage(Model model, @PathVariable("userId") Long userId) {
         User user = userService.selectById(userId);
-        model.addAttribute("user", user);
-        return "system/user/userEdit";
+        model.addAttribute("user" , user);
+        return "system/user/userEdit" ;
     }
 
     /**
@@ -150,7 +150,7 @@ public class UserController extends BaseController {
      * @param user
      * @return
      */
-    @ApiOperation(value = "编辑用户", notes = "编辑用户")
+    @ApiOperation(value = "编辑用户" , notes = "编辑用户")
     @PostMapping("/edit")
     @ResponseBody
     public Object edit(@Valid User user) throws RuntimeException {
@@ -174,8 +174,8 @@ public class UserController extends BaseController {
      * @param userId
      * @return
      */
-    @ApiOperation(value = "删除用户", notes = "删除用户")
-    @ApiImplicitParam(name = "userId", value = "用户ID", dataType = "Long", required = true)
+    @ApiOperation(value = "删除用户" , notes = "删除用户")
+    @ApiImplicitParam(name = "userId" , value = "用户ID" , dataType = "Long" , required = true)
 
     @RequiresRoles("admin")
     @PostMapping("/delete")
@@ -270,7 +270,7 @@ public class UserController extends BaseController {
             if (StringUtils.isNotBlank(pwd)) {
                 user.setPassword(ShiroKit.md5(pwd, user.getLoginName() + user.getSalt()));
             } else {
-                user.setPassword(ShiroKit.md5("123456", user.getLoginName() + user.getSalt()));
+                user.setPassword(ShiroKit.md5("123456" , user.getLoginName() + user.getSalt()));
             }
             user.setUpdateTime(new Date());
             userService.updateById(user);
@@ -293,9 +293,9 @@ public class UserController extends BaseController {
     @GetMapping("roleAssign/{userId}")
     public String roleAssign(@PathVariable("userId") Long userId, Model model) {
         UserVo user = userService.selectVoById(userId);
-        model.addAttribute("userId", userId);
-        model.addAttribute("roleList", user.getRolesList());
-        return "system/user/userRoleAssign";
+        model.addAttribute("userId" , userId);
+        model.addAttribute("roleList" , user.getRolesList());
+        return "system/user/userRoleAssign" ;
     }
 
     /**

@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.14.RELEASE</version>
+        <version>2.0.4.RELEASE</version>
     </parent>
 
     <modules>
@@ -30,13 +30,15 @@
         <java.version>1.8</java.version>
         <mybatis-plus-boot-starter.version>2.3</mybatis-plus-boot-starter.version>
         <mybatisplus.version>2.3</mybatisplus.version>
-        <httpclient.version>4.5.3</httpclient.version>
-        <joda-time.version>2.9.6</joda-time.version>
         <fastjson.version>1.2.49</fastjson.version>
         <!-- druid -->
         <druid.version>1.1.10</druid.version>
         <!-- jackson -->
-        <jackson.version>2.8.7</jackson.version>
+        <jackson.version>2.9.6</jackson.version>
+
+        <httpclient.version>4.5.3</httpclient.version>
+
+        <joda-time.version>2.10</joda-time.version>
         <!-- commons-io -->
         <commons-lang3.version>3.1</commons-lang3.version>
         <commons-fileupload.version>1.3</commons-fileupload.version>
@@ -46,8 +48,6 @@
         <commons-net.version>3.6</commons-net.version>
         <!-- pinyin4j -->
         <pinyin4j.version>2.5.1</pinyin4j.version>
-        <!-- thumbnailator -->
-        <thumbnailator.version>0.4.8</thumbnailator.version>
         <!-- zxing -->
         <zxing.core.version>3.3.1</zxing.core.version>
         <poi.version>3.17</poi.version>
@@ -61,10 +61,10 @@
         <guava.version>20.0</guava.version>
         <quartz.version>2.3.0</quartz.version>
         <dubbo.version>2.6.2</dubbo.version>
-        <dubbo-spring-boot-starter.version>0.1.1</dubbo-spring-boot-starter.version>
+        <dubbo-spring-boot-starter.version>0.2.0</dubbo-spring-boot-starter.version>
         <solrj.version>7.3.1</solrj.version>
         <fastdfs-spring-boot-starter.version>0.2.0</fastdfs-spring-boot-starter.version>
-        <springfox.swagger2.version>2.8.0</springfox.swagger2.version>
+        <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
         <lombok.version>1.18.0</lombok.version>
         <shiro.version>1.4.0</shiro.version>
         <pac4j.version>2.3.1</pac4j.version>
@@ -75,7 +75,8 @@
         <thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
         <thymeleaf-extras-shiro.version>2.0.0</thymeleaf-extras-shiro.version>
         <velocity-engine-core.version>2.0</velocity-engine-core.version>
-        <springboot-admin.version>1.5.7</springboot-admin.version>
+        <springboot-admin.version>2.0.2</springboot-admin.version>
+        <commons-pool2.version>2.5.0</commons-pool2.version>
     </properties>
 
     <dependencyManagement>
@@ -230,13 +231,7 @@
                 <version>${pdfbox.version}</version>
             </dependency>
             <!-- pdfbox end -->
-            <!-- thumbnailator begin -->
-            <dependency>
-                <groupId>net.coobird</groupId>
-                <artifactId>thumbnailator</artifactId>
-                <version>${thumbnailator.version}</version>
-            </dependency>
-            <!-- thumbnailator end -->
+
             <!-- zxing begin -->
             <dependency>
                 <groupId>com.google.zxing</groupId>
@@ -271,6 +266,12 @@
                 <groupId>org.quartz-scheduler</groupId>
                 <artifactId>quartz</artifactId>
                 <version>${quartz.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.mchange</groupId>
+                        <artifactId>c3p0</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>
@@ -409,6 +410,14 @@
                 <version>20180130</version>
             </dependency>
             <!-- ueditor end -->
+
+            <!-- commons-pool2 begin -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
+            </dependency>
+            <!-- commons-pool2 end -->
         </dependencies>
     </dependencyManagement>
 

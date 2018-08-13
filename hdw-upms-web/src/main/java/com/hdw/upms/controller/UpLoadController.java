@@ -90,7 +90,7 @@ public abstract class UpLoadController extends BaseController {
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", fileName);
+        headers.setContentDispositionFormData("attachment" , fileName);
         return new ResponseEntity<Resource>(resource, headers, status);
     }
 
@@ -110,7 +110,7 @@ public abstract class UpLoadController extends BaseController {
                 dirFile = new File(fileUploadPrefix + File.separator + dir + File.separator
                         + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
             } else {
-                dirFile = new File(fileUploadPrefix + File.separator +"upload"+ File.separator
+                dirFile = new File(fileUploadPrefix + File.separator + "upload" + File.separator
                         + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
             }
             if (!dirFile.exists()) {
@@ -162,7 +162,7 @@ public abstract class UpLoadController extends BaseController {
                 dirFile = new File(fileUploadPrefix + File.separator + dir + File.separator
                         + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
             } else {
-                dirFile = new File(fileUploadPrefix + File.separator +"upload"+ File.separator
+                dirFile = new File(fileUploadPrefix + File.separator + "upload" + File.separator
                         + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
             }
             if (!dirFile.exists()) {
@@ -227,7 +227,7 @@ public abstract class UpLoadController extends BaseController {
     public String uploadToFastDFS(String localFilePath) throws RuntimeException {
         try {
             byte[] bytes = getBytes(localFilePath);
-            String fileName = "";
+            String fileName = "" ;
             if ((localFilePath != null) && (localFilePath.length() > 0)) {
                 int dot = localFilePath.lastIndexOf(File.separator);
                 if ((dot > -1) && (dot < (localFilePath.length() - 1))) {

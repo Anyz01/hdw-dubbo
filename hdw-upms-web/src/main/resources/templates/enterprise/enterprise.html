@@ -80,13 +80,9 @@
                 { title: '安全负责人移动电话号码', field: 'safePersonMobile', align: 'center', valign: 'middle', sortable: true },
                 { title: '风险模型类型', field: 'riskModel', align: 'center', valign: 'middle', sortable: true },
                 {
-                    title: '创建时间', field: 'createTime', align: 'center', valign: 'middle', sortable: true, formatter: function (value, row, index) {
-                        return hdw.formatDate(value);
-                    }
+                    title: '创建时间', field: 'createTime', align: 'center', valign: 'middle', sortable: true
                 }, {
-                    title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, formatter: function (value, row, index) {
-                        return hdw.formatDate(value);
-                    }
+                    title: '修改时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true
                 }]
             return columns;
         };

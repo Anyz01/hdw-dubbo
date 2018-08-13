@@ -17,7 +17,7 @@
                 <li class="nav-header">
                     <div class="dropdown profile-element">
                             <span>
-                                <img alt="image" class="img-circle" src="img/profile_small.jpg" />
+                                <img alt="image" class="img-circle" src="img/profile_small.jpg"/>
                             </span>
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
@@ -281,10 +281,10 @@
     });
 
     function resetPwd() {
-        parent.layer.confirm( "<div><label>输入新密码</label><input id='password' name='password' type='password'/></div>" +
+        parent.layer.confirm("<div><label>输入新密码</label><input id='password' name='password' type='password'/></div>" +
             "<div><label>再次输入新密码</label><input id='pwd' name='pwd' type='password'/></div>", {
             btn: ['确定', '取消'],
-            area:['200px', '250px'],
+            area: ['200px', '250px'],
             title: '修改密码',
             shade: false //不显示遮罩
         }, function () {
@@ -292,7 +292,7 @@
             var pwd = $("#pwd").val();
             if (pwd.length < 6 || pwd.length > 16) {
                 layer.msg('请输入6-16位密码', {icon: 5});
-            }else if (password != pwd ) {
+            } else if (password != pwd) {
                 parent.layer.msg('密码不一致。。', {icon: 5});
             } else {
                 var ajax = new $ax(basePath + "user/reset", function (data) {

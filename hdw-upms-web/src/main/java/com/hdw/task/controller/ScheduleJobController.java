@@ -43,7 +43,7 @@ public class ScheduleJobController extends BaseController {
      */
     @GetMapping("/manager")
     public String manager() {
-        return "task/scheduleList";
+        return "task/scheduleList" ;
     }
 
     @RequestMapping("/dataGrid")
@@ -63,7 +63,7 @@ public class ScheduleJobController extends BaseController {
      */
     @GetMapping("/addPage")
     public String addPage() {
-        return "task/scheduleAdd";
+        return "task/scheduleAdd" ;
     }
 
     /**
@@ -164,12 +164,12 @@ public class ScheduleJobController extends BaseController {
         Map<String, Object> map = new HashMap<String, Object>();
         for (ScheduleEntity scheduleEntity : scheduleEntities) {
             if (jobName.equals(scheduleEntity.getJobName()) && jobGroup.equals(scheduleEntity.getJobGroup())) {
-                map.put("jobName", jobName);
-                map.put("jobGroup", jobGroup);
-                map.put("cronExpression", scheduleEntity.getCronExpression());
-                map.put("className", scheduleEntity.getClassName());
-                map.put("methodName", scheduleEntity.getMethodName());
-                map.put("description", scheduleEntity.getDescription());
+                map.put("jobName" , jobName);
+                map.put("jobGroup" , jobGroup);
+                map.put("cronExpression" , scheduleEntity.getCronExpression());
+                map.put("className" , scheduleEntity.getClassName());
+                map.put("methodName" , scheduleEntity.getMethodName());
+                map.put("description" , scheduleEntity.getDescription());
             }
         }
         return map;
@@ -183,9 +183,9 @@ public class ScheduleJobController extends BaseController {
     @RequiresRoles("admin")
     @GetMapping("/editPage/{jobName}/{jobGroup}")
     public String editPage(@PathVariable("jobName") String jobName, @PathVariable("jobGroup") String jobGroup, Model model) {
-        model.addAttribute("jobGroup", jobGroup);
-        model.addAttribute("jobName", jobName);
-        return "task/scheduleEdit";
+        model.addAttribute("jobGroup" , jobGroup);
+        model.addAttribute("jobName" , jobName);
+        return "task/scheduleEdit" ;
     }
 
     /**
@@ -229,7 +229,7 @@ public class ScheduleJobController extends BaseController {
     @ResponseBody
     public Object stratNow(String jobName, String jobGroup) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("status", -1);
+        map.put("status" , -1);
         try {
             scheduleJobService.startNowJob(jobName, jobGroup);
             return renderSuccess("执行成功");

@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 public class MessageSender {
     protected static final Logger logger = LoggerFactory.getLogger(MessageSender.class);
 
-    @Resource(name = "stringRedisTemplate")
+    @Resource(name = "redisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
     /**

@@ -16,10 +16,7 @@ import org.springframework.http.converter.*;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -32,7 +29,7 @@ import java.util.TimeZone;
  */
 @ControllerAdvice
 @Configuration
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig extends WebMvcConfigurationSupport {
     @Autowired
     private CsrfInterceptor csrfInterceptor;
 
@@ -43,7 +40,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     }
 
     @Override
@@ -57,8 +54,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         objectMapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);// 忽略 transient 修饰的属性
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // 设置为中国上海时区
-//		objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-//		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+		objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
         converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
 

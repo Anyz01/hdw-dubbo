@@ -78,14 +78,10 @@
                 },
                 { title: '简介', field: 'description', align: 'center', valign: 'middle', sortable: true },
                 {
-                    title: '创建时间', field: 'createTime', align: 'center', valign: 'middle', sortable: true, formatter: function (value, row, index) {
-                        return hdw.formatDate(value);
-                    }
+                    title: '创建时间', field: 'createTime', align: 'center', valign: 'middle', sortable: true
                 },
                 {
-                    title: '更新时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true, formatter: function (value, row, index) {
-                        return hdw.formatDate(value);
-                    }
+                    title: '更新时间', field: 'updateTime', align: 'center', valign: 'middle', sortable: true
                 }]
             return columns;
         };

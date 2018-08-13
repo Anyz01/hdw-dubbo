@@ -19,11 +19,7 @@ public class RedisServiceImpl implements IRedisService {
     @Resource(name = "redisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
-    @Resource(name = "jsonRedisTemplate")
-    private RedisTemplate<String, Object> jsonRedisTemplate;
-
-    @Value("${spring.redis.expiration}")
-    private Integer EXPIRE;
+    private Integer EXPIRE=1800;
 
     @Override
     public boolean exists(String key) {
@@ -88,7 +84,7 @@ public class RedisServiceImpl implements IRedisService {
 
     @Override
     public <T> void ladd(String key, T values, int second) {
-        jsonRedisTemplate.opsForList().leftPush(key, values);
+        redisTemplate.opsForList().leftPush(key, values);
         this.expire(key, second);
     }
 
@@ -113,12 +109,12 @@ public class RedisServiceImpl implements IRedisService {
 
     @Override
     public void ltrim(String key, long start, long end) {
-        jsonRedisTemplate.opsForList().trim(key, start, end);
+        redisTemplate.opsForList().trim(key, start, end);
     }
 
     @Override
     public Long lsize(String key) {
-        return jsonRedisTemplate.opsForList().size(key);
+        return redisTemplate.opsForList().size(key);
     }
 
     @Override
@@ -129,12 +125,12 @@ public class RedisServiceImpl implements IRedisService {
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> lget(String key, Long start, Long end) {
-        return (List<T>) jsonRedisTemplate.opsForList().range(key, start, end);
+        return (List<T>) redisTemplate.opsForList().range(key, start, end);
     }
 
     @Override
     public void sadd(String key, Object value, int second) {
-        jsonRedisTemplate.opsForSet().add(key, value);
+        redisTemplate.opsForSet().add(key, value);
         this.expire(key, second);
     }
 
@@ -145,12 +141,12 @@ public class RedisServiceImpl implements IRedisService {
 
     @Override
     public Set<Object> sget(String key) {
-        return jsonRedisTemplate.opsForSet().members(key);
+        return redisTemplate.opsForSet().members(key);
     }
 
     @Override
     public boolean sdel(String key, Object value) {
-        long flag = jsonRedisTemplate.opsForSet().remove(key, value);
+        long flag = redisTemplate.opsForSet().remove(key, value);
         if (flag == 1) {
             return true;
         } else {

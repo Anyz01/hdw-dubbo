@@ -20,7 +20,7 @@ public class URLUtils extends org.springframework.web.util.UriUtils {
     public static String encodeURL(String source, Charset charset) {
         try {
             return URLUtils.encode(source, charset.name());
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }

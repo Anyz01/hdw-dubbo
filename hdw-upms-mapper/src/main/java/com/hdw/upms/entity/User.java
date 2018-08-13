@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
+
 
 import java.io.Serializable;
 import java.util.Date;
@@ -33,7 +33,6 @@ public class User extends Model<User> implements Serializable{
     /**
      * 登陆名
      */
-	@NotBlank
 	@Length(min = 4, max = 64)
 	@TableField("login_name")
 	private String loginName;

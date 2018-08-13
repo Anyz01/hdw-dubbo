@@ -1,62 +1,79 @@
 package com.hdw.common.config.redis;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisClusterConfiguration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.*;
-import redis.clients.jedis.JedisPoolConfig;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+
 
 /**
  * @author TuMinglong
- * @description Redis配置
- * @date 2018年1月25日 上午10:40:31
+ * @Description redis配置
+ * @date 2018/8/10 10:27
  */
 @Configuration
-@EnableCaching
+@EnableCaching // 开启缓存支持
 public class RedisConfig extends CachingConfigurerSupport {
 
-    protected final static Logger logger = LoggerFactory.getLogger(RedisConfig.class);
-
-    @Value("${redis.cluster.flag}")
-    private boolean redisClusterFlag;
-
-    @Autowired
-    ClusterConfigurationProperties clusterProperties;
+    @Resource
+    private LettuceConnectionFactory lettuceConnectionFactory;
 
     @Bean
-    public RedisConnectionFactory connectionFactory() {
-        if (redisClusterFlag) {
-            return new JedisConnectionFactory(new RedisClusterConfiguration(clusterProperties.getNodes()),
-                    new JedisPoolConfig());
-        } else {
-            return new JedisConnectionFactory(new JedisPoolConfig());
-        }
+    public KeyGenerator keyGenerator() {
+        return new KeyGenerator() {
+            @Override
+            public Object generate(Object target, Method method, Object... params) {
+                StringBuffer sb = new StringBuffer();
+                sb.append(target.getClass().getName());
+                sb.append(method.getName());
+                for (Object obj : params) {
+                    sb.append(obj.toString());
+                }
+                return sb.toString();
+            }
+        };
     }
 
-    @Primary
+
+    // 缓存管理器
+    @Bean
+    public CacheManager cacheManager() {
+        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(lettuceConnectionFactory);
+        Set<String> cacheNames = new HashSet<String>() {};
+        cacheNames.add("authorizationCache");
+        cacheNames.add("authenticationCache");
+        cacheNames.add("activeSessionCache");
+        cacheNames.add("pac4jAuthorizationCache");
+        cacheNames.add("pac4jAuthenticationCache");
+        builder.initialCacheNames(cacheNames);
+        return builder.build();
+    }
+
+
     @Bean(name = "redisTemplate")
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> objectRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
 
         RedisSerializer<String> stringSerializer = new StringRedisSerializer();
         RedisObjectSerializer redisObjectSerializer = new RedisObjectSerializer();
@@ -69,85 +86,29 @@ public class RedisConfig extends CachingConfigurerSupport {
         return redisTemplate;
     }
 
-    @Bean(name = "stringRedisTemplate")
-    public RedisTemplate<String, Object> stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-
-        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
-
-        redisTemplate.setKeySerializer(stringSerializer);
-        redisTemplate.setValueSerializer(stringSerializer);
-        redisTemplate.setHashKeySerializer(stringSerializer);
-        redisTemplate.setHashValueSerializer(stringSerializer);
-
-        return redisTemplate;
-    }
-
-    @Bean(name = "longRedisTemplate")
-    public RedisTemplate<String, Object> longRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-
-        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
-        GenericToStringSerializer<Long> genericToStringSerializer = new GenericToStringSerializer<>(Long.class);
-
-        redisTemplate.setKeySerializer(stringSerializer);
-        redisTemplate.setValueSerializer(genericToStringSerializer);
-        redisTemplate.setHashKeySerializer(stringSerializer);
-        redisTemplate.setHashValueSerializer(genericToStringSerializer);
-
-        return redisTemplate;
-    }
-
-    @Bean(name = "jsonRedisTemplate")
-    public RedisTemplate<String, Object> jsonRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-
+    /**
+     * RedisTemplate配置
+     */
+    @Bean(name="jsonRedisTemplate")
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
+        // 设置序列化
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(
                 Object.class);
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        om.enableDefaultTyping(DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
-
-        redisTemplate.setKeySerializer(jackson2JsonRedisSerializer);
-        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-        redisTemplate.setHashKeySerializer(jackson2JsonRedisSerializer);
-        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
-
+        // 配置redisTemplate
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
+        redisTemplate.setConnectionFactory(lettuceConnectionFactory);
+        RedisSerializer<?> stringSerializer = new StringRedisSerializer();
+        redisTemplate.setKeySerializer(stringSerializer);// key序列化
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);// value序列化
+        redisTemplate.setHashKeySerializer(stringSerializer);// Hash key序列化
+        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);// Hash value序列化
+        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 
-    /**
-     * 缓存管理器.
-     *
-     * @param redisTemplate
-     * @return
-     */
-    @Bean
-    public CacheManager cacheManager(
-            @Qualifier("redisTemplate") RedisTemplate<String, Object> redisTemplate) {
-        RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
-        rcm.setDefaultExpiration(600);
-        rcm.setUsePrefix(true);
-
-        Map<String, Long> expires = new HashMap<String, Long>();
-        expires.put("halfHour", 1800l);
-        expires.put("hour", 3600l);
-        expires.put("oneDay", 86400l);
-
-        // shiro cache keys
-        expires.put("authorizationCache", 1800l);
-        expires.put("authenticationCache", 1800l);
-        expires.put("activeSessionCache", 1800l);
-        expires.put("pac4jAuthorizationCache", 1800l);
-        expires.put("pac4jAuthenticationCache", 1800l);
-
-        rcm.setExpires(expires);
-
-        return rcm;
-    }
-
 }
+

@@ -13,6 +13,6 @@ import ${superServiceClassPackage};
  * @since ${date}
  */
 public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
-	
-	void selectDataGrid(PageInfo pageInfo);
-}
+
+        void selectDataGrid(PageInfo pageInfo);
+        }

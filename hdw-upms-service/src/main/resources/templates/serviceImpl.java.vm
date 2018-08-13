@@ -22,24 +22,24 @@ import com.alibaba.dubbo.config.annotation.Service;
  * @since ${date}
  */
 @Service(
-		application = "${dubbo.application.id}",
-		protocol = "${dubbo.protocol.id}",
-		registry = "${dubbo.registry.id}",
+        application = "${dubbo.application.id}" ,
+        protocol = "${dubbo.protocol.id}" ,
+        registry = "${dubbo.registry.id}" ,
         group = "hdw-upms"
 )
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
-	
-	@Autowired
-	private ${table.mapperName} ${table.entityPath}Mapper;
 
-	@Override
-	public void selectDataGrid(PageInfo pageInfo) {
-		Page<${entity}> page = new Page<${entity}>(pageInfo.getNowpage(), pageInfo.getSize());
-		String orderField = StringUtils.camelToUnderline(pageInfo.getSort());
-		page.setOrderByField(orderField);
-		page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
-		List<${entity}> list = ${table.entityPath}Mapper.select${entity}Page(page, pageInfo.getCondition());
-		pageInfo.setRows(list);
-		pageInfo.setTotal(page.getTotal());
-	}
-}
+@Autowired
+private ${table.mapperName} ${table.entityPath}Mapper;
+
+@Override
+public void selectDataGrid(PageInfo pageInfo){
+        Page<${entity}> page=new Page<${entity}>(pageInfo.getNowpage(),pageInfo.getSize());
+        String orderField=StringUtils.camelToUnderline(pageInfo.getSort());
+        page.setOrderByField(orderField);
+        page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
+        List<${entity}> list= ${table.entityPath}Mapper.select${entity}Page(page,pageInfo.getCondition());
+        pageInfo.setRows(list);
+        pageInfo.setTotal(page.getTotal());
+        }
+        }

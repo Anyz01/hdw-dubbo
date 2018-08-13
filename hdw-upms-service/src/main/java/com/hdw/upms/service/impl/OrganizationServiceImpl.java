@@ -12,33 +12,28 @@ import java.util.List;
 import java.util.Map;
 
 
-
-
-
 /**
- *
  * Organization 表数据服务层接口实现类
- *
  */
 @Service(
-        application = "${dubbo.application.id}",
-        protocol = "${dubbo.protocol.id}",
-        registry = "${dubbo.registry.id}",
+        application = "${dubbo.application.id}" ,
+        protocol = "${dubbo.protocol.id}" ,
+        registry = "${dubbo.registry.id}" ,
         group = "hdw-upms"
 )
 public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Organization> implements IOrganizationService {
 
     @Autowired
     private OrganizationMapper organizationMapper;
-    
+
     @Override
     public List<ZTreeNode> selectTree() {
-         return organizationMapper.selectTree();
+        return organizationMapper.selectTree();
     }
 
     @Override
-    public List<Map<String,Object>> selectTreeGrid(Map<String,Object> par) {
-        
+    public List<Map<String, Object>> selectTreeGrid(Map<String, Object> par) {
+
         return organizationMapper.selectTreeGrid(par);
     }
 

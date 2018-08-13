@@ -24,37 +24,37 @@ import com.alibaba.dubbo.config.annotation.Service;
  * @since 2018-04-26
  */
 @Service(
-		application = "${dubbo.application.id}",
-		protocol = "${dubbo.protocol.id}",
-		registry = "${dubbo.registry.id}",
-		group = "hdw-upms"
+        application = "${dubbo.application.id}" ,
+        protocol = "${dubbo.protocol.id}" ,
+        registry = "${dubbo.registry.id}" ,
+        group = "hdw-upms"
 )
 public class SysDicServiceImpl extends ServiceImpl<SysDicMapper, SysDic> implements ISysDicService {
-	
-	@Autowired
-	private SysDicMapper sysDicMapper;
 
-	@Override
-	public PageInfo selectDataGrid(PageInfo pageInfo) {
-		Page<SysDic> page = new Page<SysDic>(pageInfo.getNowpage(), pageInfo.getSize());
-		String orderField = StringUtils.camelToUnderline(pageInfo.getSort());
-		page.setOrderByField(orderField);
-		page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
-		List<SysDic> list = sysDicMapper.selectSysDicPage(page, pageInfo.getCondition());
-		pageInfo.setRows(list);
-		pageInfo.setTotal(page.getTotal());
-		return pageInfo;
-	}
+    @Autowired
+    private SysDicMapper sysDicMapper;
 
-	@Override
-	public List<Map<String, Object>> selectTreeGrid(Map<String, Object> par) {
-	
-		return sysDicMapper.selectTreeGrid(par);
-	}
+    @Override
+    public PageInfo selectDataGrid(PageInfo pageInfo) {
+        Page<SysDic> page = new Page<SysDic>(pageInfo.getNowpage(), pageInfo.getSize());
+        String orderField = StringUtils.camelToUnderline(pageInfo.getSort());
+        page.setOrderByField(orderField);
+        page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
+        List<SysDic> list = sysDicMapper.selectSysDicPage(page, pageInfo.getCondition());
+        pageInfo.setRows(list);
+        pageInfo.setTotal(page.getTotal());
+        return pageInfo;
+    }
 
-	@Override
-	public List<ZTreeNode> selectTree(Map<String, Object> par) {
-		
-		return sysDicMapper.selectTree(par);
-	}
+    @Override
+    public List<Map<String, Object>> selectTreeGrid(Map<String, Object> par) {
+
+        return sysDicMapper.selectTreeGrid(par);
+    }
+
+    @Override
+    public List<ZTreeNode> selectTree(Map<String, Object> par) {
+
+        return sysDicMapper.selectTree(par);
+    }
 }

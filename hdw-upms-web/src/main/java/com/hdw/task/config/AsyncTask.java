@@ -8,13 +8,14 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 /**
- * @description 异步任务测试
  * @author TuMinglong
- *@Date 2018/5/31 19:18
+ * @description 异步任务测试
+ * @Date 2018/5/31 19:18
  */
 @Component
 public class AsyncTask {
-	private static Random random = new Random();
+    private static Random random = new Random();
+
     @Async
     public Future<String> doTaskOne() throws Exception {
         System.out.println("开始做任务一");

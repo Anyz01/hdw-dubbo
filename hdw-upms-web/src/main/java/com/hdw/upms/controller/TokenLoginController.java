@@ -23,11 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- *
- * @description Token鉴权登录
  * @author TuMinglong
- * @date 2018年4月19日 上午11:39:52
  * @version 1.0.0
+ * @description Token鉴权登录
+ * @date 2018年4月19日 上午11:39:52
  */
 @Controller
 public class TokenLoginController extends BaseController {

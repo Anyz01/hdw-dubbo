@@ -10,18 +10,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
  * Role 表数据服务层接口
- *
  */
 public interface IRoleService extends IService<Role> {
 
     PageInfo selectDataGrid(PageInfo pageInfo);
 
     List<Select2Node> selectTree();
-    
+
     /**
      * 根据用户Id获取角色树
+     *
      * @param userId
      * @return
      */
