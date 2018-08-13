@@ -11,30 +11,30 @@ import com.baomidou.mybatisplus.plugins.PerformanceInterceptor;
 @Configuration
 public class MybatisPlusConfig {
 
-	/**
-	 * mybatis-plus SQL执行效率插件【生产环境可以关闭】
-	 */
-	@Bean
-	public PerformanceInterceptor performanceInterceptor() {
-		return new PerformanceInterceptor();
-	}
+    /**
+     * mybatis-plus SQL执行效率插件【生产环境可以关闭】
+     */
+    @Bean
+    public PerformanceInterceptor performanceInterceptor() {
+        return new PerformanceInterceptor();
+    }
 
-	/**
-	 * mybatis-plus分页插件
-	 */
-	@Bean
-	public PaginationInterceptor paginationInterceptor() {
-		PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
-		paginationInterceptor.setLocalPage(true);// 开启 PageHelper 的支持
-		return paginationInterceptor;
-	}
+    /**
+     * mybatis-plus分页插件
+     */
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+        paginationInterceptor.setLocalPage(true);// 开启 PageHelper 的支持
+        return paginationInterceptor;
+    }
 
-	/**
-	 * 注入sql注入器
-	 */
-	@Bean
-	public ISqlInjector sqlInjector() {
-		return new LogicSqlInjector();
-	}
+    /**
+     * 注入sql注入器
+     */
+    @Bean
+    public ISqlInjector sqlInjector() {
+        return new LogicSqlInjector();
+    }
 
 }

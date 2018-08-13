@@ -209,7 +209,7 @@ public final class BeanUtils extends org.springframework.beans.BeanUtils {
      * @return
      * @throws Exception
      */
-    public static Map<String, Object> objectToMap(Object obj){
+    public static Map<String, Object> objectToMap(Object obj) {
         try {
             if (obj == null)
                 return null;

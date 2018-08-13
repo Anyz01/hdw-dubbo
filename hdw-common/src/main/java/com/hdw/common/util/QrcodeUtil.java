@@ -8,8 +8,6 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Binarizer;
@@ -24,21 +22,30 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
- * 
- * @description 二维码工具类
  * @author TuMinglong
+ * @description 二维码工具类
  * @date 2018年1月25日 上午11:21:16
  */
 public class QrcodeUtil {
-    private static Logger logger = LogManager.getLogger();
+
+    private static Logger logger = LoggerFactory.getLogger(QrcodeUtil.class);
 
     public static String createQrcode(String dir, String content) {
         return createQrcode(dir, content, 300, 300);
     }
 
+    /**
+     * @param dir     文件路径
+     * @param content 内容
+     * @param width   宽度
+     * @param height  高度
+     * @return
+     */
     public static String createQrcode(String dir, String content, int width, int height) {
         try {
             String qrcodeFormat = "png";

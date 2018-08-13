@@ -4,9 +4,8 @@ import java.lang.annotation.*;
 
 
 /**
- * 
- * @description 自定义注解
  * @author TuMinglong
+ * @description 自定义注解
  * @date 2018年1月24日 下午4:08:53
  */
 @Target({ElementType.METHOD})

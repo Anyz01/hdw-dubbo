@@ -7,13 +7,12 @@ import org.springframework.core.serializer.support.SerializingConverter;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
- * 
- * @Descriptin redis序列化对象
  * @author TuMinglong
+ * @Descriptin redis序列化对象
  * @Date 2018年5月1日 下午3:13:58
  */
 public class RedisObjectSerializer implements RedisSerializer<Object> {
-	
+
     private Converter<Object, byte[]> serializer = new SerializingConverter();
     private Converter<byte[], Object> deserializer = new DeserializingConverter();
     static final byte[] EMPTY_ARRAY = new byte[0];

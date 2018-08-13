@@ -1,17 +1,16 @@
 package com.hdw.common.constant;
 
 /**
- * 
- * @Descriptin 是否是菜单的枚举
  * @author TuMinglong
+ * @Descriptin 是否是菜单的枚举
  * @Date 2018年5月6日 上午11:55:38
  */
 public enum IsMenu {
 
     YES(0, "是"),
     NO(1, "不是"),//不是菜单的是按钮
-	OPEN(0,"开启"),
-	CLOSE(1,"关闭");
+    OPEN(0, "开启"),
+    CLOSE(1, "关闭");
 
     int code;
     String message;

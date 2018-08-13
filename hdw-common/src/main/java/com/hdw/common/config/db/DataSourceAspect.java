@@ -14,9 +14,8 @@ import java.lang.reflect.Method;
 
 
 /**
- * 
- * @description  数据源切换切面
  * @author TuMinglong
+ * @description 数据源切换切面
  * @date 2018年1月24日 下午4:07:35
  */
 @Aspect
@@ -26,7 +25,7 @@ public class DataSourceAspect {
 
 
     @Before("@annotation(DynamicDS)")
-    public void beforeDynamicDS(JoinPoint point){
+    public void beforeDynamicDS(JoinPoint point) {
 
         //获得当前访问的class
         Class<?> className = point.getTarget().getClass();
@@ -35,7 +34,7 @@ public class DataSourceAspect {
         String methodName = point.getSignature().getName();
         //得到方法的参数的类型
         @SuppressWarnings("rawtypes")
-		Class[] argClass = ((MethodSignature)point.getSignature()).getParameterTypes();
+        Class[] argClass = ((MethodSignature) point.getSignature()).getParameterTypes();
         String dataSource = DataSourceEnum.MASTER.getDefault();
         try {
             // 得到访问的方法对象
@@ -49,14 +48,14 @@ public class DataSourceAspect {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        logger.info("切换到数据源{}",dataSource);
+        logger.info("切换到数据源{}", dataSource);
         // 切换数据源
         DynamicDataSource.setDataSource(dataSource);
 
     }
 
     @After("@annotation(DynamicDS)")
-    public void afterDynamicDS(JoinPoint point){
+    public void afterDynamicDS(JoinPoint point) {
         DynamicDataSource.clearDataSource();
     }
 }

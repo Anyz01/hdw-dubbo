@@ -4,9 +4,8 @@ import java.io.Serializable;
 
 
 /**
- * 
- * @description 操作结果集
  * @author TuMinglong
+ * @description 操作结果集
  * @date 2018年1月24日 下午4:10:10
  */
 public class Result implements Serializable {
@@ -19,7 +18,7 @@ public class Result implements Serializable {
     private boolean success = false;
 
     private String msg = "";
-    
+
     private Integer code;
 
     private Object obj = null;
@@ -48,42 +47,39 @@ public class Result implements Serializable {
         this.obj = obj;
     }
 
-	public Integer getCode() {
-		return code;
-	}
+    public Integer getCode() {
+        return code;
+    }
 
-	public void setCode(Integer code) {
-		this.code = code;
-	}
+    public void setCode(Integer code) {
+        this.code = code;
+    }
 
-	public Result(Integer code, boolean success, String msg) {
-		super();
-		this.success = success;
-		this.msg = msg;
-		this.code = code;
-	}
+    public Result(Integer code, boolean success, String msg) {
+        super();
+        this.success = success;
+        this.msg = msg;
+        this.code = code;
+    }
 
-	public Result(boolean success, Integer code, Object obj) {
-		super();
-		this.success = success;
-		this.code = code;
-		this.obj = obj;
-	}
+    public Result(boolean success, Integer code, Object obj) {
+        super();
+        this.success = success;
+        this.code = code;
+        this.obj = obj;
+    }
 
-	public Result(boolean success, String msg, Integer code, Object obj) {
-		super();
-		this.success = success;
-		this.msg = msg;
-		this.code = code;
-		this.obj = obj;
-	}
+    public Result(boolean success, String msg, Integer code, Object obj) {
+        super();
+        this.success = success;
+        this.msg = msg;
+        this.code = code;
+        this.obj = obj;
+    }
 
-	public Result() {
-		super();
-	}
-	
-	
+    public Result() {
+        super();
+    }
 
-	
 
 }

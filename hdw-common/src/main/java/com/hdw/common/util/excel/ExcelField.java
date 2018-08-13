@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 
 /**
  * 用于映射实体类和Excel某列名称
- * @description ExcelField
- * @author TuMinglong
- * @date 2017年10月2日 下午3:45:24
  *
+ * @author TuMinglong
+ * @description ExcelField
+ * @date 2017年10月2日 下午3:45:24
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -26,6 +26,7 @@ public @interface ExcelField {
 
     /**
      * 类型
+     *
      * @return 数据类型
      */
     ExcelCellType type() default ExcelCellType.TEXT;
@@ -41,7 +42,7 @@ public @interface ExcelField {
 
     /**
      * 表达式，单元格计算
-     * 
+     *
      * @return 表达式
      */
     String el() default "";

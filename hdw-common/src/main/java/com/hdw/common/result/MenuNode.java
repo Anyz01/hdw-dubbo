@@ -1,4 +1,5 @@
 package com.hdw.common.result;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,20 +12,19 @@ import com.hdw.common.constant.IsMenu;
 
 
 /**
- * 
- * @Descriptin 菜单的节点
  * @author TuMinglong
+ * @Descriptin 菜单的节点
  * @Date 2018年5月6日 上午11:56:22
  */
 @SuppressWarnings("rawtypes")
-public class MenuNode implements Comparable,Serializable{
+public class MenuNode implements Comparable, Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
+    /**
      * 节点id
      */
     private Long id;
@@ -50,7 +50,7 @@ public class MenuNode implements Comparable,Serializable{
      */
     @JsonInclude(Include.NON_NULL)
     private Integer ismenu;
-    
+
     /**
      * 状态（0-正常，1-关闭）
      */
@@ -93,7 +93,7 @@ public class MenuNode implements Comparable,Serializable{
         this.id = id;
         this.pid = pid;
     }
-    
+
     public static MenuNode createRoot() {
         return new MenuNode(0L, -1L);
     }
@@ -115,14 +115,14 @@ public class MenuNode implements Comparable,Serializable{
     }
 
     public Integer getStatus() {
-		return status;
-	}
+        return status;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -131,14 +131,14 @@ public class MenuNode implements Comparable,Serializable{
     }
 
     public Long getPid() {
-		return pid;
-	}
+        return pid;
+    }
 
-	public void setPid(Long pid) {
-		this.pid = pid;
-	}
+    public void setPid(Long pid) {
+        this.pid = pid;
+    }
 
-	public String getName() {
+    public String getName() {
         return name;
     }
 
@@ -205,6 +205,7 @@ public class MenuNode implements Comparable,Serializable{
 
     /**
      * 构建整个菜单树
+     *
      * @param nodeList
      */
     public void buildNodeTree(List<MenuNode> nodeList) {
@@ -218,6 +219,7 @@ public class MenuNode implements Comparable,Serializable{
 
     /**
      * 查询子节点的集合
+     *
      * @param nodeList
      * @param pid
      * @return
@@ -237,6 +239,7 @@ public class MenuNode implements Comparable,Serializable{
 
     /**
      * 遍历一个节点的子节点
+     *
      * @param nodeList
      * @param node
      * @param pId
@@ -262,6 +265,7 @@ public class MenuNode implements Comparable,Serializable{
 
     /**
      * 得到子节点列表
+     *
      * @param list
      * @param node
      * @return
@@ -280,13 +284,14 @@ public class MenuNode implements Comparable,Serializable{
 
     /**
      * 清除掉按钮级别的资源
+     *
      * @param nodes
      * @return
      */
     public static List<MenuNode> clearBtn(List<MenuNode> nodes) {
         ArrayList<MenuNode> noBtns = new ArrayList<MenuNode>();
         for (MenuNode node : nodes) {
-            if(node.getIsmenu() == IsMenu.YES.getCode()){
+            if (node.getIsmenu() == IsMenu.YES.getCode()) {
                 noBtns.add(node);
             }
         }
@@ -295,6 +300,7 @@ public class MenuNode implements Comparable,Serializable{
 
     /**
      * 清除所有二级菜单
+     *
      * @param nodes
      * @return
      */
@@ -315,7 +321,7 @@ public class MenuNode implements Comparable,Serializable{
      * @date 2017年2月19日 下午11:18:19
      */
     @SuppressWarnings("unchecked")
-	public static List<MenuNode> buildTitle(List<MenuNode> nodes) {
+    public static List<MenuNode> buildTitle(List<MenuNode> nodes) {
 
         List<MenuNode> clearBtn = clearBtn(nodes);
 

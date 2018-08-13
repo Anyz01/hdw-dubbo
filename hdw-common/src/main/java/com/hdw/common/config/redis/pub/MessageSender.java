@@ -16,16 +16,17 @@ import javax.annotation.Resource;
 public class MessageSender {
     protected static final Logger logger = LoggerFactory.getLogger(MessageSender.class);
 
-    @Resource(name="stringRedisTemplate")
+    @Resource(name = "stringRedisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 发布消息
+     *
      * @param channel 通道名称
-     * @param message  内容
+     * @param message 内容
      */
-    public void sendObjMessage( String channel ,Object message){
-        logger.info("==== Redis 发布订阅模式 发送的消息："+message.toString()+"====");
-        redisTemplate.convertAndSend(channel,message);
+    public void sendObjMessage(String channel, Object message) {
+        logger.info("==== Redis 发布订阅模式 发送的消息：" + message.toString() + "====");
+        redisTemplate.convertAndSend(channel, message);
     }
 }

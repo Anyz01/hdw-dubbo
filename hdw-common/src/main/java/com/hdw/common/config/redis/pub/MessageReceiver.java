@@ -11,9 +11,10 @@ import org.springframework.stereotype.Component;
 public class MessageReceiver {
     /**
      * 接收消息
+     *
      * @param obj
      */
-    public void receiveMessage(Object obj){
-        System.out.println("==== Redis 发布订阅模式 收到的消息："+obj.toString()+" ====");
+    public void receiveMessage(Object obj) {
+        System.out.println("==== Redis 发布订阅模式 收到的消息：" + obj.toString() + " ====");
     }
 }

@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisServiceImpl implements IRedisService {
 
-    @Resource(name="redisTemplate")
+    @Resource(name = "redisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
-    @Resource(name="jsonRedisTemplate")
+    @Resource(name = "jsonRedisTemplate")
     private RedisTemplate<String, Object> jsonRedisTemplate;
 
     @Value("${spring.redis.expiration}")
@@ -28,7 +28,7 @@ public class RedisServiceImpl implements IRedisService {
     @Override
     public boolean exists(String key) {
 
-        return  redisTemplate.hasKey(key);
+        return redisTemplate.hasKey(key);
     }
 
     @Override
@@ -43,17 +43,17 @@ public class RedisServiceImpl implements IRedisService {
 
     @Override
     public boolean expire(String key, int second) {
-        return  redisTemplate.expire(key,second,TimeUnit.SECONDS);
+        return redisTemplate.expire(key, second, TimeUnit.SECONDS);
     }
 
     @Override
     public boolean exireAt(String key, long unixTime) {
-        return redisTemplate.expireAt(key,new Date(unixTime));
+        return redisTemplate.expireAt(key, new Date(unixTime));
     }
 
     @Override
     public long ttl(String key) {
-        return redisTemplate.getExpire(key,TimeUnit.SECONDS);
+        return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
     @Override
@@ -78,36 +78,36 @@ public class RedisServiceImpl implements IRedisService {
 
     @Override
     public void set(String key, Object value, int seconds) {
-         redisTemplate.opsForValue().set(key,value,seconds,TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
     }
 
     @Override
     public void set(String key, Object value) {
-         this.set(key,value,EXPIRE);
+        this.set(key, value, EXPIRE);
     }
 
     @Override
     public <T> void ladd(String key, T values, int second) {
-        jsonRedisTemplate.opsForList().leftPush(key,values);
-        this.expire(key,second);
+        jsonRedisTemplate.opsForList().leftPush(key, values);
+        this.expire(key, second);
     }
 
     @Override
     public <T> void ladd(String key, T values) {
-            this.ladd(key,values,EXPIRE);
+        this.ladd(key, values, EXPIRE);
     }
 
     @Override
     public <T> void ladd(String key, List<T> values, int second) {
         for (T t : values) {
-            this.ladd(key,t,second);
+            this.ladd(key, t, second);
         }
     }
 
     @Override
     public <T> void ladd(String key, List<T> values) {
         for (T t : values) {
-            this.ladd(key,t,EXPIRE);
+            this.ladd(key, t, EXPIRE);
         }
     }
 
@@ -123,24 +123,24 @@ public class RedisServiceImpl implements IRedisService {
 
     @Override
     public <T> List<T> lget(String key) {
-        return this.lget(key,0l,-1l);
+        return this.lget(key, 0l, -1l);
     }
 
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public <T> List<T> lget(String key, Long start, Long end) {
-        return (List<T>) jsonRedisTemplate.opsForList().range(key,start,end);
+        return (List<T>) jsonRedisTemplate.opsForList().range(key, start, end);
     }
 
     @Override
     public void sadd(String key, Object value, int second) {
         jsonRedisTemplate.opsForSet().add(key, value);
-        this.expire(key,second);
+        this.expire(key, second);
     }
 
     @Override
     public void sadd(String key, Object value) {
-        this.sadd(key,value,EXPIRE);
+        this.sadd(key, value, EXPIRE);
     }
 
     @Override
@@ -150,10 +150,10 @@ public class RedisServiceImpl implements IRedisService {
 
     @Override
     public boolean sdel(String key, Object value) {
-        long flag=jsonRedisTemplate.opsForSet().remove(key, value);
-        if(flag==1) {
+        long flag = jsonRedisTemplate.opsForSet().remove(key, value);
+        if (flag == 1) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -161,18 +161,18 @@ public class RedisServiceImpl implements IRedisService {
     @Override
     public void madd(String key, Map<String, Object> par, int second) {
         redisTemplate.opsForHash().putAll(key, par);
-        this.expire(key,second);
+        this.expire(key, second);
     }
 
     @Override
     public void madd(String key, Map<String, Object> par) {
-        this.madd(key,par,EXPIRE);
+        this.madd(key, par, EXPIRE);
     }
 
     @Override
     public Map<String, Object> mget(String key) {
-        Map<Object, Object> resultMap=redisTemplate.opsForHash().entries(key);
-        Map<String,Object> map=new HashMap<String,Object>();
+        Map<Object, Object> resultMap = redisTemplate.opsForHash().entries(key);
+        Map<String, Object> map = new HashMap<String, Object>();
         for (Object obj : resultMap.keySet()) {
             map.put(obj.toString(), resultMap.get(obj));
         }
@@ -181,12 +181,12 @@ public class RedisServiceImpl implements IRedisService {
 
     @Override
     public Object mget(String key, String field) {
-        Object value=redisTemplate.opsForHash().get(key,field);
+        Object value = redisTemplate.opsForHash().get(key, field);
         return value;
     }
 
     @Override
     public boolean mdel(String key, String field) {
-        return redisTemplate.opsForHash().delete(key, field)==1;
+        return redisTemplate.opsForHash().delete(key, field) == 1;
     }
 }

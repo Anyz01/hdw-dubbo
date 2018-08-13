@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Description 正则表达式进行表单验证工具类,可以验证邮箱、手机号码、固定电话、qq号码
+ * @Description 正则表达式进行表单验证工具类, 可以验证邮箱、手机号码、固定电话、qq号码
  * @Author ChenShi
  * @Date 2018/5/29 20:43
  */
@@ -48,7 +48,7 @@ public class RegexValidateUtil {
 
     /**
      * 验证手机号码
-     *
+     * <p>
      * 移动号码段:139、138、137、136、135、134、150、151、152、157、158、159、182、183、187、188、147
      * 联通号码段:130、131、132、136、185、186、145
      * 电信号码段:133、153、180、189
@@ -69,7 +69,7 @@ public class RegexValidateUtil {
      */
     public static boolean checkTelephone(String telephone) {
         String regex = "^(0\\d{2}-\\d{8}(-\\d{1,4})?)|(0\\d{3}-\\d{7,8}(-\\d{1,4})?)$";
-        return  check(telephone, regex);
+        return check(telephone, regex);
     }
 
     /**

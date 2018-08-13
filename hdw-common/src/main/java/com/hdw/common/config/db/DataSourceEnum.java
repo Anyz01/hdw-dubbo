@@ -2,55 +2,55 @@ package com.hdw.common.config.db;
 
 
 /**
- * 
- * @description 多数据源枚举
  * @author TuMinglong
+ * @description 多数据源枚举
  * @date 2018年1月24日 下午4:08:10
  */
 public enum DataSourceEnum {
 
-	// 主库
-	MASTER("masterDataSource", true),
-	// 从库
-	SLAVE("slaveDataSource", false),;
+    // 主库
+    MASTER("masterDataSource", true),
+    // 从库
+    SLAVE("slaveDataSource", false),
+    ;
 
-	// 数据源名称
-	private String name;
-	// 是否是默认数据源
-	private boolean master;
+    // 数据源名称
+    private String name;
+    // 是否是默认数据源
+    private boolean master;
 
-	DataSourceEnum(String name, boolean master) {
-		this.name = name;
-		this.master = master;
-	}
+    DataSourceEnum(String name, boolean master) {
+        this.name = name;
+        this.master = master;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public boolean isMaster() {
-		return master;
-	}
+    public boolean isMaster() {
+        return master;
+    }
 
-	public void setMaster(boolean master) {
-		this.master = master;
-	}
+    public void setMaster(boolean master) {
+        this.master = master;
+    }
 
-	public String getDefault() {
-		String defaultDataSource = "";
-		for (DataSourceEnum dataSourceEnum : DataSourceEnum.values()) {
-			if (!"".equals(defaultDataSource)) {
-				break;
-			}
-			if (dataSourceEnum.master) {
-				defaultDataSource = dataSourceEnum.getName();
-			}
-		}
-		return defaultDataSource;
-	}
+    public String getDefault() {
+        String defaultDataSource = "";
+        for (DataSourceEnum dataSourceEnum : DataSourceEnum.values()) {
+            if (!"".equals(defaultDataSource)) {
+                break;
+            }
+            if (dataSourceEnum.master) {
+                defaultDataSource = dataSourceEnum.getName();
+            }
+        }
+        return defaultDataSource;
+    }
 
 }
