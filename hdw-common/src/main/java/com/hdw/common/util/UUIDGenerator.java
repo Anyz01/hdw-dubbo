@@ -31,4 +31,14 @@ public class UUIDGenerator {
         int num = (int) Math.round(Math.random() * 90000 + 1);
         return String.valueOf(num);
     }
+
+    /**
+     * 生成企业Id
+     *
+     * @param prefix
+     * @return
+     */
+    public static String getEnterpriseId(String prefix) {
+        return prefix + getUUID().substring(0, 16);
+    }
 }
