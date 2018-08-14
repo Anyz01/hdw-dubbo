@@ -20,6 +20,6 @@ RUN sh -c 'touch  /hdw-monitor.jar'
 ENV JAVA_OPTS=""
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /home/project/hdw-monitor.jar" ]
 
-EXPOSE 8444
+EXPOSE 8180
 
-docker run -it -d --name hdw-monitor -p8444:8444 -v /output:/output hdw-monitor:v1
+docker run -it -d --name hdw-monitor -p8180:8180 -v /output:/output hdw-monitor:v1
