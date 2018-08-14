@@ -1,5 +1,7 @@
 package com.hdw.common.result;
 
+import com.hdw.common.util.JacksonUtils;
+
 import java.io.Serializable;
 
 
@@ -81,5 +83,8 @@ public class Result implements Serializable {
         super();
     }
 
-
+    @Override
+    public String toString() {
+        return JacksonUtils.toJson(this);
+    }
 }
