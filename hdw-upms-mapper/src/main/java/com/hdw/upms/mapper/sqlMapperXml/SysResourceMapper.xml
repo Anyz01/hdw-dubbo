@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdw.upms.mapper.SysResourceMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.hdw.upms.entity.SysResource">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="url" property="url" />
+		<result column="open_mode" property="openMode" />
+		<result column="description" property="description" />
+		<result column="icon" property="icon" />
+		<result column="pid" property="pid" />
+		<result column="seq" property="seq" />
+		<result column="status" property="status" />
+		<result column="opened" property="opened" />
+		<result column="resource_type" property="resourceType" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, name, url, open_mode AS openMode, description, icon,
+		pid, seq,
+		status, opened, resource_type AS resourceType, create_time AS
+		createTime, update_time AS updateTime
+	</sql>
+
+	<select id="selectTreeGrid" parameterType="map" resultType="map">
+		SELECT
+		t.id,
+		t.name,
+		t.url,
+		t.open_mode AS openMode,
+		t.description,
+		t.icon,
+		t.pid,
+		t.seq,
+		(
+		CASE
+		WHEN (t.`status` = 0) THEN
+		'正常'
+		ELSE
+		'停用'
+		END
+		) AS statusName,
+		(
+		CASE
+		WHEN (t.opened = 0) THEN
+		'开启'
+		ELSE
+		'关闭'
+		END
+		) AS openedName,
+		(
+		CASE
+		WHEN (t.resource_type = 0) THEN
+		'菜单'
+		ELSE
+		'按钮'
+		END
+		) AS resourceType,
+		date_format(
+		t.create_time,
+		'%Y-%m-%d %H:%i:%s'
+		) AS createTime,
+		date_format(
+		t.update_time,
+		'%Y-%m-%d %H:%i:%s'
+		) AS updateTime
+		FROM
+		t_sys_resource t
+		<where>
+			<if test="id!=null">
+				t.id=#{id}
+			</if>
+			<if test="name!=null and name !=''">
+				and t.name like CONCAT('%',#{name},'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="selectMenuTree"
+		resultType="com.hdw.common.result.ZTreeNode">
+		SELECT
+		t.id AS id,
+		t.pid AS pId,
+		t. name,
+		(
+		CASE
+		WHEN (t.pid = 0
+		OR t.pid IS NULL) THEN
+		'true'
+		ELSE
+		'false'
+		END
+		) AS isOpen
+		FROM
+		t_sys_resource t
+		WHERE
+		t.resource_type = 0
+	</select>
+
+</mapper>

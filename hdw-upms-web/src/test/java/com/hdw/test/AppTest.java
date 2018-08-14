@@ -3,8 +3,6 @@ package com.hdw.test;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.upms.entity.vo.UserVo;
 import com.hdw.upms.service.IUpmsApiService;
-import com.hdw.upms.service.IUserService;
-import com.hdw.upms.shiro.ShiroKit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/sysLog")
 public class SysLogController extends BaseController {
 
-    @Reference(version = "1.0.0" , application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
     private ISysLogService sysLogService;
 
     /**

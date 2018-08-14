@@ -34,7 +34,7 @@ public class SysLogAspect {
     private long startTime = 0;
     private long endTime = 0;
 
-    @Reference(version = "1.0.0" , application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
     private IUpmsApiService upmsApiService;
 
     @Pointcut("within(@org.springframework.stereotype.Controller *)")

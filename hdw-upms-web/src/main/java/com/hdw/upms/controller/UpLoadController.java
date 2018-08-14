@@ -37,13 +37,13 @@ public abstract class UpLoadController extends BaseController {
     /**
      * 文件上传路径前缀
      */
-    @Value("${hdw.file-upload.prefix}")
+    @Value("${file-upload.prefix}")
     private String fileUploadPrefix;
 
     /**
      * 文件上传服务器名称
      */
-    @Value("${hdw.file-upload.server}")
+    @Value("${file-upload.server}")
     private String fileUploadServer;
 
     /**
@@ -77,7 +77,7 @@ public abstract class UpLoadController extends BaseController {
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                 .getRequest();
-        String header = request.getHeader("User-Agent");
+        String header = request.getHeader("SysUser-Agent");
         // 避免空指针
         header = header == null ? "" : header.toUpperCase();
         HttpStatus status;

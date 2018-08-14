@@ -3,11 +3,11 @@ package com.hdw.upms.entity.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import com.hdw.upms.entity.Resource;
-import com.hdw.upms.entity.Role;
+import com.hdw.upms.entity.SysResource;
+import com.hdw.upms.entity.SysRole;
 
 
-public class RoleVo extends Role implements Serializable{
+public class RoleVo extends SysRole implements Serializable{
 
 	/**
 	 * 
@@ -15,13 +15,13 @@ public class RoleVo extends Role implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	// 拥有的权限列表
-    private List<Resource> permissions;
+    private List<SysResource> permissions;
 
-	public List<Resource> getPermissions() {
+	public List<SysResource> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(List<Resource> permissions) {
+	public void setPermissions(List<SysResource> permissions) {
 		this.permissions = permissions;
 	}
     

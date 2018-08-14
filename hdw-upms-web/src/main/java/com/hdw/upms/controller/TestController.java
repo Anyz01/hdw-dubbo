@@ -36,7 +36,7 @@ public class TestController extends BaseController {
     /**
      * 文件上传服务器名称
      */
-    @Value("${hdw.file-upload.server}")
+    @Value("${file-upload.server}")
     private String fileUploadServer;
 
     @GetMapping(value = "/task")

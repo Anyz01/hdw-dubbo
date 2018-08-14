@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdw.upms.mapper.SysOrganizationMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.hdw.upms.entity.SysOrganization">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="address" property="address" />
+		<result column="code" property="code" />
+		<result column="icon" property="icon" />
+		<result column="pid" property="pid" />
+		<result column="seq" property="seq" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, name, address, code, icon, pid, seq, create_time AS
+		createTime,
+		update_time AS updateTime
+	</sql>
+
+	<select id="selectTree"
+		resultType="com.hdw.common.result.ZTreeNode">
+		SELECT
+		id,
+		pid AS pId,
+		name,
+		(
+		CASE
+		WHEN (pId = 0 OR pId IS NULL)
+		THEN
+		'true'
+		ELSE
+		'false'
+		END
+		) AS isOpen
+		FROM
+		t_sys_organization
+	</select>
+
+
+	<select id="selectTreeGrid" resultType="map">
+		SELECT
+		t.id,
+		t.name,
+		t.address,
+		t.`code`,
+		t.icon,
+		t.pid,
+		t.seq,
+		date_format(t.create_time,'%Y-%m-%d %H:%i:%s') AS createTime,
+		date_format(t.update_time,'%Y-%m-%d %H:%i:%s') AS updateTime
+		FROM
+		t_sys_organization t
+		<where>
+			<if test="id!=null">
+				t.id=#{id}
+			</if>
+			<if test="name!=null and name !=''">
+				t.name like '%${name}%'
+			</if>
+			<if test="address!=null and address!=''">
+				t.address like '%${address}%'
+			</if>
+		</where>
+	</select>
+
+</mapper>

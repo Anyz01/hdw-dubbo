@@ -2,7 +2,7 @@ package com.hdw.upms.shiro;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.util.JacksonUtils;
-import com.hdw.upms.entity.Resource;
+import com.hdw.upms.entity.SysResource;
 import com.hdw.upms.entity.vo.RoleVo;
 import com.hdw.upms.entity.vo.UserVo;
 import com.hdw.upms.service.IUpmsApiService;
@@ -34,7 +34,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
 
     private static final Logger logger = LoggerFactory.getLogger(ShiroDBRealm.class);
 
-    @Reference(version = "1.0.0" , application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
     private IUpmsApiService upmsApiService;
 
     /**
@@ -143,9 +143,9 @@ public class ShiroDBRealm extends AuthorizingRealm {
             if (rvList != null && !rvList.isEmpty()) {
                 for (RoleVo rv : rvList) {
                     roles.add(rv.getName());
-                    List<Resource> rList = rv.getPermissions();
+                    List<SysResource> rList = rv.getPermissions();
                     if (rList != null && !rList.isEmpty()) {
-                        for (Resource r : rList) {
+                        for (SysResource r : rList) {
                             if (StringUtils.isNotBlank(r.getUrl())) {
                                 urlSet.add(r.getUrl());
                             }

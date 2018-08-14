@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hdw.upms.mapper.SysUserMapper">
+
+	<resultMap id="userVoResultMap"
+		type="com.hdw.upms.entity.vo.UserVo">
+		<id column="id" property="id" />
+		<result column="login_name" property="loginName" />
+		<result column="name" property="name" />
+		<result column="password" property="password" />
+		<result column="salt" property="salt" />
+		<result column="sex" property="sex" />
+		<result column="age" property="age" />
+		<result column="phone" property="phone" />
+		<result column="email" property="email" />
+		<result column="user_type" property="userType" />
+		<result column="status" property="status" />
+		<result column="expired" property="expired" />
+		<result column="organization_id" property="organizationId" />
+		<result column="enterprise_id" property="enterpriseId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+
+		<result column="organizationName" property="organizationName" />
+		<result column="enterpriseName" property="enterpriseName" />
+
+		<collection property="rolesList" ofType="RoleVo">
+			<id column="roleId" property="id" />
+			<result column="roleName" property="name" />
+			<result column="description" property="description" />
+			<collection property="permissions" ofType="SysResource">
+				<id column="resourceId" property="id" />
+				<result column="resourceName" property="name" />
+				<result column="url" property="url" />
+			</collection>
+		</collection>
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, login_name AS loginName, name, password, salt, sex,
+		age, phone,
+		email, user_type AS userType, status, expired,
+		organization_id AS
+		organizationId, enterprise_id AS enterpriseId,
+		create_time AS
+		createTime, update_time AS updateTime
+	</sql>
+
+	<select id="selectByLoginName"  resultMap="userVoResultMap" parameterType="java.lang.String">
+		SELECT DISTINCT
+		t.id,
+		t.login_name,
+		t.`name`,
+		t.`password`,
+		t.salt,
+		t.sex,
+		t.age,
+		t.phone,
+		t.email,
+		t.user_type,
+		t.`status`,
+		t.expired,
+		t.organization_id,
+		t.enterprise_id,
+		t.create_time,
+		t.update_time,
+		t3.id AS roleId,
+		t3.`name` AS roleName,
+		t3.description,
+		t5.id AS resourceId,
+		t5.`name` AS resourceName,
+		t5.url,
+		t6.`name` AS organizationName,
+		t7.enterprise_name AS enterpriseName
+		FROM
+		t_sys_user t
+		LEFT JOIN t_sys_user_role t2 ON t.id = t2.user_id
+		LEFT JOIN t_sys_role t3 ON t2.role_id = t3.id
+		LEFT JOIN t_sys_role_resource t4 ON t3.id = t4.role_id
+		LEFT JOIN t_sys_resource t5 ON t4.resource_id = t5.id
+		LEFT JOIN t_sys_organization t6 ON t.organization_id = t6.id
+		LEFT JOIN t_sys_enterprise t7 ON t.enterprise_id = t7.id
+		WHERE
+		t.login_name =#{loginName}
+	</select>
+
+	<select id="selectUserVoById" resultMap="userVoResultMap"
+		parameterType="java.lang.Long">
+		SELECT DISTINCT
+		t.id,
+		t.login_name,
+		t.`name`,
+		t.`password`,
+		t.salt,
+		t.sex,
+		t.age,
+		t.phone,
+		t.email,
+		t.user_type,
+		t.`status`,
+		t.expired,
+		t.organization_id,
+		t.enterprise_id,
+		t.create_time,
+		t.update_time,
+		t3.id AS roleId,
+		t3.`name` AS roleName,
+		t3.description,
+		t5.id AS resourceId,
+		t5.`name` AS resourceName,
+		t5.url,
+		t6.`name` AS organizationName,
+		t7.enterprise_name AS enterpriseName
+		FROM
+		t_sys_user t
+		LEFT JOIN t_sys_user_role t2 ON t.id = t2.user_id
+		LEFT JOIN t_sys_role t3 ON t2.role_id = t3.id
+		LEFT JOIN t_sys_role_resource t4 ON t3.id = t4.role_id
+		LEFT JOIN t_sys_resource t5 ON t4.resource_id = t5.id
+		LEFT JOIN t_sys_organization t6 ON t.organization_id = t6.id
+		LEFT JOIN t_sys_enterprise t7 ON t.enterprise_id = t7.id
+		WHERE
+		t.id =#{id}
+	</select>
+
+	<select id="selectUserPage" resultType="Map">
+		SELECT
+		t.id,
+		t.login_name AS loginName,
+		t.`name`,
+		t.phone,
+		t.`password`,
+		t.sex,
+		t.email,
+		t.age,
+		t.create_time AS createTime,
+		t.update_time AS updateTime,
+		t.user_type AS userType,
+		t.`status`,
+		t.expired,
+		t.organization_id AS
+		organizationId,
+		s.`name` AS organizationName,
+		t.enterprise_id as
+		enterpriseId,
+		e.enterprise_name as enterpriseName,
+		group_concat(o.`name`) AS rolesList
+		FROM
+		t_sys_user t
+		LEFT JOIN
+		t_sys_user_role r ON t.id = r.user_id
+		LEFT JOIN t_sys_role o ON
+		r.role_id = o.id
+		LEFT JOIN t_sys_organization s ON s.id =
+		t.organization_id
+		LEFT JOIN t_sys_enterprise e ON e.id =
+		t.enterprise_id
+		<where>
+			<if test=" name != null and name != '' ">
+				t.login_name like concat('%',#{name},'%')
+				or t.name like concat('%',#{name},'%')
+			</if>
+			<if test=" enterpriseId != null ">
+				and t.enterprise_id = #{enterpriseId}
+			</if>
+			<if test=" organizationId != null ">
+				and t.organization_id = #{organizationId}
+			</if>
+			<if test=" startTime != null and starTime !='' and endTime !=null and endTime!=''">
+               and (t.creat_time between concat(#{startTime},'00:00:00') and concat(#{endTime},"00:00:00"))
+			</if>
+
+		</where>
+		GROUP BY t.id
+	</select>
+
+</mapper>

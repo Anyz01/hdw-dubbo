@@ -27,13 +27,13 @@ public class UeditorController extends UpLoadController {
     /**
      * 文件上传路径前缀
      */
-    @Value("${hdw.file-upload.prefix}")
+    @Value("${file-upload.prefix}")
     private String fileUploadPrefix;
 
     /**
      * 文件上传服务器名称
      */
-    @Value("${hdw.file-upload.server}")
+    @Value("${file-upload.server}")
     private String fileUploadServer;
 
     /**

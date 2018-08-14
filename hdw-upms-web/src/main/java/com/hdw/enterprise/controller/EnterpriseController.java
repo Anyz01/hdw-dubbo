@@ -31,10 +31,10 @@ import java.util.*;
 @RequestMapping("/enterprise")
 public class EnterpriseController extends BaseController {
 
-    @Reference(version = "1.0.0" , application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
     private IEnterpriseService enterpriseService;
 
-    @Reference(version = "1.0.0" , application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
     private ISysDicService sysDicService;
 
     /**

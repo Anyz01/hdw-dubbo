@@ -32,13 +32,13 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
-    @Value("${hdw.upms.loginUrl}")
+    @Value("${upms.loginUrl}")
     private String loginUrl;
 
-    @Value("${hdw.upms.successUrl}")
+    @Value("${upms.successUrl}")
     private String successUrl;
 
-    @Value("${hdw.upms.unauthorizedUrl}")
+    @Value("${upms.unauthorizedUrl}")
     private String unauthorizedUrl;
 
 

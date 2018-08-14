@@ -1,7 +1,7 @@
 package com.hdw.upms.entity.vo;
 
 import com.hdw.common.util.JacksonUtils;
-import com.hdw.upms.entity.User;
+import com.hdw.upms.entity.SysUser;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author：TuMinglong
  * @date：2015/10/1 14:51
  */
-public class UserVo extends User implements Serializable {
+public class UserVo extends SysUser implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String organizationName;

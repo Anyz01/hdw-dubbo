@@ -6,7 +6,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.hdw.upms.entity.SysLog;
 import com.hdw.upms.entity.vo.UserVo;
 import com.hdw.upms.mapper.SysLogMapper;
-import com.hdw.upms.mapper.UserMapper;
+import com.hdw.upms.mapper.SysUserMapper;
 import com.hdw.upms.service.IUpmsApiService;
 
 
@@ -25,7 +25,7 @@ import com.hdw.upms.service.IUpmsApiService;
 public class UpmsApiServiceImpl implements IUpmsApiService {
 
     @Autowired
-    private UserMapper userMapper;
+    private SysUserMapper userMapper;
     @Autowired
     private SysLogMapper sysLogMapper;
 
