@@ -107,7 +107,7 @@
 			</form>
 
 			<!-- 部门选择的下拉框 -->
-			<div id="menuContent" class="menuContent" style="display: none; position: absolute; z-index: 200;">
+			<div id="menuContent" class="menuContent" style="display: none; position: absolute; z-index: 200;background-color: #ffffff !important;">
 				<ul id="deptTree" class="ztree tree-box" style="width: 249px !important;"></ul>
 			</div>
 		</div>
@@ -116,8 +116,10 @@
 	<script type="text/javascript" th:inline="javascript">
         //获取企业下拉框的值
         $(function(){
-            var S2L=new $Select2List("enterpriseId",basePath+"enterprise/select2Tree");
-            S2L.init();
+            //初始化select2
+            var select2List = new Select2List('enterpriseId', basePath + "enterprise/select2Tree");
+            select2List.setPlaceholder("选择企业");
+            select2List.init();
         })
 
 		var UserInfoDlg = {};

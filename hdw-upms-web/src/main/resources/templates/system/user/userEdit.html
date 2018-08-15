@@ -110,7 +110,7 @@
 			</form>
 
 			<!--部门选择的下拉框 -->
-			<div id="menuContent" class="menuContent" style="display: none; position: absolute; z-index: 200;">
+			<div id="menuContent" class="menuContent" style="display: none; position: absolute; z-index: 200;background-color: #ffffff !important;">
 				<ul id="deptTree" class="ztree tree-box" style="width: 249px !important;"></ul>
 			</div>
 		</div>
@@ -119,7 +119,14 @@
 	<script type="text/javascript" th:inline="javascript">
         $(function(){
             var enterpriseId = [[${user.enterpriseId}]];
-            BindSelect("enterpriseId",basePath+"enterprise/select2Tree",enterpriseId);
+            var enterpriseIdArray=[];
+            if(enterpriseId!=null){
+                enterpriseIdArray.push(enterpriseId);
+            }
+            var select2List= new Select2List('enterpriseId', basePath+"enterprise/select2Tree");
+            select2List.setPlaceholder("选择企业");
+            select2List.setArrayObj(enterpriseIdArray);
+            select2List.init();
         });
 
         $(function(){
@@ -222,41 +229,7 @@
 					});
 				}
 			});
-
 		});
-
-        /**
-         * 绑定字典内容到指定的Select控件
-         * ctrlName ID
-         * url 后台服务地址
-         * arryObj 被选中的ID
-         */
-        function BindSelect(ctrlName, url,enterpriseId) {
-            var control = $('#' + ctrlName);
-            $.ajax({
-                url: url,
-                type: 'get',
-                dataType: 'json',
-                cache: true,
-                success: function (data) {
-                    control.empty();
-                    $.each(data, function (i, item) {
-                        if (item.id == enterpriseId) {
-                            control.append("<option value='" + item.id + "' selected='selected'>&nbsp;" + item.text + "</option>");
-                        } else {
-                            control.append("<option value='" + item.id + "'>&nbsp;" + item.text + "</option>");
-                        }
-                    });
-                }
-            });
-            //设置Select2的处理
-            control.select2({
-                allowClear: true,
-                placeholder: "请选择",
-                language: "zh-CN",
-                escapeMarkup: function (m) { return m; }
-            });
-        }
 	</script>
 </body>
 
