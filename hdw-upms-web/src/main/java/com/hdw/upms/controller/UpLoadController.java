@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.result.Result;
 import com.hdw.common.util.DateUtil;
+import com.hdw.common.util.QrcodeUtil;
 import com.hdw.common.util.URLUtils;
 import com.luhuiguo.fastdfs.domain.StorePath;
 import com.luhuiguo.fastdfs.exception.FdfsUnsupportStorePathException;
@@ -45,6 +46,13 @@ public abstract class UpLoadController extends BaseController {
      */
     @Value("${file-upload.server}")
     private String fileUploadServer;
+
+    /**
+     * 二维码文件本地路径
+     */
+    @Value("${file-upload.prefix}")
+    private String qrCodeDir;
+
 
     /**
      * FastDFS文件上传服务器名称
@@ -98,7 +106,7 @@ public abstract class UpLoadController extends BaseController {
      * 多文件上传
      *
      * @param files 文件
-     * @param dir   保存文件的文件夹名称
+     * @param dir   保存文件的文件夹名称,,相对路径必须upload开头，例如upload/test
      * @return
      * @throws Exception
      */
@@ -132,7 +140,7 @@ public abstract class UpLoadController extends BaseController {
                     file.transferTo(targetFile);
 
                     if (StringUtils.isNotBlank(fileUploadServer)) {
-                        fileNames.add(fileUploadServer + "/" + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")
+                        fileNames.add(fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")
                                 + "/" + fileName + realFileName.substring(realFileName.indexOf(".")) + "?attname=" + realFileName);
                     } else {
                         fileNames.add("/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf(".")));
@@ -151,7 +159,7 @@ public abstract class UpLoadController extends BaseController {
      * 单个文件上传
      *
      * @param file 前台传过来文件路径
-     * @param dir  保存文件的相对路径
+     * @param dir  保存文件的相对路径,相对路径必须upload开头，例如upload/test
      * @return
      * @throws Exception
      */
@@ -414,4 +422,24 @@ public abstract class UpLoadController extends BaseController {
         }
     }
 
+    /**
+     * 创建二维码
+     * @param qrResource 内容
+     * @return
+     */
+    public String createQrcode(String qrResource) {
+        String pngDir = QrcodeUtil.createQrcode(qrCodeDir +"upload"+File.separator +"qr"+File.separator, qrResource);
+        String qrDir = "";
+        qrDir = uploadToFastDFS(pngDir);
+        if (StringUtils.isBlank(qrDir)) return null;
+        return qrDir;
+    }
+
+    public String getFileUploadPrefix() {
+        return fileUploadPrefix;
+    }
+
+    public String getFileUploadServer() {
+        return fileUploadServer;
+    }
 }

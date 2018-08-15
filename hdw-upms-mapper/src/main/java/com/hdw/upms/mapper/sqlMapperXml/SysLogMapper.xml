@@ -2,32 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hdw.upms.mapper.SysLogMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.hdw.upms.entity.SysLog">
-		<id column="id" property="id" />
-		<result column="login_name" property="loginName" />
-		<result column="role_name" property="roleName" />
-		<result column="opt_content" property="optContent" />
-		<result column="client_ip" property="clientIp" />
-		<result column="create_time" property="createTime" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hdw.upms.entity.SysLog">
+        <id column="id" property="id"/>
+        <result column="login_name" property="loginName"/>
+        <result column="role_name" property="roleName"/>
+        <result column="class_name" property="className"/>
+        <result column="method" property="method"/>
+        <result column="params" property="params"/>
+        <result column="time" property="time"/>
+        <result column="client_ip" property="clientIp"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, login_name AS loginName, role_name AS roleName, opt_content AS optContent, client_ip AS clientIp, create_time AS createTime
+        id, login_name AS loginName, role_name AS roleName, class_name AS className, method, params, time, client_ip AS clientIp, create_time AS createTime
     </sql>
-    
-    <select id="selectLogPage" parameterType="map" resultType="SysLog">
-    	select <include refid="Base_Column_List"/> from t_sys_log t
-    	<where>
-    		<if test="loginName!=null and loginName!=''">
-    		   t.login_name like '%${loginName}%'
-    		</if>
-    		<if test=" startTime != null and starTime !='' and endTime !=null and endTime!=''">
-               and (t.creat_time between #{startTime} and #{endTime})
-			</if>
-    	</where>
-    		
+
+    <select id="selectLogPage" parameterType="map" resultType="com.hdw.upms.entity.SysLog">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_log t
+        <where>
+            <if test="loginName!=null and loginName!=''">
+                t.login_name like '%${loginName}%'
+            </if>
+            <if test=" startTime != null and starTime !='' and endTime !=null and endTime!=''">
+                and (t.creat_time between #{startTime} and #{endTime})
+            </if>
+        </where>
     </select>
 
 </mapper>

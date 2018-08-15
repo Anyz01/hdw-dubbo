@@ -79,7 +79,10 @@
                 { title: 'id', field: 'id', visible: false, align: 'center', valign: 'middle' },
                 { title: '登录名', field: 'loginName', align: 'center', valign: 'middle', sortable: true },
                 { title: '角色名', field: 'roleName', align: 'center', valign: 'middle', sortable: true },
-                { title: '内容', field: 'optContent', align: 'center', valign: 'middle', sortable: true },
+                { title: '类名', field: 'className', align: 'center', valign: 'middle', sortable: true },
+                { title: '方法名', field: 'method', align: 'center', valign: 'middle', sortable: true },
+                { title: '参数', field: 'params', align: 'center', valign: 'middle', sortable: true },
+                { title: '执行时间', field: 'time', align: 'center', valign: 'middle', sortable: true },
                 { title: '客户端IP', field: 'clientIp', align: 'center', valign: 'middle', sortable: true },
                 {
                     title: '创建时间', field: 'createTime', align: 'center', valign: 'middle', sortable: true
@@ -94,7 +97,7 @@
         Log.check = function () {
             var selected = $('#' + this.id).bootstrapTable('getSelections');
             if (selected.length == 0) {
-                hdw.info("请先选中表格中的某一记录！");
+                zx.info("请先选中表格中的某一记录！");
                 return false;
             } else {
                 Log.seItem = selected[0];

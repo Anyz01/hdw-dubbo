@@ -22,4 +22,4 @@ ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urando
 
 EXPOSE 8180
 
-docker run -it -d --name hdw-monitor -p8180:8180 -v /output:/output hdw-monitor:v1
+# docker run -it -d --name hdw-monitor -p8180:8180 -v /output:/output hdw-monitor:v1

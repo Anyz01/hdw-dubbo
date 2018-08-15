@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50722
 File Encoding         : 65001
 
-Date: 2018-06-02 11:58:00
+Date: 2018-08-15 09:26:26
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -107,7 +107,7 @@ CREATE TABLE `qrtz_fired_triggers` (
 -- ----------------------------
 -- Records of qrtz_fired_triggers
 -- ----------------------------
-INSERT INTO `qrtz_fired_triggers` VALUES ('SchedulerFactory', 'LENOVO-LEGION15279116783431527911677664', '异步任务', '异步任务', 'LENOVO-LEGION1527911678343', '1527911880001', '1527911880000', '5', 'EXECUTING', '异步任务', '异步任务', '1', '0');
+INSERT INTO `qrtz_fired_triggers` VALUES ('SchedulerFactory', 'LENOVO-LEGION15342280283041534228027603', '异步任务', '异步任务', 'LENOVO-LEGION1534228028304', '1534228117637', '1534228140000', '5', 'ACQUIRED', null, null, '0', '0');
 
 -- ----------------------------
 -- Table structure for qrtz_job_details
@@ -177,9 +177,9 @@ CREATE TABLE `qrtz_scheduler_state` (
 -- ----------------------------
 -- Records of qrtz_scheduler_state
 -- ----------------------------
-INSERT INTO `qrtz_scheduler_state` VALUES ('hdw-upms-Scheduler', 'LENOVO-LEGION1527911677692', '1527911877997', '20000');
+INSERT INTO `qrtz_scheduler_state` VALUES ('hdw-upms-Scheduler', 'LENOVO-LEGION1527911677692', '1527911978006', '20000');
 INSERT INTO `qrtz_scheduler_state` VALUES ('RiskCollect-Scheduler', 'DESKTOP-FSS0DPP1527761116611', '1527761137019', '20000');
-INSERT INTO `qrtz_scheduler_state` VALUES ('SchedulerFactory', 'LENOVO-LEGION1527911678343', '1527911864300', '20000');
+INSERT INTO `qrtz_scheduler_state` VALUES ('SchedulerFactory', 'LENOVO-LEGION1534228028304', '1534228123805', '20000');
 INSERT INTO `qrtz_scheduler_state` VALUES ('SensorDA-Scheduler', 'ChenShi-PC1527149139127', '1527149179625', '20000');
 
 -- ----------------------------
@@ -257,7 +257,7 @@ CREATE TABLE `qrtz_triggers` (
 -- ----------------------------
 -- Records of qrtz_triggers
 -- ----------------------------
-INSERT INTO `qrtz_triggers` VALUES ('SchedulerFactory', '异步任务', '异步任务', '异步任务', '异步任务', null, '1527911940000', '1527911880000', '5', 'BLOCKED', 'CRON', '1527911789000', '0', null, '0', '');
+INSERT INTO `qrtz_triggers` VALUES ('SchedulerFactory', '异步任务', '异步任务', '异步任务', '异步任务', null, '1534228140000', '1534228080000', '5', 'ACQUIRED', 'CRON', '1527911789000', '0', null, '0', '');
 
 -- ----------------------------
 -- Table structure for regexregisteredservice
@@ -517,7 +517,7 @@ CREATE TABLE `t_sys_enterprise` (
   `update_user` varchar(20) DEFAULT NULL COMMENT '记录最后修改者(用户)',
   `risk_model` varchar(255) DEFAULT NULL COMMENT '风险模型类型',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=946198868 DEFAULT CHARSET=utf8 COMMENT='企业信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='企业信息表';
 
 -- ----------------------------
 -- Records of t_sys_enterprise
@@ -529,20 +529,21 @@ INSERT INTO `t_sys_enterprise` VALUES ('1', '测试企业', '85', '59', '测试�
 -- ----------------------------
 DROP TABLE IF EXISTS `t_sys_log`;
 CREATE TABLE `t_sys_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `login_name` varchar(255) DEFAULT NULL COMMENT '登陆名',
   `role_name` varchar(255) DEFAULT NULL COMMENT '角色名',
-  `opt_content` varchar(1024) DEFAULT NULL COMMENT '内容',
+  `class_name` varchar(1024) DEFAULT NULL COMMENT '类名',
+  `method` varchar(1024) DEFAULT NULL COMMENT '请求方法',
+  `params` varchar(1024) DEFAULT NULL COMMENT '请求参数',
+  `time` bigint(19) DEFAULT NULL COMMENT '执行时长',
   `client_ip` varchar(255) DEFAULT NULL COMMENT '客户端ip',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='系统日志';
+) ENGINE=InnoDB AUTO_INCREMENT=453 DEFAULT CHARSET=utf8 COMMENT='系统日志';
 
 -- ----------------------------
 -- Records of t_sys_log
 -- ----------------------------
-INSERT INTO `t_sys_log` VALUES ('12', 'admin', 'admin', '[类名]:com.hdw.task.controller.ScheduleJobController,[方法]:deleteJob,[参数]:jstime=1527911715805&jobName=传感器数据接收异常日志&jobGroup=传感器数据&', '0:0:0:0:0:0:0:1', '2018-06-02 11:55:16');
-INSERT INTO `t_sys_log` VALUES ('13', 'admin', 'admin', '[类名]:com.hdw.task.controller.ScheduleJobController,[方法]:addPage,[参数]:', null, '2018-06-02 11:55:17');
 
 -- ----------------------------
 -- Table structure for t_sys_organization
