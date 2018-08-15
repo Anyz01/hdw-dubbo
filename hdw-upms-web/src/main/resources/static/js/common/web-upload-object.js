@@ -9,7 +9,7 @@
      * @param {*} url 上传服务器地址
      * @param {*} id 选择文件按钮ID picker
      * @param {*} list 文件预览DIV的ID thelist
-     * @param {*} btn 开始长传按钮ID ctlBtn
+     * @param {*} btn 开始上传按钮ID ctlBtn
      */
 	var FileWebUpload = function (url, id, list, btn) {
 		this.url = url;

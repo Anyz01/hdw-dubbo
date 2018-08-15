@@ -98,7 +98,7 @@ public abstract class UpLoadController extends BaseController {
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment" , fileName);
+        headers.setContentDispositionFormData("attachment", fileName);
         return new ResponseEntity<Resource>(resource, headers, status);
     }
 
@@ -200,6 +200,75 @@ public abstract class UpLoadController extends BaseController {
     /**
      * 上传文件到FastDFS
      *
+     * @param localFilePath
+     * @return
+     * @throws RuntimeException
+     */
+    public String uploadToFastDFS(String localFilePath) throws RuntimeException {
+        try {
+            byte[] bytes = getBytes(localFilePath);
+            String fileName = "";
+            if ((localFilePath != null) && (localFilePath.length() > 0)) {
+                int dot = localFilePath.lastIndexOf(File.separator);
+                if ((dot > -1) && (dot < (localFilePath.length() - 1))) {
+                    fileName = localFilePath.substring(dot + 1, localFilePath.length());
+                }
+            }
+            StorePath storePath = fastFileStorageClient.uploadFile(bytes, FilenameUtils.getExtension(fileName));
+            // StorePath storePath =
+            // fastFileStorageClient.uploadFile(IOUtils.toByteArray(new
+            // FileInputStream(file)),FilenameUtils.getExtension(file.getName()));
+            System.out.println("上传文件路径：" + storePath.getFullPath());
+            logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
+            String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+            //Map<String, Object> par = new HashMap<>();
+            //par.put(fileName, path);
+            return path;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new RuntimeException("保存文件异常，请联系管理员");
+        }
+    }
+
+    /**
+     * 多文件上传到FastDFS
+     *
+     * @param files
+     * @return
+     * @throws RuntimeException
+     */
+    public Map<String, String> uploadsToFastDFS(MultipartFile[] files) throws RuntimeException {
+        Map<String, String> par = new HashMap<>();
+        try {
+            // 判断file数组不能为空并且长度大于0
+            if (files != null && files.length > 0) {
+                // 循环获取file数组中得文件
+                for (int i = 0; i < files.length; i++) {
+                    MultipartFile file = files[i];
+                    String fileName = file.getOriginalFilename();
+                    StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()),
+                            FilenameUtils.getExtension(file.getOriginalFilename()));
+                    // StorePath storePath =
+                    // fastFileStorageClient.uploadFile(IOUtils.toByteArray(new
+                    // FileInputStream(file)),FilenameUtils.getExtension(file.getName()));
+                    System.out.println("上传文件路径：" + storePath.getFullPath());
+                    logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
+                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+                    par.put(fileName, path);
+                }
+            }
+            return par;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new RuntimeException("保存文件异常，请联系管理员");
+        }
+    }
+
+    /**
+     * 上传文件到FastDFS
+     *
      * @param file
      * @return
      * @throws RuntimeException
@@ -218,40 +287,6 @@ public abstract class UpLoadController extends BaseController {
             Map<String, Object> par = new HashMap<>();
             par.put(fileName, path);
             return par;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            throw new RuntimeException("保存文件异常，请联系管理员");
-        }
-    }
-
-    /**
-     * 上传文件到FastDFS
-     *
-     * @param localFilePath
-     * @return
-     * @throws RuntimeException
-     */
-    public String uploadToFastDFS(String localFilePath) throws RuntimeException {
-        try {
-            byte[] bytes = getBytes(localFilePath);
-            String fileName = "" ;
-            if ((localFilePath != null) && (localFilePath.length() > 0)) {
-                int dot = localFilePath.lastIndexOf(File.separator);
-                if ((dot > -1) && (dot < (localFilePath.length() - 1))) {
-                    fileName = localFilePath.substring(dot + 1, localFilePath.length());
-                }
-            }
-            StorePath storePath = fastFileStorageClient.uploadFile(bytes, FilenameUtils.getExtension(fileName));
-            // StorePath storePath =
-            // fastFileStorageClient.uploadFile(IOUtils.toByteArray(new
-            // FileInputStream(file)),FilenameUtils.getExtension(file.getName()));
-            System.out.println("上传文件路径：" + storePath.getFullPath());
-            logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-            String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
-            //Map<String, Object> par = new HashMap<>();
-            //par.put(fileName, path);
-            return path;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -424,11 +459,12 @@ public abstract class UpLoadController extends BaseController {
 
     /**
      * 创建二维码
+     *
      * @param qrResource 内容
      * @return
      */
     public String createQrcode(String qrResource) {
-        String pngDir = QrcodeUtil.createQrcode(qrCodeDir +"upload"+File.separator +"qr"+File.separator, qrResource);
+        String pngDir = QrcodeUtil.createQrcode(qrCodeDir + "upload" + File.separator + "qr" + File.separator, qrResource);
         String qrDir = "";
         qrDir = uploadToFastDFS(pngDir);
         if (StringUtils.isBlank(qrDir)) return null;
