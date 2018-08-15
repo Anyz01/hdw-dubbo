@@ -134,6 +134,19 @@ public final class DateUtil {
     }
 
     /**
+     * @param date
+     * @param pattern 时间格式
+     * @return
+     */
+    public static final Date stringToDate(String date, String pattern) {
+        try {
+            return new SimpleDateFormat(pattern).parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
      * 间隔天数
      *
      * @param startDate

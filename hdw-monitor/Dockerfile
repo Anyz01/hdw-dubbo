@@ -15,6 +15,9 @@ ADD hdw-monitor.jar /home/project/hdw-monitor.jar
 
 WORKDIR /home/project
 
+# 指定容器内的时区
+RUN echo "Asia/Shanghai" > /etc/timezone
+
 RUN sh -c 'touch  /hdw-monitor.jar'
 
 ENV JAVA_OPTS=""
