@@ -77,7 +77,6 @@
          */
         setArrayObj: function (arrayObj) {
             this.arrayObj = arrayObj;
-            console.log(this.arrayObj);
         },
     };
 
