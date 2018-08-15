@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
@@ -21,6 +22,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableAspectJAutoProxy
 @EnableAsync
 @EnableScheduling
+@EnableJms
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1800)
 public class UpmsWebApplication extends SpringBootServletInitializer {
 
