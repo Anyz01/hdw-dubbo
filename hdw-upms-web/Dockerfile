@@ -15,6 +15,9 @@ ADD hdw-upms-web.jar /home/project/hdw-upms-web.jar
 
 WORKDIR /home/project
 
+# 指定容器内的时区
+RUN echo "Asia/Shanghai" > /etc/timezone
+
 RUN sh -c 'touch  /hdw-upms-web.jar'
 
 ENV JAVA_OPTS=""
