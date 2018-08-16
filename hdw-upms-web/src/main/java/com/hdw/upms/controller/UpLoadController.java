@@ -464,7 +464,7 @@ public abstract class UpLoadController extends BaseController {
      * @return
      */
     public String createQrcode(String qrResource) {
-        String pngDir = QrcodeUtil.createQrcode(qrCodeDir + "upload" + File.separator + "qr" + File.separator, qrResource);
+        String pngDir = QrcodeUtil.createQrcode(qrCodeDir+File.separator + "upload" + File.separator + "qr" + File.separator, qrResource);
         String qrDir = "";
         qrDir = uploadToFastDFS(pngDir);
         if (StringUtils.isBlank(qrDir)) return null;
