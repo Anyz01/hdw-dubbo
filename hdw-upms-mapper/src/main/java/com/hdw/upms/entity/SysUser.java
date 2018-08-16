@@ -96,6 +96,9 @@ public class SysUser extends Model<SysUser> implements Serializable{
 	@TableField("update_time")
 	private Date updateTime;
 
+	@TableField(exist = false)
+	private String organizationName;
+
 
 	public Long getId() {
 		return id;
@@ -223,6 +226,14 @@ public class SysUser extends Model<SysUser> implements Serializable{
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public String getOrganizationName() {
+		return organizationName;
+	}
+
+	public void setOrganizationName(String organizationName) {
+		this.organizationName = organizationName;
 	}
 
 	@Override

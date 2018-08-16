@@ -3,8 +3,10 @@ package com.hdw.upms.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.result.PageInfo;
+import com.hdw.upms.entity.SysOrganization;
 import com.hdw.upms.entity.SysUser;
 import com.hdw.upms.entity.vo.UserVo;
+import com.hdw.upms.service.ISysOrganizationService;
 import com.hdw.upms.service.ISysUserService;
 import com.hdw.upms.shiro.ShiroKit;
 import io.swagger.annotations.Api;
@@ -35,6 +37,10 @@ public class SysUserController extends BaseController {
 
     @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
     private ISysUserService userService;
+
+    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    private ISysOrganizationService sysOrganizationService;
+
 
     /**
      * 用户管理页
@@ -140,6 +146,10 @@ public class SysUserController extends BaseController {
     @GetMapping("/editPage/{userId}")
     public String editPage(Model model, @PathVariable("userId") Long userId) {
         SysUser user = userService.selectById(userId);
+        SysOrganization sysOrganization=sysOrganizationService.selectById(user.getOrganizationId());
+        if(null!=sysOrganization){
+            user.setOrganizationName(sysOrganization.getName());
+        }
         model.addAttribute("user" , user);
         return "system/user/userEdit" ;
     }

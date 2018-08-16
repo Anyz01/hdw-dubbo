@@ -89,7 +89,8 @@
 				<div class="form-group">
 					<label class="col-sm-3 control-label">企业部门</label>
 					<div class="col-sm-8">
-						<input id="organizationId" class="form-control" name="organizationId" th:value="${user.organizationId}" readonly="readonly" onclick="UserInfoDlg.showDeptSelectTree(); return false;"/>
+						<input type="hidden" id="organizationId" name="organizationId" th:value="${user.organizationId}">
+						<input id="organizationName" class="form-control" name="organizationName" th:value="${user.organizationName}" readonly="readonly" onclick="UserInfoDlg.showDeptSelectTree(); return false;"/>
 					</div>
 				</div>
 				<div class="hr-line-dashed"></div>
@@ -156,8 +157,8 @@
 		 * @returns
 		 */
 		UserInfoDlg.onClickDept = function (e, treeId, treeNode) {
-			$("#organizationId").attr("value", treeNode.id);
-            console.log(treeNode.id);
+            $("#organizationId").attr("value", treeNode.id);
+            $("#organizationName").attr("value", treeNode.name);
 		};
 
 		/**
@@ -195,7 +196,7 @@
             var ztree = new $ZTree("deptTree", basePath + "organization/tree");
             ztree.bindOnClick(UserInfoDlg.onClickDept);
             ztree.init();
-            instance = ztree;
+
 
 			$("#fm").validator({
 				valid: function (form) {
