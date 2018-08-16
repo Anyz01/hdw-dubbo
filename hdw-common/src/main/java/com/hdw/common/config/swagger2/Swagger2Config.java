@@ -34,22 +34,19 @@ public class Swagger2Config {
                 .forCodeGeneration(true)
                 .useDefaultResponseMessages(false).select()
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                // 指定controller存放的目录路径
-                //.apis(RequestHandlerSelectors.basePackage("com.hdw.upms.controller"))
-                // .paths(PathSelectors.ant("/api/v1/*"))
                 .paths(PathSelectors.any()).build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 // 文档标题
-                .title("华德威系统API服务")
+                .title("系统API服务")
                 // 文档描述
-                .description("华德威系统API接口文档简要描述")
+                .description("系统API接口文档简要描述")
                 .version("v1")
                 .license("MIT 协议")
                 .licenseUrl("http://www.opensource.org/licenses/MIT")
-                .contact(new Contact("涂明龙", "https://github.com/tumao2/hdw-dubbo", "tuminglong@126.com")).build();
+                .contact(new Contact("TuMinglong", "https://github.com/tumao2/hdw-dubbo", "tuminglong@126.com")).build();
     }
 
 }
