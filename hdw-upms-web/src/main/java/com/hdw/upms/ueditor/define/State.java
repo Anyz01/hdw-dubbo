@@ -1,4 +1,4 @@
-package com.hdw.upms.ueditor;
+package com.hdw.upms.ueditor.define;
 
 /**
  * 处理状态接口

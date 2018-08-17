@@ -11,7 +11,7 @@ import com.hdw.upms.ueditor.PathFormat;
 import com.hdw.upms.ueditor.define.AppInfo;
 import com.hdw.upms.ueditor.define.BaseState;
 import com.hdw.upms.ueditor.define.MultiState;
-import com.hdw.upms.ueditor.State;
+import com.hdw.upms.ueditor.define.State;
 
 public class FileManager {
 

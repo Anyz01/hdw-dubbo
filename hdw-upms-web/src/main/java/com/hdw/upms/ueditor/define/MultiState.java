@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hdw.upms.ueditor.Encoder;
-import com.hdw.upms.ueditor.State;
+import com.hdw.upms.ueditor.define.State;
 
 /**
  * 多状态集合状态

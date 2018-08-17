@@ -2,7 +2,7 @@ package com.hdw.upms.ueditor.upload;
 
 import com.hdw.upms.ueditor.define.AppInfo;
 import com.hdw.upms.ueditor.define.BaseState;
-import com.hdw.upms.ueditor.State;
+import com.hdw.upms.ueditor.define.State;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

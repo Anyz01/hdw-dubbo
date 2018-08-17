@@ -1,6 +1,6 @@
 package com.hdw.upms.ueditor.upload;
 
-import com.hdw.upms.ueditor.State;
+import com.hdw.upms.ueditor.define.State;
 
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;

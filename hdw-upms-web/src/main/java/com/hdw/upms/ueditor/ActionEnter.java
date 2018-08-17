@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.hdw.upms.ueditor.define.ActionMap;
 import com.hdw.upms.ueditor.define.AppInfo;
 import com.hdw.upms.ueditor.define.BaseState;
-import com.hdw.upms.ueditor.State;
+import com.hdw.upms.ueditor.define.State;
 import com.hdw.upms.ueditor.hunter.FileManager;
 import com.hdw.upms.ueditor.hunter.ImageHunter;
 import com.hdw.upms.ueditor.upload.Uploader;

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.hdw.upms.ueditor.Encoder;
-import com.hdw.upms.ueditor.State;
+import com.hdw.upms.ueditor.define.State;
 
 public class BaseState implements State {
 
