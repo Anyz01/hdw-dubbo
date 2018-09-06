@@ -22,8 +22,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 
 
-@ServerEndpoint(value = "/ws/sms/{userId}")
-@Component
+//@ServerEndpoint(value = "/ws/sms/{userId}")
+////@Component
 public class SmsPushSocket {
 
     private final static Logger logger = LoggerFactory.getLogger(SmsPushSocket.class);

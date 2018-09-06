@@ -103,7 +103,12 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/doc.html" , "anon");
 
         // 其他的
-        filterChainDefinitionMap.put("/test/**" , "anon");
+        filterChainDefinitionMap.put("/druid/**", "anon");
+        filterChainDefinitionMap.put("/actuator/**", "anon");
+        filterChainDefinitionMap.put("/ws/**", "anon");
+        filterChainDefinitionMap.put("/qr/**", "anon");
+        filterChainDefinitionMap.put("/test/**", "anon");
+
         filterChainDefinitionMap.put("/login" , "anon");
         filterChainDefinitionMap.put("/**" , "authc");
 

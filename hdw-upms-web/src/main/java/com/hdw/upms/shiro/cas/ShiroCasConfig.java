@@ -128,6 +128,12 @@ public class ShiroCasConfig {
         filterChainDefinitionMap.put("/swagger-ui.html" , "anon");
 
         // 其他的
+        filterChainDefinitionMap.put("/druid/**", "anon");
+        filterChainDefinitionMap.put("/actuator/**", "anon");
+        filterChainDefinitionMap.put("/ws/**", "anon");
+        filterChainDefinitionMap.put("/qr/**", "anon");
+        filterChainDefinitionMap.put("/test/**", "anon");
+
         filterChainDefinitionMap.put("/callback" , "callbackFilter");
         filterChainDefinitionMap.put("/logout" , "logoutFilter");
         filterChainDefinitionMap.put("/**" , "casSecurityFilter");
