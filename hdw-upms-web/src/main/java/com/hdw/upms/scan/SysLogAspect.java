@@ -28,10 +28,9 @@ import java.util.Enumeration;
 @Aspect
 @Component
 public class SysLogAspect {
-    private static final Logger LOGGER = LogManager.getLogger(SysLogAspect.class);
+    private static final Logger logger = LogManager.getLogger(SysLogAspect.class);
     private long startTime = 0;
     private long endTime = 0;
-    private long beginTime = 0;
 
 
     @Reference(application = "${dubbo.application.id}", group = "hdw-upms")
@@ -44,19 +43,18 @@ public class SysLogAspect {
     @Before("cutController()")
     public void doBefore(JoinPoint joinPoint) {
         startTime = System.currentTimeMillis();
-        beginTime = System.currentTimeMillis();
         //URL
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        LOGGER.info("url={}", request.getRequestURL());
+        logger.info("url={}", request.getRequestURL());
         //method
-        LOGGER.info("method={}", request.getMethod());
+        logger.info("method={}", request.getMethod());
         //ip
-        LOGGER.info("ip={}", request.getRemoteAddr());
+        logger.info("ip={}", request.getRemoteAddr());
         //类方法
-        LOGGER.info("class_method={}", joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+        logger.info("class_method={}", joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         //参数
-        LOGGER.info("args={}", joinPoint.getArgs());
+        logger.info("args={}", joinPoint.getArgs());
     }
 
     @Around("cutController()")
@@ -82,9 +80,9 @@ public class SysLogAspect {
             }
         }
         //执行时长(毫秒)
-        long time = System.currentTimeMillis() - beginTime;
+        long time = System.currentTimeMillis() - startTime;
         String strMessage = String.format("[类名]:%s,[方法]:%s,[参数]:%s", strClassName, strMethodName, bfParams.toString());
-        LOGGER.info(strMessage);
+        logger.info(strMessage);
         if (isWriteLog(strMethodName)) {
             try {
                 ShiroUser shiroUser = ShiroKit.getUser();
@@ -95,7 +93,7 @@ public class SysLogAspect {
                     sysLog.setRoleName(shiroUser.getRoles().get(0));
                     sysLog.setClassName(strClassName);
                     sysLog.setMethod(strMethodName);
-                    if (StringUtils.isNotBlank(bfParams.toString())) {
+                    if (StringUtils.isNotBlank(bfParams.toString())&& !bfParams.toString().equals("null")) {
                         sysLog.setParams(bfParams.toString());
                     }
                     sysLog.setCreateTime(new Date());
@@ -103,11 +101,11 @@ public class SysLogAspect {
                         sysLog.setClientIp(request.getRemoteAddr());
                     }
                     sysLog.setTime(time);
-                    LOGGER.info(sysLog.toString());
+                    logger.info(sysLog.toString());
                     upmsApiService.insertSysLog(sysLog);
                 }
             } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
+                logger.error(e.getMessage(), e);
             }
         }
 
@@ -117,9 +115,9 @@ public class SysLogAspect {
     @AfterReturning(returning = "object", pointcut = "cutController()")
     public void doAfterReturning(Object object) {
         if (object != null) {
-            LOGGER.info("response={}", object.toString());
+            logger.info("response={}", object.toString());
         } else {
-            LOGGER.info("response=");
+            logger.info("response=");
         }
 
     }
@@ -128,11 +126,11 @@ public class SysLogAspect {
     public void doAfter() {
         endTime = System.currentTimeMillis();
         long totalMillis = endTime - startTime;
-        LOGGER.info("----" + "执行时间：" + totalMillis + "毫秒" + "----");
+        logger.info("----" + "执行时间：" + totalMillis + "毫秒" + "----");
     }
 
     private boolean isWriteLog(String method) {
-        String[] pattern = {"login", "logout", "add", "edit", "delete", "grant"};
+        String[] pattern = {"login", "logout", "save", "update", "delete","list","dataGrid","edit","grant"};
         for (String s : pattern) {
             if (method.indexOf(s) > -1) {
                 return true;
