@@ -31,12 +31,16 @@ public class SysLogAspect {
     private static final Logger logger = LogManager.getLogger(SysLogAspect.class);
     private long startTime = 0;
     private long endTime = 0;
-
+    private String strMethodName = "";
+    private String strClassName = "";
+    private String args = "";
+    private String clientIp = "127.0.0.1";
 
     @Reference(application = "${dubbo.application.id}", group = "hdw-upms")
     private IUpmsApiService upmsApiService;
 
     @Pointcut("within(@org.springframework.stereotype.Controller *)")
+    //@Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void cutController() {
     }
 
@@ -59,8 +63,8 @@ public class SysLogAspect {
 
     @Around("cutController()")
     public Object recordSysLog(ProceedingJoinPoint point) throws Throwable {
-        String strMethodName = point.getSignature().getName();
-        String strClassName = point.getTarget().getClass().getName();
+        strMethodName = point.getSignature().getName();
+        strClassName = point.getTarget().getClass().getName();
         Object[] params = point.getArgs();
         StringBuffer bfParams = new StringBuffer();
         Enumeration<String> paraNames = null;
@@ -78,36 +82,12 @@ public class SysLogAspect {
             if (StringUtils.isBlank(bfParams)) {
                 bfParams.append(request.getQueryString());
             }
+            args = bfParams.toString();
+            clientIp = request.getRemoteAddr();
         }
-        //执行时长(毫秒)
-        long time = System.currentTimeMillis() - startTime;
+
         String strMessage = String.format("[类名]:%s,[方法]:%s,[参数]:%s", strClassName, strMethodName, bfParams.toString());
         logger.info(strMessage);
-        if (isWriteLog(strMethodName)) {
-            try {
-                ShiroUser shiroUser = ShiroKit.getUser();
-                if (null != shiroUser) {
-                    String loginName = shiroUser.getLoginName();
-                    SysLog sysLog = new SysLog();
-                    sysLog.setLoginName(loginName);
-                    sysLog.setRoleName(shiroUser.getRoles().get(0));
-                    sysLog.setClassName(strClassName);
-                    sysLog.setMethod(strMethodName);
-                    if (StringUtils.isNotBlank(bfParams.toString())&& !bfParams.toString().equals("null")) {
-                        sysLog.setParams(bfParams.toString());
-                    }
-                    sysLog.setCreateTime(new Date());
-                    if (request != null) {
-                        sysLog.setClientIp(request.getRemoteAddr());
-                    }
-                    sysLog.setTime(time);
-                    logger.info(sysLog.toString());
-                    upmsApiService.insertSysLog(sysLog);
-                }
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-            }
-        }
 
         return point.proceed();
     }
@@ -126,6 +106,28 @@ public class SysLogAspect {
     public void doAfter() {
         endTime = System.currentTimeMillis();
         long totalMillis = endTime - startTime;
+        if (isWriteLog(strMethodName)) {
+            try {
+                ShiroUser shiroUser = ShiroKit.getUser();
+                if (null != shiroUser) {
+                    String loginName = shiroUser.getLoginName();
+                    SysLog sysLog = new SysLog();
+                    sysLog.setLoginName(loginName);
+                    sysLog.setRoleName(shiroUser.getRoles().get(0));
+                    sysLog.setClassName(strClassName);
+                    sysLog.setMethod(strMethodName);
+                    if (StringUtils.isNotBlank(args) && !args.equals("null")) {
+                        sysLog.setParams(args);
+                    }
+                    sysLog.setTime(totalMillis);
+                    sysLog.setCreateTime(new Date());
+                    sysLog.setClientIp(clientIp);
+                    upmsApiService.insertSysLog(sysLog);
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
         logger.info("----" + "执行时间：" + totalMillis + "毫秒" + "----");
     }
 
