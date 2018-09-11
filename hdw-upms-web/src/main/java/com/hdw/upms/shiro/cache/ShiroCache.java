@@ -41,6 +41,7 @@ public class ShiroCache<K, V> implements Cache<K, V> {
     public V put(K key, V value) throws CacheException {
         V old = get(key);
         redisTemplate.boundValueOps(getCacheKey(key)).set(value);
+        redisTemplate.boundValueOps(getCacheKey(key)).expire(globExpire, TimeUnit.MINUTES);
         return old;
     }
 

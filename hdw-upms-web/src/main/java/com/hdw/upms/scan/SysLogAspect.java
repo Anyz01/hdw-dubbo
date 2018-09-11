@@ -47,14 +47,15 @@ public class SysLogAspect {
     @Before("cutController()")
     public void doBefore(JoinPoint joinPoint) {
         startTime = System.currentTimeMillis();
-        //URL
+
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
+        //ip
+        logger.info("ip={}", request.getRemoteAddr());
+        //URL
         logger.info("url={}", request.getRequestURL());
         //method
         logger.info("method={}", request.getMethod());
-        //ip
-        logger.info("ip={}", request.getRemoteAddr());
         //类方法
         logger.info("class_method={}", joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         //参数
@@ -86,8 +87,8 @@ public class SysLogAspect {
             clientIp = request.getRemoteAddr();
         }
 
-        String strMessage = String.format("[类名]:%s,[方法]:%s,[参数]:%s", strClassName, strMethodName, bfParams.toString());
-        logger.info(strMessage);
+//        String strMessage = String.format("[类名]:%s,[方法]:%s,[参数]:%s", strClassName, strMethodName, bfParams.toString());
+//        logger.info(strMessage);
 
         return point.proceed();
     }
