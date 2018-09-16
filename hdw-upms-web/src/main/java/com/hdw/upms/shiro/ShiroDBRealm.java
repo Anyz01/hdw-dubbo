@@ -97,7 +97,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
     @Override
     public void onLogout(PrincipalCollection principals) {
         super.clearCachedAuthorizationInfo(principals);
-        logger.error("从session中获取的userSessionId：" + ShiroKit.getUser().getLoginName());
+        logger.error("从session中获取的Login：" + ShiroKit.getUser().getLoginName());
         removeUserCache(ShiroKit.getUser());
 
     }

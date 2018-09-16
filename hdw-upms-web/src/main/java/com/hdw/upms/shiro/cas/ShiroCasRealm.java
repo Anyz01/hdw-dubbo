@@ -5,6 +5,7 @@ import com.hdw.upms.entity.SysResource;
 import com.hdw.upms.entity.vo.RoleVo;
 import com.hdw.upms.entity.vo.UserVo;
 import com.hdw.upms.service.IUpmsApiService;
+import com.hdw.upms.shiro.ShiroKit;
 import com.hdw.upms.shiro.ShiroUser;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jPrincipal;
@@ -89,20 +90,18 @@ public class ShiroCasRealm extends Pac4jRealm {
     @Override
     public void onLogout(PrincipalCollection principals) {
         super.clearCachedAuthorizationInfo(principals);
-        Session session = SecurityUtils.getSubject().getSession();
-        String loginName = (String) session.getAttribute("userSessionId");
-        logger.error("从session中获取的userSessionId：" + loginName);
-        removeUserCache(loginName);
+        logger.error("从session中获取的Login：" + ShiroKit.getUser().getLoginName());
+        removeUserCache(ShiroKit.getUser());
 
     }
 
     /**
      * 清除用户缓存
      *
-     * @param userVo
+     * @param shiroUser
      */
-    public void removeUserCache(UserVo userVo) {
-        removeUserCache(userVo.getLoginName());
+    public void removeUserCache(ShiroUser shiroUser) {
+        removeUserCache(shiroUser.getLoginName());
     }
 
     /**
@@ -115,7 +114,6 @@ public class ShiroCasRealm extends Pac4jRealm {
         principals.add(loginName, super.getName());
         super.clearCachedAuthenticationInfo(principals);
     }
-
     /**
      * 将UserVo赋值给shiroUser
      *

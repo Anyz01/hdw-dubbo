@@ -119,6 +119,13 @@
         </dependency>
         <!-- websocket end -->
 
+        <!-- solr begin -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-solr</artifactId>
+        </dependency>
+        <!-- solr end -->
+
         <!-- spring-boot-admin begin -->
         <dependency>
             <groupId>de.codecentric</groupId>
