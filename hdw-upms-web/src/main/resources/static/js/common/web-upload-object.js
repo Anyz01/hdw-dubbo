@@ -14,7 +14,7 @@
 	var FileWebUpload = function (url, id, list, btn) {
 		this.url = url;
 		this.id = id;
-		this.list;
+		this.list = list;
 		this.btn = btn;
 	};
 
@@ -98,6 +98,13 @@
 					$btn.text('开始上传');
 				}
 			});
+            $btn.on( 'click', function() {
+                if ( state === 'uploading' ) {
+                    uploader.stop();
+                } else {
+                    uploader.upload();
+                }
+            });
 		},
 	};
 
@@ -139,7 +146,7 @@
 				auto: true,
 
 				// swf文件路径
-				swf: zx.ctxPath + '/static/hplus/js/plugins/webuploader/Uploader.swf',
+				swf: hdw.ctxPath + '/static/hplus/js/plugins/webuploader/Uploader.swf',
 
 				// 文件接收服务端。
 				server: this.url,
