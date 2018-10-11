@@ -27,10 +27,15 @@ import org.pac4j.cas.config.CasProtocol;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.config.Config;
 import org.pac4j.http.client.direct.ParameterClient;
+import org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration;
+import org.pac4j.jwt.config.signature.SecretSignatureConfiguration;
 import org.pac4j.jwt.credentials.authenticator.JwtAuthenticator;
+import org.pac4j.jwt.profile.JwtGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -42,7 +47,8 @@ import java.util.Map;
  * @description Shiro CAS 配置
  * @date 2018年3月5日 上午11:22:21
  */
-//@Configuration
+@Configuration
+@ConditionalOnProperty(value ={"upms.cas.status"}, matchIfMissing = false)
 public class ShiroCasConfig {
 
     @Value("${sso.cas.server.loginUrl}")
@@ -327,5 +333,28 @@ public class ShiroCasConfig {
         return filter;
     }
 
+    /**
+     * JWT Token 生成器，对CommonProfile生成然后每次携带token访问
+     *
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+    @Bean
+    protected JwtGenerator jwtGenerator() {
+        return new JwtGenerator(new SecretSignatureConfiguration(salt), new SecretEncryptionConfiguration(salt));
+    }
+
+    /**
+     * JWT校验器，也就是目前设置的ParameterClient进行的校验器，是rest/或者前后端分离的核心校验器
+     *
+     * @return
+     */
+    @Bean
+    protected JwtAuthenticator jwtAuthenticator() {
+        JwtAuthenticator jwtAuthenticator = new JwtAuthenticator();
+        jwtAuthenticator.addSignatureConfiguration(new SecretSignatureConfiguration(salt));
+        jwtAuthenticator.addEncryptionConfiguration(new SecretEncryptionConfiguration(salt));
+        return jwtAuthenticator;
+    }
 
 }

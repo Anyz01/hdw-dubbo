@@ -30,6 +30,7 @@ import java.util.Map;
  * @date 2018年5月14日下午7:57:14
  */
 @Configuration
+@ConditionalOnProperty(value ={"upms.shiro.status"}, matchIfMissing = false)
 public class ShiroConfig {
 
     @Value("${upms.loginUrl}")
