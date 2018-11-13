@@ -23,13 +23,7 @@ import java.util.Map;
  * @author TuMinglong
  * @since 2018-04-26
  */
-@Service(
-        application = "${dubbo.application.id}" ,
-        protocol = "${dubbo.protocol.id}" ,
-        registry = "${dubbo.registry.id}" ,
-        group = "hdw-upms" ,
-        timeout = 60000
-)
+@Service
 public class EnterpriseServiceImpl extends ServiceImpl<EnterpriseMapper, Enterprise> implements IEnterpriseService {
 
     @Autowired

@@ -16,12 +16,7 @@ import com.hdw.upms.service.IUpmsApiService;
  * @description UpmsApi接口实现层
  * @date 2018年3月7日 下午9:45:27
  */
-@Service(
-        application = "${dubbo.application.id}" ,
-        protocol = "${dubbo.protocol.id}" ,
-        registry = "${dubbo.registry.id}" ,
-        group = "hdw-upms"
-)
+@Service
 public class UpmsApiServiceImpl implements IUpmsApiService {
 
     @Autowired

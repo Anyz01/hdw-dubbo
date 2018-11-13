@@ -37,10 +37,10 @@ import java.util.Map;
 @RequestMapping("/role")
 public class SysRoleController extends BaseController {
 
-    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference
     private ISysRoleService roleService;
 
-    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference
     private ISysResourceService resourceService;
 
     /**

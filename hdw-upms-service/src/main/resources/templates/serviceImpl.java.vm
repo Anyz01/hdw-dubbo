@@ -21,12 +21,7 @@ import com.alibaba.dubbo.config.annotation.Service;
  * @author ${author}
  * @since ${date}
  */
-@Service(
-        application = "${dubbo.application.id}" ,
-        protocol = "${dubbo.protocol.id}" ,
-        registry = "${dubbo.registry.id}" ,
-        group = "hdw-upms"
-)
+@Service
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
 
 @Autowired

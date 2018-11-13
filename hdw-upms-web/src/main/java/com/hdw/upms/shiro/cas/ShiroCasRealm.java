@@ -32,7 +32,7 @@ public class ShiroCasRealm extends Pac4jRealm {
 
     private final static Logger logger = LoggerFactory.getLogger(ShiroCasRealm.class);
 
-    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference
     private IUpmsApiService upmsApiService;
 
     public ShiroCasRealm() {

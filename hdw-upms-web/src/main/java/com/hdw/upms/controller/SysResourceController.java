@@ -40,10 +40,10 @@ import java.util.Map;
 @RequestMapping("/resource")
 public class SysResourceController extends BaseController {
 
-    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference
     private IUpmsApiService upmsApiService;
 
-    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference
     private ISysResourceService resourceService;
 
     /**

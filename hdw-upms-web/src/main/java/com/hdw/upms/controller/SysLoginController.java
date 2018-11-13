@@ -37,10 +37,10 @@ import java.util.List;
 @Controller
 public class SysLoginController extends BaseController {
 
-    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference
     private IUpmsApiService upmsApiService;
 
-    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference
     private ISysResourceService resourceService;
 
     /**

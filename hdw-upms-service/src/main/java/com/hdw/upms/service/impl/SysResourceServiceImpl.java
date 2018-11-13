@@ -26,12 +26,7 @@ import java.util.Set;
 /**
  * SysResource 表数据服务层接口实现类
  */
-@Service(
-        application = "${dubbo.application.id}" ,
-        protocol = "${dubbo.protocol.id}" ,
-        registry = "${dubbo.registry.id}" ,
-        group = "hdw-upms"
-)
+@Service
 public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysResource> implements ISysResourceService {
     private static final int RESOURCE_MENU = 0; // 菜单
 

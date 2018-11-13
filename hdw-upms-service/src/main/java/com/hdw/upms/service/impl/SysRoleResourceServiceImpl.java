@@ -11,12 +11,7 @@ import com.hdw.upms.service.ISysRoleResourceService;
 /**
  * SysRoleResource 表数据服务层接口实现类
  */
-@Service(
-        application = "${dubbo.application.id}" ,
-        protocol = "${dubbo.protocol.id}" ,
-        registry = "${dubbo.registry.id}"
-        , group = "hdw-upms"
-)
+@Service
 public class SysRoleResourceServiceImpl extends ServiceImpl<SysRoleResourceMapper, SysRoleResource> implements ISysRoleResourceService {
 
 

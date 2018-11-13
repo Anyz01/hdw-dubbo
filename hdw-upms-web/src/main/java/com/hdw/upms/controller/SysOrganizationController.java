@@ -36,7 +36,7 @@ import java.util.Map;
 @RequestMapping("/organization")
 public class SysOrganizationController extends BaseController {
 
-    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference
     private ISysOrganizationService organizationService;
 
     /**

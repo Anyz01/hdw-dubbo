@@ -22,11 +22,7 @@ import java.util.*;
 /**
  * SysRole 表数据服务层接口实现类
  */
-@Service(
-        application = "${dubbo.application.id}" ,
-        protocol = "${dubbo.protocol.id}" ,
-        registry = "${dubbo.registry.id}" ,
-        group = "hdw-upms")
+@Service
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements ISysRoleService {
 
     @Autowired

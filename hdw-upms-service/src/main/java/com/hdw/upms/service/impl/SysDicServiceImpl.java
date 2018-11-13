@@ -23,12 +23,7 @@ import com.alibaba.dubbo.config.annotation.Service;
  * @author TuMinglong
  * @since 2018-04-26
  */
-@Service(
-        application = "${dubbo.application.id}" ,
-        protocol = "${dubbo.protocol.id}" ,
-        registry = "${dubbo.registry.id}" ,
-        group = "hdw-upms"
-)
+@Service
 public class SysDicServiceImpl extends ServiceImpl<SysDicMapper, SysDic> implements ISysDicService {
 
     @Autowired

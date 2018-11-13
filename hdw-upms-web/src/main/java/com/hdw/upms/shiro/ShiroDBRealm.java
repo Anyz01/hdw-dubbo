@@ -34,7 +34,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
 
     private static final Logger logger = LoggerFactory.getLogger(ShiroDBRealm.class);
 
-    @Reference(application = "${dubbo.application.id}" , group = "hdw-upms")
+    @Reference
     private IUpmsApiService upmsApiService;
 
     /**
