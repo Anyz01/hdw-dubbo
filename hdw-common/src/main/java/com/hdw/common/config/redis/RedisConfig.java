@@ -1,17 +1,16 @@
 package com.hdw.common.config.redis;
 
-import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,10 +18,11 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import javax.annotation.Resource;
+import java.lang.reflect.Method;
+import java.time.Duration;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -53,22 +53,26 @@ public class RedisConfig extends CachingConfigurerSupport {
         };
     }
 
-
     // 缓存管理器
     @Bean
-    public CacheManager cacheManager() {
-        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager.RedisCacheManagerBuilder
-                .fromConnectionFactory(lettuceConnectionFactory);
+    public CacheManager cacheManager(LettuceConnectionFactory lettuceConnectionFactory) {
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(30))
+                .disableCachingNullValues();
+
         Set<String> cacheNames = new HashSet<String>() {};
         cacheNames.add("authorizationCache");
         cacheNames.add("authenticationCache");
         cacheNames.add("activeSessionCache");
         cacheNames.add("pac4jAuthorizationCache");
         cacheNames.add("pac4jAuthenticationCache");
-        builder.initialCacheNames(cacheNames);
-        return builder.build();
-    }
 
+        return RedisCacheManager.builder(lettuceConnectionFactory)
+                .cacheDefaults(config)
+                .transactionAware()
+                .initialCacheNames(cacheNames)
+                .build();
+    }
 
     @Bean(name = "redisTemplate")
     public RedisTemplate<String, Object> objectRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
@@ -89,7 +93,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     /**
      * RedisTemplate配置
      */
-    @Bean(name="jsonRedisTemplate")
+    @Bean(name = "jsonRedisTemplate")
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         // 设置序列化
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<Object>(

@@ -1,14 +1,15 @@
 package com.hdw.upms.controller;
 
-import com.google.common.base.Charsets;
 import com.hdw.common.base.BaseController;
-import com.hdw.common.result.Result;
+import com.hdw.common.result.ResultMap;
+import com.hdw.common.util.Charsets;
 import com.hdw.common.util.DateUtil;
 import com.hdw.common.util.QrcodeUtil;
 import com.hdw.common.util.URLUtils;
 import com.luhuiguo.fastdfs.domain.StorePath;
 import com.luhuiguo.fastdfs.exception.FdfsUnsupportStorePathException;
 import com.luhuiguo.fastdfs.service.FastFileStorageClient;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author TuMinglong
@@ -34,6 +40,9 @@ import java.util.*;
  * @Date 2018年5月8日 上午10:12:45
  */
 public abstract class UpLoadController extends BaseController {
+
+    // 控制线程数，最优选择是处理器线程数*3，本机处理器是4线程
+    private final static int THREAD_COUNT = 12;
 
     /**
      * 文件上传路径前缀
@@ -90,69 +99,16 @@ public abstract class UpLoadController extends BaseController {
         header = header == null ? "" : header.toUpperCase();
         HttpStatus status;
         if (header.contains("MSIE") || header.contains("TRIDENT") || header.contains("EDGE")) {
-            fileName = URLUtils.encodeURL(fileName, Charsets.UTF_8);
+            fileName = URLUtils.encodeURL(fileName, com.hdw.common.util.Charsets.UTF_8);
             status = HttpStatus.OK;
         } else {
-            fileName = new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1);
+            fileName = new String(fileName.getBytes(com.hdw.common.util.Charsets.UTF_8), Charsets.ISO_8859_1);
             status = HttpStatus.CREATED;
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", fileName);
         return new ResponseEntity<Resource>(resource, headers, status);
-    }
-
-    /**
-     * 多文件上传
-     *
-     * @param files 文件
-     * @param dir   保存文件的文件夹名称,,相对路径必须upload开头，例如upload/test
-     * @return
-     * @throws Exception
-     */
-    public List<String> uploads(MultipartFile[] files, String dir) throws RuntimeException {
-        List<String> fileNames = new ArrayList<String>();
-        try {
-            File dirFile = null;
-            if (StringUtils.isNotBlank(dir)) {
-                dirFile = new File(fileUploadPrefix + File.separator + dir + File.separator
-                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
-            } else {
-                dirFile = new File(fileUploadPrefix + File.separator + "upload" + File.separator
-                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
-            }
-            if (!dirFile.exists()) {
-                dirFile.mkdirs();
-            }
-
-            // 判断file数组不能为空并且长度大于0
-            if (files != null && files.length > 0) {
-                // 循环获取file数组中得文件
-                for (int i = 0; i < files.length; i++) {
-                    MultipartFile file = files[i];
-                    // 保存文件
-                    String realFileName = file.getOriginalFilename();
-                    Long fileName = System.currentTimeMillis();
-                    File targetFile = new File(dirFile.getAbsoluteFile() + File.separator + fileName + realFileName.substring(realFileName.indexOf(".")));
-                    if (!targetFile.exists()) {// 文件名不存在 则新建文件，并将文件复制到新建文件中
-                        targetFile.createNewFile();
-                    }
-                    file.transferTo(targetFile);
-
-                    if (StringUtils.isNotBlank(fileUploadServer)) {
-                        fileNames.add(fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")
-                                + "/" + fileName + realFileName.substring(realFileName.indexOf(".")) + "?attname=" + realFileName);
-                    } else {
-                        fileNames.add("/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf(".")));
-                    }
-                }
-            }
-            return fileNames;
-
-        } catch (Exception e) {
-            throw new RuntimeException("保存文件异常，请联系管理员");
-        }
-
     }
 
     /**
@@ -163,7 +119,8 @@ public abstract class UpLoadController extends BaseController {
      * @return
      * @throws Exception
      */
-    public String upload(MultipartFile file, String dir) throws RuntimeException {
+    public String upload(MultipartFile file, String dir) {
+        String resultPath = "";
         try {
             File dirFile = null;
             if (StringUtils.isNotBlank(dir)) {
@@ -185,26 +142,93 @@ public abstract class UpLoadController extends BaseController {
             }
             file.transferTo(targetFile);
             if (StringUtils.isNotBlank(fileUploadServer)) {
-                return fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/"
+                resultPath = fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/"
                         + fileName + realFileName.substring(realFileName.indexOf(".")) + "?attname=" + realFileName;
             } else {
-                return "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf("."));
+                resultPath = "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf("."));
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
-            throw new RuntimeException("保存文件异常，请联系管理员");
         }
+        return resultPath;
     }
+
+    /**
+     * 多文件上传
+     *
+     * @param multipartFiles 文件
+     * @param dir            保存文件的文件夹名称,,相对路径必须upload开头，例如upload/test
+     * @return
+     */
+    public List<String> uploads(MultipartFile[] multipartFiles, String dir) {
+        // 创建线程池，一共THREAD_COUNT个线程可以使用
+        ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
+        List<String> fileNames = new ArrayList<String>();
+        try {
+            File dirFile = null;
+            if (StringUtils.isNotBlank(dir)) {
+                dirFile = new File(fileUploadPrefix + File.separator + dir + File.separator
+                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
+            } else {
+                dirFile = new File(fileUploadPrefix + File.separator + "upload" + File.separator
+                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
+            }
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+            // 判断file数组不能为空并且长度大于0
+            if (multipartFiles != null && multipartFiles.length > 0) {
+                // 循环获取file数组中得文件
+                File dirFile2 = dirFile;
+                for (MultipartFile file : multipartFiles) {
+                    pool.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                // 保存文件
+                                String realFileName = file.getOriginalFilename();
+                                Long fileName = System.currentTimeMillis();
+                                File targetFile = new File(dirFile2.getAbsoluteFile() + File.separator + fileName + realFileName.substring(realFileName.indexOf(".")));
+                                if (!targetFile.exists()) {// 文件名不存在 则新建文件，并将文件复制到新建文件中
+                                    targetFile.createNewFile();
+                                }
+                                file.transferTo(targetFile);
+
+                                if (StringUtils.isNotBlank(fileUploadServer)) {
+                                    fileNames.add(fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")
+                                            + "/" + fileName + realFileName.substring(realFileName.indexOf(".")) + "?attname=" + realFileName);
+                                } else {
+                                    fileNames.add("/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf(".")));
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                logger.error(e.getMessage());
+                            }
+                        }
+                    });
+                }
+                pool.shutdown();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return fileNames;
+
+    }
+
 
     /**
      * 上传文件到FastDFS
      *
      * @param localFilePath
      * @return
-     * @throws RuntimeException
      */
-    public String uploadToFastDFS(String localFilePath) throws RuntimeException {
+    public String uploadToFastDFS(String localFilePath) {
+        String path = "";
         try {
             byte[] bytes = getBytes(localFilePath);
             String fileName = "";
@@ -215,55 +239,47 @@ public abstract class UpLoadController extends BaseController {
                 }
             }
             StorePath storePath = fastFileStorageClient.uploadFile(bytes, FilenameUtils.getExtension(fileName));
-            // StorePath storePath =
-            // fastFileStorageClient.uploadFile(IOUtils.toByteArray(new
-            // FileInputStream(file)),FilenameUtils.getExtension(file.getName()));
             System.out.println("上传文件路径：" + storePath.getFullPath());
             logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-            String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
-            //Map<String, Object> par = new HashMap<>();
-            //par.put(fileName, path);
-            return path;
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            throw new RuntimeException("保存文件异常，请联系管理员");
         }
+        return path;
     }
 
+
     /**
-     * 多文件上传到FastDFS
+     * 上传文件到FastDFS
      *
-     * @param files
+     * @param localFilePath
      * @return
      * @throws RuntimeException
      */
-    public Map<String, String> uploadsToFastDFS(MultipartFile[] files) throws RuntimeException {
-        Map<String, String> par = new HashMap<>();
+    public Map<String, String> uploadToFastDFS2(String localFilePath) {
+        Map<String, String> params = new HashedMap();
+        String path = "";
         try {
-            // 判断file数组不能为空并且长度大于0
-            if (files != null && files.length > 0) {
-                // 循环获取file数组中得文件
-                for (int i = 0; i < files.length; i++) {
-                    MultipartFile file = files[i];
-                    String fileName = file.getOriginalFilename();
-                    StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()),
-                            FilenameUtils.getExtension(file.getOriginalFilename()));
-                    // StorePath storePath =
-                    // fastFileStorageClient.uploadFile(IOUtils.toByteArray(new
-                    // FileInputStream(file)),FilenameUtils.getExtension(file.getName()));
-                    System.out.println("上传文件路径：" + storePath.getFullPath());
-                    logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
-                    par.put(fileName, path);
+            byte[] bytes = getBytes(localFilePath);
+            String fileName = "";
+            if ((localFilePath != null) && (localFilePath.length() > 0)) {
+                int dot = localFilePath.lastIndexOf(File.separator);
+                if ((dot > -1) && (dot < (localFilePath.length() - 1))) {
+                    fileName = localFilePath.substring(dot + 1, localFilePath.length());
                 }
             }
-            return par;
+            StorePath storePath = fastFileStorageClient.uploadFile(bytes, FilenameUtils.getExtension(fileName));
+            System.out.println("上传文件路径：" + storePath.getFullPath());
+            logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+            params.put("fileName", fileName);
+            params.put("filePath", path);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            throw new RuntimeException("保存文件异常，请联系管理员");
         }
+        return params;
     }
 
     /**
@@ -271,63 +287,209 @@ public abstract class UpLoadController extends BaseController {
      *
      * @param file
      * @return
-     * @throws RuntimeException
      */
-    public Map<String, Object> uploadToFastDFS(MultipartFile file) throws RuntimeException {
+    public String uploadToFastDFS(File file) {
+        String path = "";
+        try {
+            String fileName = file.getName();
+            StorePath storePath =
+                    fastFileStorageClient.uploadFile(IOUtils.toByteArray(new
+                            FileInputStream(file)), FilenameUtils.getExtension(file.getName()));
+            System.out.println("上传文件路径：" + storePath.getFullPath());
+            logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return path;
+    }
+
+    /**
+     * 上传文件到FastDFS
+     *
+     * @param file
+     * @return
+     */
+    public Map<String, String> uploadToFastDFS2(File file) {
+        Map<String, String> params = new HashedMap();
+        String path = "";
+        try {
+            String fileName = file.getName();
+            StorePath storePath =
+                    fastFileStorageClient.uploadFile(IOUtils.toByteArray(new
+                            FileInputStream(file)), FilenameUtils.getExtension(file.getName()));
+            System.out.println("上传文件路径：" + storePath.getFullPath());
+            logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+            params.put("fileName", fileName);
+            params.put("filePath", path);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return params;
+    }
+
+    /**
+     * 上传文件到FastDFS
+     *
+     * @param file
+     * @return
+     */
+    public String uploadToFastDFS(MultipartFile file) {
+        String path = "";
         try {
             String fileName = file.getOriginalFilename();
             StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()),
                     FilenameUtils.getExtension(file.getOriginalFilename()));
-            // StorePath storePath =
-            // fastFileStorageClient.uploadFile(IOUtils.toByteArray(new
-            // FileInputStream(file)),FilenameUtils.getExtension(file.getName()));
             System.out.println("上传文件路径：" + storePath.getFullPath());
             logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-            String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
-            Map<String, Object> par = new HashMap<>();
-            par.put(fileName, path);
-            return par;
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            throw new RuntimeException("保存文件异常，请联系管理员");
         }
+        return path;
+    }
+
+    /**
+     * 上传文件到FastDFS
+     *
+     * @param file
+     * @return
+     */
+    public Map<String, String> uploadToFastDFS2(MultipartFile file) {
+        Map<String, String> params = new HashedMap();
+        String path = "";
+        try {
+            String fileName = file.getOriginalFilename();
+            StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()),
+                    FilenameUtils.getExtension(file.getOriginalFilename()));
+            System.out.println("上传文件路径：" + storePath.getFullPath());
+            logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+            params.put("fileName", fileName);
+            params.put("filePath", path);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return params;
     }
 
     /**
      * 多文件上传到FastDFS
      *
-     * @param files
-     * @param dir
+     * @param fileList
      * @return
-     * @throws RuntimeException
      */
-    public Map<String, Object> uploadsToFastDFS(MultipartFile[] files, String dir) throws RuntimeException {
-        Map<String, Object> par = new HashMap<>();
-        try {
-            // 判断file数组不能为空并且长度大于0
-            if (files != null && files.length > 0) {
-                // 循环获取file数组中得文件
-                for (int i = 0; i < files.length; i++) {
-                    MultipartFile file = files[i];
-                    String fileName = file.getOriginalFilename();
-                    StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()),
-                            FilenameUtils.getExtension(file.getOriginalFilename()));
-                    // StorePath storePath =
-                    // fastFileStorageClient.uploadFile(IOUtils.toByteArray(new
-                    // FileInputStream(file)),FilenameUtils.getExtension(file.getName()));
+    public List<String> uploadsToFastDFS(List<File> fileList) {
+        List<String> list = new ArrayList<>();
+        // 创建线程池，一共THREAD_COUNT个线程可以使用
+        ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
+        if (null != fileList && !fileList.isEmpty()) {
+            for (File file : fileList) {
+                pool.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String fileName = file.getName();
+                            StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(new FileInputStream(file)), FilenameUtils.getExtension(file.getName()));
+                            System.out.println("上传文件路径：" + storePath.getFullPath());
+                            logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
+                            String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+                            list.add(path);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+            pool.shutdown();
+        }
+        return list;
+    }
+
+    /**
+     * 多文件上传到FastDFS
+     *
+     * @param fileList
+     * @return
+     */
+    public List<Map<String, String>> uploadsToFastDFS2(List<File> fileList) {
+        List<Map<String, String>> list = new ArrayList<>();
+        if (null != fileList && !fileList.isEmpty()) {
+            for (File file : fileList) {
+                try {
+                    String fileName = file.getName();
+                    StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(new FileInputStream(file)), FilenameUtils.getExtension(file.getName()));
                     System.out.println("上传文件路径：" + storePath.getFullPath());
                     logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
                     String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
-                    par.put(fileName, path);
+                    Map<String, String> params = new HashedMap();
+                    params.put("fileName", fileName);
+                    params.put("filePath", path);
+                    list.add(params);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-            return par;
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            throw new RuntimeException("保存文件异常，请联系管理员");
         }
+        return list;
+    }
+
+    /**
+     * 多文件上传到FastDFS
+     *
+     * @param multipartFiles
+     * @return
+     */
+    public List<String> uploadsToFastDFS(MultipartFile[] multipartFiles) {
+        List<String> list = new ArrayList<>();
+        if (multipartFiles != null && multipartFiles.length > 0) {
+            for (MultipartFile file : multipartFiles) {
+                try {
+                    String fileName = file.getName();
+                    StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()), FilenameUtils.getExtension(file.getOriginalFilename()));
+                    System.out.println("上传文件路径：" + storePath.getFullPath());
+                    logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
+                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+                    list.add(path);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 多文件上传到FastDFS
+     *
+     * @param multipartFiles
+     * @return
+     */
+    public List<Map<String, String>> uploadsToFastDFS2(MultipartFile[] multipartFiles) {
+        List<Map<String, String>> list = new ArrayList<>();
+        if (multipartFiles != null && multipartFiles.length > 0) {
+            for (MultipartFile file : multipartFiles) {
+                try {
+                    String fileName = file.getName();
+                    StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()), FilenameUtils.getExtension(file.getOriginalFilename()));
+                    System.out.println("上传文件路径：" + storePath.getFullPath());
+                    logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
+                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+                    Map<String, String> params = new HashedMap();
+                    params.put("fileName", fileName);
+                    params.put("filePath", path);
+                    list.add(params);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -337,7 +499,7 @@ public abstract class UpLoadController extends BaseController {
      * @param filePath 保存路径（不需要带文件名）
      * @return
      */
-    public Result downloadFileFromFastDFS(String fileUrl, String filePath) throws RuntimeException {
+    public Object downloadFileFromFastDFS(String fileUrl, String filePath) {
         try {
             String temp = fileUrl.substring(fileUrl.indexOf("group"), fileUrl.indexOf("?"));
             String group = temp.substring(0, temp.indexOf("/"));
@@ -345,17 +507,12 @@ public abstract class UpLoadController extends BaseController {
             String fileName = fileUrl.substring(fileUrl.indexOf("=") + 1);
             byte[] bfile = fastFileStorageClient.downloadFile(group, path);
             getFile(bfile, filePath, fileName);
-            Result r = new Result();
-            r.setMsg("文件下载成功");
-            r.setSuccess(true);
-            r.setCode(1);
-            return r;
+            return ResultMap.ok("文件下载成功");
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            throw new RuntimeException("保存文件异常，请联系管理员");
+            return ResultMap.error(1, e.getMessage());
         }
-
     }
 
     /**
@@ -363,28 +520,20 @@ public abstract class UpLoadController extends BaseController {
      *
      * @param fileUrl 源文件路径
      */
-    public Result deleteFileFromFastDFS(String fileUrl) throws RuntimeException {
+    public Object deleteFileFromFastDFS(String fileUrl) {
         if (StringUtils.isEmpty(fileUrl)) {
-            Result r = new Result();
-            r.setMsg("文件删除失败");
-            r.setSuccess(false);
-            r.setCode(-1);
-            return r;
+            return ResultMap.error(1, "文件删除失败");
         }
         try {
             String temp = fileUrl.substring(fileUrl.indexOf("group"), fileUrl.indexOf("?"));
             String group = temp.substring(0, temp.indexOf("/"));
             String path = temp.substring(temp.indexOf("/") + 1);
             fastFileStorageClient.deleteFile(group, path);
-            Result r = new Result();
-            r.setMsg("文件删除成功");
-            r.setSuccess(true);
-            r.setCode(1);
-            return r;
+            return ResultMap.ok("文件删除成功");
         } catch (FdfsUnsupportStorePathException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            throw new RuntimeException("删除文件异常，请联系管理员");
+            return ResultMap.error(1, e.getMessage());
         }
     }
 
@@ -394,7 +543,6 @@ public abstract class UpLoadController extends BaseController {
      * @param filePath
      * @return
      */
-    @SuppressWarnings("unused")
     private byte[] getBytes(String filePath) {
         byte[] buffer = null;
         try {
@@ -464,7 +612,7 @@ public abstract class UpLoadController extends BaseController {
      * @return
      */
     public String createQrcode(String qrResource) {
-        String pngDir = QrcodeUtil.createQrcode(qrCodeDir+File.separator + "upload" + File.separator + "qr" + File.separator, qrResource);
+        String pngDir = QrcodeUtil.createQrcode(qrCodeDir + File.separator + "upload" + File.separator + "qr" + File.separator, qrResource);
         String qrDir = "";
         qrDir = uploadToFastDFS(pngDir);
         if (StringUtils.isBlank(qrDir)) return null;
@@ -478,4 +626,5 @@ public abstract class UpLoadController extends BaseController {
     public String getFileUploadServer() {
         return fileUploadServer;
     }
+
 }
