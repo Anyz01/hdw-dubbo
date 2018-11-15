@@ -391,7 +391,7 @@ public abstract class UpLoadController extends BaseController {
         if (multipartFiles != null && multipartFiles.length > 0) {
             for (MultipartFile file : multipartFiles) {
                 try {
-                    String fileName = file.getName();
+                    String fileName = file.getOriginalFilename();
                     StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()), FilenameUtils.getExtension(file.getOriginalFilename()));
                     System.out.println("上传文件路径：" + storePath.getFullPath());
                     logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
@@ -416,7 +416,7 @@ public abstract class UpLoadController extends BaseController {
         if (multipartFiles != null && multipartFiles.length > 0) {
             for (MultipartFile file : multipartFiles) {
                 try {
-                    String fileName = file.getName();
+                    String fileName = file.getOriginalFilename();
                     StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()), FilenameUtils.getExtension(file.getOriginalFilename()));
                     System.out.println("上传文件路径：" + storePath.getFullPath());
                     logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
