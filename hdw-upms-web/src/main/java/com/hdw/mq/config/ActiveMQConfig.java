@@ -1,14 +1,15 @@
 package com.hdw.mq.config;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
-import org.springframework.jms.config.SimpleJmsListenerContainerFactory;
+import org.springframework.jms.connection.CachingConnectionFactory;
+import org.springframework.jms.core.JmsTemplate;
 
-import javax.jms.ConnectionFactory;
 
 /**
  * @Description com.hdw.trans
@@ -18,19 +19,46 @@ import javax.jms.ConnectionFactory;
 @Configuration
 public class ActiveMQConfig {
 
-    @Bean(name = "jmsListenerContainerFactory")
-    public JmsListenerContainerFactory<?> jmsListenerContainerFactory(ConnectionFactory connectionFactory, DefaultJmsListenerContainerFactoryConfigurer configurer) {
-        SimpleJmsListenerContainerFactory factory = new SimpleJmsListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory);
+    @Value("${spring.activemq.broker-url}")
+    private String brokerUrl;
+
+    @Value("${spring.activemq.user}")
+    private String username;
+
+    @Value("${spring.activemq.password}")
+    private String password;
+
+    @Bean
+    public CachingConnectionFactory cachingConnectionFactory() {
+        ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(brokerUrl);
+        activeMQConnectionFactory.setUserName(username);
+        activeMQConnectionFactory.setPassword(password);
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(activeMQConnectionFactory);
+        cachingConnectionFactory.setCacheConsumers(true);
+        cachingConnectionFactory.setCacheProducers(true);
+        cachingConnectionFactory.setSessionCacheSize(100);
+        return cachingConnectionFactory;
+    }
+
+    @Bean
+    public JmsTemplate jmsTemplate() {
+        return new JmsTemplate(cachingConnectionFactory());
+    }
+
+
+    @Bean(name = "topicJmsListenerContainerFactory")
+    public JmsListenerContainerFactory<?> topicJmsListenerContainerFactory(DefaultJmsListenerContainerFactoryConfigurer configurer) {
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setPubSubDomain(true);
+        configurer.configure(factory, cachingConnectionFactory());
         return factory;
     }
 
     @Bean(name = "queueJmsListenerContainerFactory")
-    public JmsListenerContainerFactory<?> queueJmsListenerContainerFactory(ConnectionFactory connectionFactory,
-                                                                           DefaultJmsListenerContainerFactoryConfigurer configurer) {
+    public JmsListenerContainerFactory<?> queueJmsListenerContainerFactory(DefaultJmsListenerContainerFactoryConfigurer configurer) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-        configurer.configure(factory, connectionFactory);
+        factory.setPubSubDomain(false);
+        configurer.configure(factory, cachingConnectionFactory());
         return factory;
     }
 }
