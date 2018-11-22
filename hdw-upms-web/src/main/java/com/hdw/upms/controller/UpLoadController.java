@@ -140,7 +140,7 @@ public abstract class UpLoadController extends BaseController {
             file.transferTo(targetFile);
             if (StringUtils.isNotBlank(fileUploadServer)) {
                 resultPath = fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/"
-                        + fileName + realFileName.substring(realFileName.indexOf(".")) + "?attname=" + realFileName;
+                        + fileName + realFileName.substring(realFileName.indexOf("."));
             } else {
                 resultPath = "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf("."));
             }
@@ -195,7 +195,7 @@ public abstract class UpLoadController extends BaseController {
 
                                 if (StringUtils.isNotBlank(fileUploadServer)) {
                                     fileNames.add(fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")
-                                            + "/" + fileName + realFileName.substring(realFileName.indexOf(".")) + "?attname=" + realFileName);
+                                            + "/" + fileName + realFileName.substring(realFileName.indexOf(".")));
                                 } else {
                                     fileNames.add("/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf(".")));
                                 }
@@ -238,7 +238,7 @@ public abstract class UpLoadController extends BaseController {
             StorePath storePath = fastFileStorageClient.uploadFile(bytes, FilenameUtils.getExtension(fileName));
             System.out.println("上传文件路径：" + storePath.getFullPath());
             logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath();
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -269,7 +269,7 @@ public abstract class UpLoadController extends BaseController {
             StorePath storePath = fastFileStorageClient.uploadFile(bytes, FilenameUtils.getExtension(fileName));
             System.out.println("上传文件路径：" + storePath.getFullPath());
             logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath();
             params.put(fileName, path);
         } catch (Exception e) {
             e.printStackTrace();
@@ -294,7 +294,7 @@ public abstract class UpLoadController extends BaseController {
                             FileInputStream(file)), FilenameUtils.getExtension(file.getName()));
             System.out.println("上传文件路径：" + storePath.getFullPath());
             logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath();
             params.put(fileName, path);
         } catch (Exception e) {
             e.printStackTrace();
@@ -318,7 +318,7 @@ public abstract class UpLoadController extends BaseController {
                     FilenameUtils.getExtension(file.getOriginalFilename()));
             System.out.println("上传文件路径：" + storePath.getFullPath());
             logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-            path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+            path = fdfsfileUploadServer + "/" + storePath.getFullPath();
             params.put(fileName, path);
         } catch (Exception e) {
             e.printStackTrace();
@@ -342,7 +342,7 @@ public abstract class UpLoadController extends BaseController {
                     StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(new FileInputStream(file)), FilenameUtils.getExtension(file.getName()));
                     System.out.println("上传文件路径：" + storePath.getFullPath());
                     logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath();
                     params.put(fileName, path);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -367,7 +367,7 @@ public abstract class UpLoadController extends BaseController {
                     StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(new FileInputStream(file)), FilenameUtils.getExtension(file.getName()));
                     System.out.println("上传文件路径：" + storePath.getFullPath());
                     logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath();
                     Map<String, String> params = new HashedMap();
                     params.put("fileName", fileName);
                     params.put("filePath", path);
@@ -395,7 +395,7 @@ public abstract class UpLoadController extends BaseController {
                     StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()), FilenameUtils.getExtension(file.getOriginalFilename()));
                     System.out.println("上传文件路径：" + storePath.getFullPath());
                     logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath();
                     params.put(fileName, path);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -420,7 +420,7 @@ public abstract class UpLoadController extends BaseController {
                     StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()), FilenameUtils.getExtension(file.getOriginalFilename()));
                     System.out.println("上传文件路径：" + storePath.getFullPath());
                     logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath() + "?attname=" + fileName;
+                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath();
                     Map<String, String> params = new HashedMap();
                     params.put("fileName", fileName);
                     params.put("filePath", path);
