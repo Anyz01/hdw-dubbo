@@ -165,7 +165,7 @@
     </dependencies>
 
     <build>
-        <finalName>hdw-upms-web</finalName>
+        <finalName>${project.artifactId}</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -173,21 +173,27 @@
                     <include>**/*.properties</include>
                     <include>**/*.xml</include>
                 </includes>
-                <filtering>true</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <excludes>
-                    <exclude>static/fonts/**</exclude>
-                    <exclude>static/favicon.ico</exclude>
-                </excludes>
+                <filtering>false</filtering>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
+                    <include>application.properties</include>
+                    <include>application-${profileActive}.properties</include>
+                    <include>application.yml</include>
+                    <include>application-${profileActive}.yml</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.json</include>
+                    <include>static/**</include>
                     <include>static/fonts/**</include>
-                    <include>static/favicon.ico</include>
+                    <include>templates/**</include>
+                    <include>quartz.properties</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>

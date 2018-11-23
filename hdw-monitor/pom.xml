@@ -43,25 +43,47 @@
 	</dependencies>
 
 	<build>
-		<finalName>hdw-monitor</finalName>
+		<finalName>${project.artifactId}</finalName>
 		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
 			<resource>
 				<directory>src/main/java</directory>
 				<includes>
 					<include>**/*.properties</include>
 					<include>**/*.xml</include>
 				</includes>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>application.properties</include>
+					<include>application-${profileActive}.properties</include>
+					<include>application.yml</include>
+					<include>application-${profileActive}.yml</include>
+				</includes>
 				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.json</include>
+					<include>static/**</include>
+					<include>static/fonts/**</include>
+					<include>templates/**</include>
+					<include>quartz.properties</include>
+				</includes>
+				<filtering>false</filtering>
 			</resource>
 		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<!--fork : 如果没有该项配置，devtools不会起作用，即应用不会restart -->
+					<fork>true</fork>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
