@@ -96,10 +96,10 @@ public abstract class UpLoadController extends BaseController {
         header = header == null ? "" : header.toUpperCase();
         HttpStatus status;
         if (header.contains("MSIE") || header.contains("TRIDENT") || header.contains("EDGE")) {
-            fileName = URLUtils.encodeURL(fileName, com.hdw.common.util.Charsets.UTF_8);
+            fileName = URLUtils.encodeURL(fileName, Charsets.UTF_8);
             status = HttpStatus.OK;
         } else {
-            fileName = new String(fileName.getBytes(com.hdw.common.util.Charsets.UTF_8), Charsets.ISO_8859_1);
+            fileName = new String(fileName.getBytes(Charsets.UTF_8), Charsets.ISO_8859_1);
             status = HttpStatus.CREATED;
         }
         HttpHeaders headers = new HttpHeaders();
@@ -465,7 +465,7 @@ public abstract class UpLoadController extends BaseController {
      */
     public byte[] downloadFileFromFastDFS(String fileUrl) {
         try {
-            String temp = fileUrl.substring(fileUrl.indexOf("group"), fileUrl.indexOf("?"));
+            String temp = fileUrl.substring(fileUrl.indexOf("group"));
             String group = temp.substring(0, temp.indexOf("/"));
             String path = temp.substring(temp.indexOf("/") + 1);
             byte[] bfile = fastFileStorageClient.downloadFile(group, path);
@@ -483,11 +483,12 @@ public abstract class UpLoadController extends BaseController {
      * @param fileUrl 源文件路径
      */
     public Object deleteFileFromFastDFS(String fileUrl) {
+        System.out.println(fileUrl);
         if (StringUtils.isEmpty(fileUrl)) {
             return ResultMap.error(1, "文件删除失败");
         }
         try {
-            String temp = fileUrl.substring(fileUrl.indexOf("group"), fileUrl.indexOf("?"));
+            String temp = fileUrl.substring(fileUrl.indexOf("group"));
             String group = temp.substring(0, temp.indexOf("/"));
             String path = temp.substring(temp.indexOf("/") + 1);
             fastFileStorageClient.deleteFile(group, path);
