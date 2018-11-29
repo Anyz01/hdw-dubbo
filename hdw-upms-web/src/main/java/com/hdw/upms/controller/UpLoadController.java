@@ -442,7 +442,12 @@ public abstract class UpLoadController extends BaseController {
      */
     public Object downloadFileFromFastDFS(String fileUrl, String filePath) {
         try {
-            String temp = fileUrl.substring(fileUrl.indexOf("group"), fileUrl.indexOf("?"));
+            String temp = "";
+            if (fileUrl.indexOf("?") > -1) {
+                temp = fileUrl.substring(fileUrl.indexOf("group"), fileUrl.indexOf("?"));
+            } else {
+                temp = fileUrl.substring(fileUrl.indexOf("group"));
+            }
             String group = temp.substring(0, temp.indexOf("/"));
             String path = temp.substring(temp.indexOf("/") + 1);
             String fileName = fileUrl.substring(fileUrl.indexOf("=") + 1);
@@ -465,7 +470,12 @@ public abstract class UpLoadController extends BaseController {
      */
     public byte[] downloadFileFromFastDFS(String fileUrl) {
         try {
-            String temp = fileUrl.substring(fileUrl.indexOf("group"));
+            String temp = "";
+            if (fileUrl.indexOf("?") > -1) {
+                temp = fileUrl.substring(fileUrl.indexOf("group"), fileUrl.indexOf("?"));
+            } else {
+                temp = fileUrl.substring(fileUrl.indexOf("group"));
+            }
             String group = temp.substring(0, temp.indexOf("/"));
             String path = temp.substring(temp.indexOf("/") + 1);
             byte[] bfile = fastFileStorageClient.downloadFile(group, path);
@@ -488,7 +498,12 @@ public abstract class UpLoadController extends BaseController {
             return ResultMap.error(1, "文件删除失败");
         }
         try {
-            String temp = fileUrl.substring(fileUrl.indexOf("group"));
+            String temp = "";
+            if (fileUrl.indexOf("?") > -1) {
+                temp = fileUrl.substring(fileUrl.indexOf("group"), fileUrl.indexOf("?"));
+            } else {
+                temp = fileUrl.substring(fileUrl.indexOf("group"));
+            }
             String group = temp.substring(0, temp.indexOf("/"));
             String path = temp.substring(temp.indexOf("/") + 1);
             fastFileStorageClient.deleteFile(group, path);
