@@ -1,16 +1,19 @@
 package com.hdw.upms.aspect;
 
+
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.upms.entity.SysLog;
-import com.hdw.upms.service.IUpmsApiService;
+import com.hdw.upms.service.ISysLogService;
+import com.hdw.upms.service.ISysUserService;
 import com.hdw.upms.shiro.ShiroKit;
 import com.hdw.upms.shiro.ShiroUser;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -28,19 +31,22 @@ import java.util.Enumeration;
 @Aspect
 @Component
 public class SysLogAspect {
-    private static final Logger logger = LogManager.getLogger(SysLogAspect.class);
+    private static final Logger logger = LoggerFactory.getLogger(SysLogAspect.class);
     private long startTime = 0;
     private long endTime = 0;
-    private String strMethodName = "";
+    private String strMethodName ="";
     private String strClassName = "";
-    private String args = "";
-    private String clientIp = "127.0.0.1";
+    private String args ="";
+    private String clientIp="127.0.0.1";
 
-    @Reference(application = "${dubbo.application.id}", group = "hdw-upms")
-    private IUpmsApiService upmsApiService;
+    @Reference
+    private ISysUserService sysUserService;
 
-    @Pointcut("within(@org.springframework.stereotype.Controller *)")
-    //@Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
+    @Reference
+    private ISysLogService sysLogService;
+
+    //@Pointcut("within(@org.springframework.stereotype.Controller *)")
+    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void cutController() {
     }
 
@@ -83,8 +89,8 @@ public class SysLogAspect {
             if (StringUtils.isBlank(bfParams)) {
                 bfParams.append(request.getQueryString());
             }
-            args = bfParams.toString();
-            clientIp = request.getRemoteAddr();
+            args=bfParams.toString();
+            clientIp=request.getRemoteAddr();
         }
 
 //        String strMessage = String.format("[类名]:%s,[方法]:%s,[参数]:%s", strClassName, strMethodName, bfParams.toString());
@@ -117,13 +123,13 @@ public class SysLogAspect {
                     sysLog.setRoleName(shiroUser.getRoles().get(0));
                     sysLog.setClassName(strClassName);
                     sysLog.setMethod(strMethodName);
-                    if (StringUtils.isNotBlank(args) && !args.equals("null")) {
+                    if (StringUtils.isNotBlank(args)&&!args.equals("null")) {
                         sysLog.setParams(args);
                     }
                     sysLog.setTime(totalMillis);
                     sysLog.setCreateTime(new Date());
                     sysLog.setClientIp(clientIp);
-                    upmsApiService.insertSysLog(sysLog);
+                    sysLogService.save(sysLog);
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

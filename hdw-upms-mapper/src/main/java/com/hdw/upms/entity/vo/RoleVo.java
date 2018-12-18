@@ -1,8 +1,8 @@
 package com.hdw.upms.entity.vo;
 
 
-import com.hdw.sys.entity.SysResource;
-import com.hdw.sys.entity.SysRole;
+import com.hdw.upms.entity.SysResource;
+import com.hdw.upms.entity.SysRole;
 
 import java.io.Serializable;
 import java.util.List;

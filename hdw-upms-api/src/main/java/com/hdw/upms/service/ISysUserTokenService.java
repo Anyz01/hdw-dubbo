@@ -2,7 +2,7 @@ package com.hdw.upms.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hdw.sys.entity.SysUserToken;
+import com.hdw.upms.entity.SysUserToken;
 
 /**
  * <p>

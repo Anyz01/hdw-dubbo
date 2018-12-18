@@ -3,7 +3,7 @@ package com.hdw.upms.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hdw.sys.entity.SysFile;
+import com.hdw.upms.entity.SysFile;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

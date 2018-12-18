@@ -1,7 +1,7 @@
 package com.hdw.job.task;
 
-import com.hdw.sys.entity.SysUser;
-import com.hdw.sys.service.ISysUserService;
+import com.hdw.upms.entity.SysUser;
+import com.hdw.upms.service.ISysUserService;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

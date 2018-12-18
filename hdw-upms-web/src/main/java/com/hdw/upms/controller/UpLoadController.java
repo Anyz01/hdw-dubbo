@@ -2,13 +2,13 @@ package com.hdw.upms.controller;
 
 import com.hdw.common.base.BaseController;
 import com.hdw.common.result.ResultMap;
-import com.hdw.common.util.Charsets;
 import com.hdw.common.util.DateUtil;
 import com.hdw.common.util.QrcodeUtil;
 import com.hdw.common.util.URLUtils;
 import com.luhuiguo.fastdfs.domain.StorePath;
 import com.luhuiguo.fastdfs.exception.FdfsUnsupportStorePathException;
 import com.luhuiguo.fastdfs.service.FastFileStorageClient;
+import org.apache.commons.codec.Charsets;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -24,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.util.*;
@@ -37,6 +36,7 @@ import java.util.concurrent.Executors;
  * @Date 2018年5月8日 上午10:12:45
  */
 public abstract class UpLoadController extends BaseController {
+
 
     // 控制线程数，最优选择是处理器线程数*3，本机处理器是4线程
     private final static int THREAD_COUNT = 12;
@@ -116,7 +116,8 @@ public abstract class UpLoadController extends BaseController {
      * @return
      * @throws Exception
      */
-    public String upload(MultipartFile file, String dir) {
+    public Map<String, String> upload(MultipartFile file, String dir) {
+        Map<String, String> params = new HashedMap();
         String resultPath = "";
         try {
             File dirFile = null;
@@ -145,11 +146,14 @@ public abstract class UpLoadController extends BaseController {
                 resultPath = "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf("."));
             }
 
+            params.put("fileName", realFileName);
+            params.put("filePath", resultPath);
+
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
         }
-        return resultPath;
+        return params;
     }
 
     /**
@@ -159,10 +163,10 @@ public abstract class UpLoadController extends BaseController {
      * @param dir            保存文件的文件夹名称,,相对路径必须upload开头，例如upload/test
      * @return
      */
-    public List<String> uploads(MultipartFile[] multipartFiles, String dir) {
+    public List<Map<String, String>> uploads(MultipartFile[] multipartFiles, String dir) {
+        List<Map<String, String>> list = new ArrayList<>();
         // 创建线程池，一共THREAD_COUNT个线程可以使用
         ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
-        List<String> fileNames = new ArrayList<String>();
         try {
             File dirFile = null;
             if (StringUtils.isNotBlank(dir)) {
@@ -194,10 +198,18 @@ public abstract class UpLoadController extends BaseController {
                                 file.transferTo(targetFile);
 
                                 if (StringUtils.isNotBlank(fileUploadServer)) {
-                                    fileNames.add(fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")
-                                            + "/" + fileName + realFileName.substring(realFileName.indexOf(".")));
+                                    String resultPath = fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")
+                                            + "/" + fileName + realFileName.substring(realFileName.indexOf("."));
+                                    Map<String, String> params = new HashedMap();
+                                    params.put("fileName", realFileName);
+                                    params.put("filePath", resultPath);
+                                    list.add(params);
                                 } else {
-                                    fileNames.add("/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf(".")));
+                                    String resultPath = "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf("."));
+                                    Map<String, String> params = new HashedMap();
+                                    params.put("fileName", realFileName);
+                                    params.put("filePath", resultPath);
+                                    list.add(params);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -208,42 +220,12 @@ public abstract class UpLoadController extends BaseController {
                 }
                 pool.shutdown();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
         }
-        return fileNames;
+        return list;
 
-    }
-
-
-    /**
-     * 上传文件到FastDFS
-     *
-     * @param localFilePath
-     * @return
-     */
-    public String uploadToFastDFS(String localFilePath) {
-        String path = "";
-        try {
-            byte[] bytes = getBytes(localFilePath);
-            String fileName = "";
-            if ((localFilePath != null) && (localFilePath.length() > 0)) {
-                int dot = localFilePath.lastIndexOf(File.separator);
-                if ((dot > -1) && (dot < (localFilePath.length() - 1))) {
-                    fileName = localFilePath.substring(dot + 1, localFilePath.length());
-                }
-            }
-            StorePath storePath = fastFileStorageClient.uploadFile(bytes, FilenameUtils.getExtension(fileName));
-            System.out.println("上传文件路径：" + storePath.getFullPath());
-            logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-            path = fdfsfileUploadServer + "/" + storePath.getFullPath();
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-        }
-        return path;
     }
 
 
@@ -254,7 +236,7 @@ public abstract class UpLoadController extends BaseController {
      * @return
      * @throws RuntimeException
      */
-    public Map<String, String> uploadToFastDFS2(String localFilePath) {
+    public Map<String, String> uploadToFastDFS(String localFilePath) {
         Map<String, String> params = new HashedMap();
         String path = "";
         try {
@@ -270,13 +252,15 @@ public abstract class UpLoadController extends BaseController {
             System.out.println("上传文件路径：" + storePath.getFullPath());
             logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
             path = fdfsfileUploadServer + "/" + storePath.getFullPath();
-            params.put(fileName, path);
+            params.put("fileName", fileName);
+            params.put("filePath", path);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
         }
         return params;
     }
+
 
     /**
      * 上传文件到FastDFS
@@ -295,13 +279,15 @@ public abstract class UpLoadController extends BaseController {
             System.out.println("上传文件路径：" + storePath.getFullPath());
             logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
             path = fdfsfileUploadServer + "/" + storePath.getFullPath();
-            params.put(fileName, path);
+            params.put("fileName", fileName);
+            params.put("filePath", path);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
         }
         return params;
     }
+
 
     /**
      * 上传文件到FastDFS
@@ -319,7 +305,8 @@ public abstract class UpLoadController extends BaseController {
             System.out.println("上传文件路径：" + storePath.getFullPath());
             logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
             path = fdfsfileUploadServer + "/" + storePath.getFullPath();
-            params.put(fileName, path);
+            params.put("fileName", fileName);
+            params.put("filePath", path);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -333,32 +320,7 @@ public abstract class UpLoadController extends BaseController {
      * @param fileList
      * @return
      */
-    public Map<String, String> uploadsToFastDFS(List<File> fileList) {
-        Map<String, String> params = new LinkedHashMap<>();
-        if (null != fileList && !fileList.isEmpty()) {
-            for (File file : fileList) {
-                try {
-                    String fileName = file.getName();
-                    StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(new FileInputStream(file)), FilenameUtils.getExtension(file.getName()));
-                    System.out.println("上传文件路径：" + storePath.getFullPath());
-                    logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath();
-                    params.put(fileName, path);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return params;
-    }
-
-    /**
-     * 多文件上传到FastDFS
-     *
-     * @param fileList
-     * @return
-     */
-    public List<Map<String, String>> uploadsToFastDFS2(List<File> fileList) {
+    public List<Map<String, String>> uploadsToFastDFS(List<File> fileList) {
         List<Map<String, String>> list = new ArrayList<>();
         if (null != fileList && !fileList.isEmpty()) {
             for (File file : fileList) {
@@ -378,31 +340,6 @@ public abstract class UpLoadController extends BaseController {
             }
         }
         return list;
-    }
-
-    /**
-     * 多文件上传到FastDFS
-     *
-     * @param multipartFiles
-     * @return
-     */
-    public Map<String, String> uploadsToFastDFS(MultipartFile[] multipartFiles) {
-        Map<String, String> params = new HashedMap();
-        if (multipartFiles != null && multipartFiles.length > 0) {
-            for (MultipartFile file : multipartFiles) {
-                try {
-                    String fileName = file.getOriginalFilename();
-                    StorePath storePath = fastFileStorageClient.uploadFile(IOUtils.toByteArray(file.getInputStream()), FilenameUtils.getExtension(file.getOriginalFilename()));
-                    System.out.println("上传文件路径：" + storePath.getFullPath());
-                    logger.info("文件分组：" + storePath.getGroup() + "上传文件路径：" + storePath.getFullPath());
-                    String path = fdfsfileUploadServer + "/" + storePath.getFullPath();
-                    params.put(fileName, path);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return params;
     }
 
     /**
@@ -461,7 +398,6 @@ public abstract class UpLoadController extends BaseController {
         }
     }
 
-
     /**
      * 从FastDFS上下载文件
      *
@@ -469,6 +405,7 @@ public abstract class UpLoadController extends BaseController {
      * @return
      */
     public byte[] downloadFileFromFastDFS(String fileUrl) {
+        byte[] bfile = null;
         try {
             String temp = "";
             if (fileUrl.indexOf("?") > -1) {
@@ -478,13 +415,12 @@ public abstract class UpLoadController extends BaseController {
             }
             String group = temp.substring(0, temp.indexOf("/"));
             String path = temp.substring(temp.indexOf("/") + 1);
-            byte[] bfile = fastFileStorageClient.downloadFile(group, path);
-            return bfile;
+            bfile = fastFileStorageClient.downloadFile(group, path);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return null;
         }
+        return bfile;
     }
 
     /**
@@ -493,7 +429,6 @@ public abstract class UpLoadController extends BaseController {
      * @param fileUrl 源文件路径
      */
     public Object deleteFileFromFastDFS(String fileUrl) {
-        System.out.println(fileUrl);
         if (StringUtils.isEmpty(fileUrl)) {
             return ResultMap.error(1, "文件删除失败");
         }
@@ -592,8 +527,10 @@ public abstract class UpLoadController extends BaseController {
     public String createQrcode(String qrResource) {
         String pngDir = QrcodeUtil.createQrcode(qrCodeDir + File.separator + "upload" + File.separator + "qr" + File.separator, qrResource);
         String qrDir = "";
-        qrDir = uploadToFastDFS(pngDir);
-        if (StringUtils.isBlank(qrDir)) return null;
+        Map<String, String> params = uploadToFastDFS(pngDir);
+        if (null != params) {
+            qrDir = params.get("filePath");
+        }
         return qrDir;
     }
 

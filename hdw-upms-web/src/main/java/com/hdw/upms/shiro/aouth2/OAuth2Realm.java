@@ -1,16 +1,17 @@
 package com.hdw.upms.shiro.aouth2;
 
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.util.JacksonUtils;
-import com.hdw.sys.entity.SysResource;
-import com.hdw.sys.entity.SysRole;
-import com.hdw.sys.entity.SysUserToken;
-import com.hdw.sys.entity.vo.UserVo;
-import com.hdw.sys.service.ISysRoleService;
-import com.hdw.sys.service.ISysUserEnterpriseService;
-import com.hdw.sys.service.ISysUserService;
-import com.hdw.sys.service.ISysUserTokenService;
-import com.hdw.sys.shiro.ShiroUser;
+import com.hdw.upms.entity.SysResource;
+import com.hdw.upms.entity.SysRole;
+import com.hdw.upms.entity.SysUserToken;
+import com.hdw.upms.entity.vo.UserVo;
+import com.hdw.upms.service.ISysRoleService;
+import com.hdw.upms.service.ISysUserEnterpriseService;
+import com.hdw.upms.service.ISysUserService;
+import com.hdw.upms.service.ISysUserTokenService;
+import com.hdw.upms.shiro.ShiroUser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -19,7 +20,6 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
@@ -32,13 +32,13 @@ public class OAuth2Realm extends AuthorizingRealm {
 
     private static final Logger logger = LoggerFactory.getLogger(OAuth2Realm.class);
 
-    @Autowired
+    @Reference
     private ISysUserService sysUserService;
-    @Autowired
+    @Reference
     private ISysUserTokenService sysUserTokenService;
-    @Autowired
+    @Reference
     private ISysRoleService sysRoleService;
-    @Autowired
+    @Reference
     private ISysUserEnterpriseService sysUserEnterpriseService;
 
 

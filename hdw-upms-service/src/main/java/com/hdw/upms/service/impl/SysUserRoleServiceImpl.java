@@ -1,10 +1,10 @@
 package com.hdw.upms.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hdw.sys.entity.SysUserRole;
-import com.hdw.sys.mapper.SysUserRoleMapper;
-import com.hdw.sys.service.ISysUserRoleService;
-import org.springframework.stereotype.Service;
+import com.hdw.upms.entity.SysUserRole;
+import com.hdw.upms.mapper.SysUserRoleMapper;
+import com.hdw.upms.service.ISysUserRoleService;
+import com.alibaba.dubbo.config.annotation.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;

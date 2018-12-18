@@ -2,8 +2,8 @@ package com.hdw.upms.entity.vo;
 
 
 import com.hdw.common.util.JacksonUtils;
-import com.hdw.sys.entity.SysRole;
-import com.hdw.sys.entity.SysUser;
+import com.hdw.upms.entity.SysRole;
+import com.hdw.upms.entity.SysUser;
 
 import java.io.Serializable;
 import java.util.List;
@@ -55,6 +55,13 @@ public class UserVo extends SysUser implements Serializable {
 
     public void setRoles(List<SysRole> roles) {
         this.roles = roles;
+    }
+
+    /**
+     * 密码盐
+     */
+    public String getCredentialsSalt() {
+        return getLoginName() + getSalt();
     }
 
     @Override

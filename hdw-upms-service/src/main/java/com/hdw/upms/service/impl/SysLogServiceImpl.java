@@ -1,14 +1,13 @@
 package com.hdw.upms.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hdw.common.result.PageUtils;
-import com.hdw.sys.entity.SysLog;
-import com.hdw.sys.mapper.SysLogMapper;
-import com.hdw.sys.service.ISysLogService;
-import org.springframework.stereotype.Service;
-
+import com.hdw.upms.entity.SysLog;
+import com.hdw.upms.mapper.SysLogMapper;
+import com.hdw.upms.service.ISysLogService;
 import java.util.List;
 import java.util.Map;
 

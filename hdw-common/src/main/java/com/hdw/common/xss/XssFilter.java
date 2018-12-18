@@ -1,6 +1,6 @@
 package com.hdw.common.xss;
 
-
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
@@ -16,6 +16,5 @@ public class XssFilter implements Filter {
         XssHttpServletRequestWrapper xssRequest = new XssHttpServletRequestWrapper(
                 (HttpServletRequest) request);
         chain.doFilter(xssRequest, response);
-
     }
 }

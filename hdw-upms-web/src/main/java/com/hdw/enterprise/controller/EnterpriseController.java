@@ -1,19 +1,19 @@
 package com.hdw.enterprise.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.result.PageUtils;
 import com.hdw.common.result.ResultMap;
 import com.hdw.common.result.TreeNode;
 import com.hdw.enterprise.entity.Enterprise;
 import com.hdw.enterprise.service.IEnterpriseService;
-import com.hdw.sys.service.ISysDicService;
-import com.hdw.sys.shiro.ShiroKit;
-import com.hdw.sys.shiro.ShiroUser;
+import com.hdw.upms.service.ISysDicService;
+import com.hdw.upms.shiro.ShiroKit;
+import com.hdw.upms.shiro.ShiroUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -26,10 +26,10 @@ import java.util.*;
 @RestController
 @RequestMapping("/enterprise")
 public class EnterpriseController extends BaseController {
-    @Autowired
+    @Reference
     private ISysDicService sysDicService;
 
-    @Autowired
+    @Reference
     private IEnterpriseService enterpriseService;
 
     /**

@@ -3,8 +3,8 @@ package com.hdw.upms.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.hdw.sys.entity.SysRole;
-import com.hdw.sys.entity.vo.RoleVo;
+import com.hdw.upms.entity.SysRole;
+import com.hdw.upms.entity.vo.RoleVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

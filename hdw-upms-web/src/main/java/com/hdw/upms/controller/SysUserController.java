@@ -1,30 +1,30 @@
 package com.hdw.upms.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.result.PageUtils;
 import com.hdw.common.result.ResultMap;
 import com.hdw.common.util.Constant;
 import com.hdw.common.validator.Assert;
-import com.hdw.sys.entity.SysUser;
-import com.hdw.sys.entity.vo.UserVo;
-import com.hdw.sys.service.ISysUserEnterpriseService;
-import com.hdw.sys.service.ISysUserRoleService;
-import com.hdw.sys.service.ISysUserService;
-import com.hdw.sys.shiro.ShiroKit;
-import com.hdw.sys.shiro.form.PasswordForm;
+import com.hdw.upms.entity.SysUser;
+import com.hdw.upms.entity.vo.UserVo;
+import com.hdw.upms.service.ISysUserEnterpriseService;
+import com.hdw.upms.service.ISysUserRoleService;
+import com.hdw.upms.service.ISysUserService;
+import com.hdw.upms.shiro.ShiroKit;
+import com.hdw.upms.shiro.form.PasswordForm;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @Description com.hdw.sys.controller
+ * @Description com.hdw.upms.controller
  * @Author TuMinglong
  * @Date 2018/12/13 11:42
  */
@@ -33,11 +33,11 @@ import java.util.Map;
 @RequestMapping("sys/user")
 public class SysUserController extends BaseController {
 
-    @Autowired
+    @Reference
     private ISysUserService sysUserService;
-    @Autowired
+    @Reference
     private ISysUserRoleService sysUserRoleService;
-    @Autowired
+    @Reference
     private ISysUserEnterpriseService sysUserEnterpriseService;
 
 

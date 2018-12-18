@@ -1,10 +1,12 @@
 package com.hdw.upms.shiro;
 
+
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.hdw.upms.shiro.cache.RedisCacheManager;
 import com.hdw.upms.shiro.cache.RedisSessionDAO;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -172,7 +174,7 @@ public class ShiroConfig {
         simpleCookie.setMaxAge(60 * 60 * 1 * 1);
         //设置Cookie名字，默认为JSESSIONID
         simpleCookie.setName("session-z-id");
-        simpleCookie.setPath("/TailingPond");
+        simpleCookie.setPath("/hdw");
         simpleCookie.setHttpOnly(true);
         return simpleCookie;
     }

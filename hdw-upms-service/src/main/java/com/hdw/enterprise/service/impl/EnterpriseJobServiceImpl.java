@@ -1,5 +1,6 @@
 package com.hdw.enterprise.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,8 +9,6 @@ import com.hdw.common.result.TreeNode;
 import com.hdw.enterprise.entity.EnterpriseJob;
 import com.hdw.enterprise.mapper.EnterpriseJobMapper;
 import com.hdw.enterprise.service.IEnterpriseJobService;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 

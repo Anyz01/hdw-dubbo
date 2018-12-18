@@ -1,9 +1,9 @@
 package com.hdw.upms.shiro.aouth2;
 
-
-import com.hdw.sys.shiro.cache.RedisCacheManager;
-import com.hdw.sys.shiro.cache.RedisSessionDAO;
+import com.hdw.upms.shiro.cache.RedisCacheManager;
+import com.hdw.upms.shiro.cache.RedisSessionDAO;
 import org.apache.shiro.codec.Base64;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -13,9 +13,9 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,6 +27,7 @@ import java.util.Map;
  * @date 2018年5月14日下午7:57:14
  */
 @Configuration
+@ConditionalOnProperty(value ={"upms.jwt.status"}, matchIfMissing = false)
 public class ShiroJwtConfig {
 
     @Autowired

@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.hdw</groupId>
         <artifactId>hdw-dubbo</artifactId>
-        <version>1.0.0</version>
+        <version>1.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>hdw-upms-web</artifactId>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.hdw</groupId>
             <artifactId>hdw-upms-api</artifactId>
-            <version>1.0.0</version>
+            <version>1.2.0</version>
             <type>jar</type>
         </dependency>
 
@@ -98,13 +98,6 @@
             <scope>provided</scope>
         </dependency>
         <!-- websocket end -->
-
-        <!-- solr begin -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-solr</artifactId>
-        </dependency>
-        <!-- solr end -->
 
         <!-- spring-boot-admin begin -->
         <dependency>

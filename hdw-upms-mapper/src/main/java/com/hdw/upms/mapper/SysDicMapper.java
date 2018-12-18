@@ -3,7 +3,7 @@ package com.hdw.upms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hdw.common.result.TreeNode;
-import com.hdw.sys.entity.SysDic;
+import com.hdw.upms.entity.SysDic;
 
 import java.util.List;
 import java.util.Map;

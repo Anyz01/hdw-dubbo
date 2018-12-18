@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.hdw.sys.mapper.SysUserMapper">
+<mapper namespace="com.hdw.upms.mapper.SysUserMapper">
 
 	<!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hdw.sys.entity.SysUser" >
+    <resultMap id="BaseResultMap" type="com.hdw.upms.entity.SysUser" >
         <result column="id" property="id" />
         <result column="login_name" property="loginName" />
         <result column="name" property="name" />
@@ -24,7 +24,7 @@
         <result column="update_time" property="updateTime" />
     </resultMap>
 
-    <resultMap id="UserVoResultMap" type="com.hdw.sys.entity.vo.UserVo" >
+    <resultMap id="UserVoResultMap" type="com.hdw.upms.entity.vo.UserVo" >
         <result column="id" property="id" />
         <result column="login_name" property="loginName" />
         <result column="name" property="name" />
@@ -46,7 +46,7 @@
         <result column="departmentName" property="departmentName" />
         <result column="jobName" property="jobName" />
 
-        <collection property="roles" ofType="com.hdw.sys.entity.SysRole">
+        <collection property="roles" ofType="com.hdw.upms.entity.SysRole">
             <id column="roleId" property="id"/>
             <result column="roleName" property="name"/>
             <result column="roleDescription" property="description"/>

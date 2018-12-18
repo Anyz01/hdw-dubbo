@@ -1,20 +1,21 @@
 package com.hdw.upms.controller;
 
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.google.code.kaptcha.Producer;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.config.redis.IRedisService;
 import com.hdw.common.result.ResultMap;
 import com.hdw.enterprise.entity.Enterprise;
 import com.hdw.enterprise.service.IEnterpriseService;
-import com.hdw.sys.entity.SysUserToken;
-import com.hdw.sys.entity.vo.UserVo;
-import com.hdw.sys.service.ISysResourceService;
-import com.hdw.sys.service.ISysUserService;
-import com.hdw.sys.service.ISysUserTokenService;
-import com.hdw.sys.shiro.ShiroKit;
-import com.hdw.sys.shiro.form.SysLoginForm;
-import com.hdw.sys.shiro.oauth2.TokenGenerator;
+import com.hdw.upms.entity.SysUserToken;
+import com.hdw.upms.entity.vo.UserVo;
+import com.hdw.upms.service.ISysResourceService;
+import com.hdw.upms.service.ISysUserService;
+import com.hdw.upms.service.ISysUserTokenService;
+import com.hdw.upms.shiro.ShiroKit;
+import com.hdw.upms.shiro.aouth2.TokenGenerator;
+import com.hdw.upms.shiro.form.SysLoginForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -42,16 +42,16 @@ import java.util.Date;
 @RestController
 public class SysLoginController extends BaseController {
 
-    @Autowired
+    @Reference
     private ISysUserService userService;
 
-    @Autowired
+    @Reference
     private ISysUserTokenService userTokenService;
 
-    @Autowired
+    @Reference
     private ISysResourceService resourceService;
 
-    @Autowired
+    @Reference
     private IEnterpriseService enterpriseService;
 
     @Autowired

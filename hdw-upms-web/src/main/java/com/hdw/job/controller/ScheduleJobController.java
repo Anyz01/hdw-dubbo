@@ -1,14 +1,14 @@
 package com.hdw.job.controller;
 
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.result.PageUtils;
 import com.hdw.common.result.ResultMap;
 import com.hdw.common.validator.ValidatorUtils;
 import com.hdw.job.entity.ScheduleJobEntity;
 import com.hdw.job.service.ScheduleJobService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
@@ -19,7 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/sys/schedule")
 public class ScheduleJobController {
-	@Autowired
+	@Reference
 	private ScheduleJobService scheduleJobService;
 	
 	/**

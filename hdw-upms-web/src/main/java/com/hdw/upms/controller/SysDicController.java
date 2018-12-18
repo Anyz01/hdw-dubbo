@@ -1,18 +1,18 @@
 package com.hdw.upms.controller;
 
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.result.ResultMap;
 import com.hdw.common.result.SelectNode;
 import com.hdw.common.result.TreeNode;
 import com.hdw.enterprise.service.IEnterpriseService;
-import com.hdw.sys.entity.SysDic;
-import com.hdw.sys.service.ISysDicService;
-import com.hdw.sys.shiro.ShiroKit;
+import com.hdw.upms.entity.SysDic;
+import com.hdw.upms.service.ISysDicService;
+import com.hdw.upms.shiro.ShiroKit;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -25,10 +25,10 @@ import java.util.*;
 @RequestMapping("/sys/dic")
 public class SysDicController extends BaseController {
 
-    @Autowired
+    @Reference
     private ISysDicService sysDicService;
 
-    @Autowired
+    @Reference
     private IEnterpriseService enterpriseService;
 
     /**

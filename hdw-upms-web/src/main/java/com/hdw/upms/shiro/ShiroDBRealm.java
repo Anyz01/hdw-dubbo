@@ -3,9 +3,12 @@ package com.hdw.upms.shiro;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.util.JacksonUtils;
 import com.hdw.upms.entity.SysResource;
-import com.hdw.upms.entity.vo.RoleVo;
+import com.hdw.upms.entity.SysRole;
 import com.hdw.upms.entity.vo.UserVo;
-import com.hdw.upms.service.IUpmsApiService;
+import com.hdw.upms.service.ISysRoleService;
+import com.hdw.upms.service.ISysUserEnterpriseService;
+import com.hdw.upms.service.ISysUserService;
+import com.hdw.upms.service.ISysUserTokenService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -32,7 +35,13 @@ public class ShiroDBRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(ShiroDBRealm.class);
 
     @Reference
-    private IUpmsApiService upmsApiService;
+    private ISysUserService sysUserService;
+    @Reference
+    private ISysUserTokenService sysUserTokenService;
+    @Reference
+    private ISysRoleService sysRoleService;
+    @Reference
+    private ISysUserEnterpriseService sysUserEnterpriseService;
 
     /**
      * 认证信息.(身份验证) Authentication 是用来验证用户身份
@@ -50,7 +59,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
         String loginName = (String) token.getPrincipal();
 
         // 通过loginName从数据库中查找 UserVo对象
-        UserVo userVo = upmsApiService.selectByLoginName(loginName);
+        UserVo userVo = sysUserService.selectByLoginName(loginName);
         // 账号不存在
         if (userVo == null) {
             return null;
@@ -133,14 +142,16 @@ public class ShiroDBRealm extends AuthorizingRealm {
             su.setId(userVo.getId());
             su.setName(userVo.getName());
             su.setLoginName(userVo.getLoginName());
-            su.setOrganizationId(userVo.getOrganizationId());
-            List<RoleVo> rvList = userVo.getRolesList();
+            su.setUserType(userVo.getUserType());
+            su.setStatus(userVo.getStatus());
+            su.setIsLeader(userVo.getIsLeader());
+            List<SysRole> rvList = userVo.getRoles();
             List<String> urlSet = new ArrayList<>();
             List<String> roles = new ArrayList<>();
             if (rvList != null && !rvList.isEmpty()) {
-                for (RoleVo rv : rvList) {
+                for (SysRole rv : rvList) {
                     roles.add(rv.getName());
-                    List<SysResource> rList = rv.getPermissions();
+                    List<SysResource> rList =sysRoleService.selectByRoleId(rv.getId()).getPermissions();
                     if (rList != null && !rList.isEmpty()) {
                         for (SysResource r : rList) {
                             if (StringUtils.isNotBlank(r.getUrl())) {
@@ -153,8 +164,8 @@ public class ShiroDBRealm extends AuthorizingRealm {
             su.setRoles(roles);
             su.setUrlSet(urlSet);
             List<String> enterpriseIdList=new ArrayList<>();
-            List<String> enterpriseIds = upmsApiService.selectEnterpriseIdByUserName(userVo.getLoginName());
-            if(enterpriseIds!=null && !enterpriseIds.isEmpty()){
+            List<String> enterpriseIds = sysUserEnterpriseService.selectEnterpriseIdByUserId(userVo.getId());
+            if(enterpriseIds!=null && enterpriseIds.size()>0){
                 enterpriseIdList.addAll(enterpriseIds);
             }
             if(StringUtils.isNotBlank(userVo.getEnterpriseId())){
@@ -162,9 +173,8 @@ public class ShiroDBRealm extends AuthorizingRealm {
             }
             su.setEnterprises(removeDuplicate(enterpriseIdList));
             su.setEnterpriseId(userVo.getEnterpriseId());
-            su.setIsLeader(userVo.getIsLeader());
-            su.setUserJob(userVo.getUserJob());
-            su.setUserType(userVo.getUserType());
+            su.setDepartmentId(userVo.getDepartmentId());
+            su.setJobId(userVo.getJobId());
             return su;
         }
     }

@@ -1,5 +1,6 @@
 package com.hdw;
 
+import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +19,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  * @description Application
  * @date 2017年9月5日下午8:55:08
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
 @EnableAspectJAutoProxy
 @EnableAsync
 @EnableScheduling

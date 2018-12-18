@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.hdw.sys.mapper.SysResourceMapper">
+<mapper namespace="com.hdw.upms.mapper.SysResourceMapper">
 
 	<!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hdw.sys.entity.SysResource" >
+    <resultMap id="BaseResultMap" type="com.hdw.upms.entity.SysResource" >
         <result column="id" property="id" />
         <result column="parent_id" property="parentId" />
         <result column="name" property="name" />
@@ -19,5 +19,15 @@
         <result column="create_user" property="createUser" />
         <result column="update_user" property="updateUser" />
     </resultMap>
+
+    <select id="selectResourceList" parameterType="map" resultMap="BaseResultMap">
+        select * from t_sys_resource t
+        <where>
+            <if test="parentId!=null and parentId!=''">
+                t.parent_id=#{parentId}
+            </if>
+        </where>
+        order by t.seq asc
+    </select>
 
 </mapper>

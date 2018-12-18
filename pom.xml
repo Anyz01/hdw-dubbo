@@ -6,7 +6,7 @@
 
     <groupId>com.hdw</groupId>
     <artifactId>hdw-dubbo</artifactId>
-    <version>1.0.0</version>
+    <version>1.2.0</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -60,9 +60,9 @@
         <!-- dom4j -->
         <dom4j.version>1.6.1</dom4j.version>
 
-        <poi.version>3.17</poi.version>
+        <poi.version>4.0.1</poi.version>
         <!-- pdfbox -->
-        <pdfbox.version>2.0.7</pdfbox.version>
+        <pdfbox.version>2.0.13</pdfbox.version>
         <!-- hutool -->
         <hutool.version>4.0.12</hutool.version>
         <!-- guava -->
@@ -70,9 +70,9 @@
 
         <fastdfs-spring-boot-starter.version>0.2.0</fastdfs-spring-boot-starter.version>
         <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
-        <lombok.version>1.18.0</lombok.version>
+        <lombok.version>1.18.4</lombok.version>
 
-        <springboot-admin.version>2.0.2</springboot-admin.version>
+        <springboot-admin.version>2.1.1</springboot-admin.version>
 
         <jjwt.version>0.9.1</jjwt.version>
         <shiro.version>1.4.0</shiro.version>
@@ -80,14 +80,9 @@
         <buji.version>4.0.0</buji.version>
 
         <!-- thymeleaf -->
-        <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
+        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
         <thymeleaf-extras-shiro.version>2.0.0</thymeleaf-extras-shiro.version>
-
-        <spring-security-oauth2.version>2.3.4.RELEASE</spring-security-oauth2.version>
-        <spring-security-jwt.version>1.0.9.RELEASE</spring-security-jwt.version>
-        <thymeleaf-extras-springsecurity5.version>3.0.4.RELEASE</thymeleaf-extras-springsecurity5.version>
-
     </properties>
 
     <dependencyManagement>
@@ -267,12 +262,6 @@
             <!-- hutool end -->
 
             <!-- mybatis-plus begin -->
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <scope>runtime</scope>
-            </dependency>
-
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>

@@ -1,10 +1,10 @@
 package com.hdw.upms.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hdw.sys.entity.SysUserToken;
-import com.hdw.sys.mapper.SysUserTokenMapper;
-import com.hdw.sys.service.ISysUserTokenService;
-import org.springframework.stereotype.Service;
+import com.hdw.upms.entity.SysUserToken;
+import com.hdw.upms.mapper.SysUserTokenMapper;
+import com.hdw.upms.service.ISysUserTokenService;
+import com.alibaba.dubbo.config.annotation.Service;
 
 /**
  * <p>

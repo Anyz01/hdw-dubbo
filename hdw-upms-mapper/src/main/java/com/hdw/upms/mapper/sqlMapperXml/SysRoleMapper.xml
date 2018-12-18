@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.hdw.sys.mapper.SysRoleMapper">
+<mapper namespace="com.hdw.upms.mapper.SysRoleMapper">
 
 	<!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hdw.sys.entity.SysRole" >
+    <resultMap id="BaseResultMap" type="com.hdw.upms.entity.SysRole" >
         <result column="id" property="id" />
         <result column="name" property="name" />
         <result column="seq" property="seq" />
@@ -15,7 +15,7 @@
         <result column="create_user_id" property="createUserId" />
     </resultMap>
 
-    <resultMap id="RoleVoResultMap" type="com.hdw.sys.entity.vo.RoleVo" >
+    <resultMap id="RoleVoResultMap" type="com.hdw.upms.entity.vo.RoleVo" >
         <result column="id" property="id" />
         <result column="name" property="name" />
         <result column="seq" property="seq" />
@@ -24,7 +24,7 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="create_user_id" property="createUserId" />
-        <collection property="permissions" ofType="com.hdw.sys.entity.SysResource">
+        <collection property="permissions" ofType="com.hdw.upms.entity.SysResource">
             <result column="resourceId" property="id" />
             <result column="resourceParentId" property="parentId" />
             <result column="resourceName" property="name" />

@@ -2,10 +2,10 @@ package com.hdw.upms.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hdw.sys.entity.SysUserEnterprise;
-import com.hdw.sys.mapper.SysUserEnterpriseMapper;
-import com.hdw.sys.service.ISysUserEnterpriseService;
-import org.springframework.stereotype.Service;
+import com.hdw.upms.entity.SysUserEnterprise;
+import com.hdw.upms.mapper.SysUserEnterpriseMapper;
+import com.hdw.upms.service.ISysUserEnterpriseService;
+import com.alibaba.dubbo.config.annotation.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;

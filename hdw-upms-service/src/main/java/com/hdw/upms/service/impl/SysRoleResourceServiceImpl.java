@@ -1,11 +1,10 @@
 package com.hdw.upms.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hdw.sys.entity.SysRoleResource;
-import com.hdw.sys.mapper.SysRoleResourceMapper;
-import com.hdw.sys.service.ISysRoleResourceService;
-import org.springframework.stereotype.Service;
-
+import com.hdw.upms.entity.SysRoleResource;
+import com.hdw.upms.mapper.SysRoleResourceMapper;
+import com.hdw.upms.service.ISysRoleResourceService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -2,17 +2,18 @@ package com.hdw.upms.shiro.cas;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.upms.entity.SysResource;
-import com.hdw.upms.entity.vo.RoleVo;
+import com.hdw.upms.entity.SysRole;
 import com.hdw.upms.entity.vo.UserVo;
-import com.hdw.upms.service.IUpmsApiService;
+import com.hdw.upms.service.ISysRoleService;
+import com.hdw.upms.service.ISysUserEnterpriseService;
+import com.hdw.upms.service.ISysUserService;
+import com.hdw.upms.service.ISysUserTokenService;
 import com.hdw.upms.shiro.ShiroKit;
 import com.hdw.upms.shiro.ShiroUser;
 import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -24,16 +25,24 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 
 public class ShiroCasRealm extends Pac4jRealm {
 
-    private static final Logger logger = LogManager.getLogger(ShiroCasRealm.class);
+    private static final Logger logger = LoggerFactory.getLogger(ShiroCasRealm.class);
 
     @Reference
-    private IUpmsApiService upmsApiService;
+    private ISysUserService sysUserService;
+    @Reference
+    private ISysUserTokenService sysUserTokenService;
+    @Reference
+    private ISysRoleService sysRoleService;
+    @Reference
+    private ISysUserEnterpriseService sysUserEnterpriseService;
 
     public ShiroCasRealm() {
         super();
@@ -49,7 +58,7 @@ public class ShiroCasRealm extends Pac4jRealm {
 
         logger.info("Shiro开始登录认证");
         Pac4jToken token = (Pac4jToken) authcToken;
-        LinkedHashMap<String, CommonProfile> profiles = token.getProfiles();
+        List<CommonProfile> profiles = token.getProfiles();
         Pac4jPrincipal principal = new Pac4jPrincipal(profiles);
 
         String loginName = principal.getProfile().getId();
@@ -57,7 +66,7 @@ public class ShiroCasRealm extends Pac4jRealm {
         Session session = SecurityUtils.getSubject().getSession();
         session.setAttribute("user", loginName);
 
-        UserVo userVo = upmsApiService.selectByLoginName(loginName);
+        UserVo userVo = sysUserService.selectByLoginName(loginName);
         // 账号不存在
         if (userVo == null) {
             return null;
@@ -130,14 +139,16 @@ public class ShiroCasRealm extends Pac4jRealm {
             su.setId(userVo.getId());
             su.setName(userVo.getName());
             su.setLoginName(userVo.getLoginName());
-            su.setOrganizationId(userVo.getOrganizationId());
-            List<RoleVo> rvList = userVo.getRolesList();
+            su.setUserType(userVo.getUserType());
+            su.setStatus(userVo.getStatus());
+            su.setIsLeader(userVo.getIsLeader());
+            List<SysRole> rvList = userVo.getRoles();
             List<String> urlSet = new ArrayList<>();
             List<String> roles = new ArrayList<>();
             if (rvList != null && !rvList.isEmpty()) {
-                for (RoleVo rv : rvList) {
+                for (SysRole rv : rvList) {
                     roles.add(rv.getName());
-                    List<SysResource> rList = rv.getPermissions();
+                    List<SysResource> rList =sysRoleService.selectByRoleId(rv.getId()).getPermissions();
                     if (rList != null && !rList.isEmpty()) {
                         for (SysResource r : rList) {
                             if (StringUtils.isNotBlank(r.getUrl())) {
@@ -150,8 +161,8 @@ public class ShiroCasRealm extends Pac4jRealm {
             su.setRoles(roles);
             su.setUrlSet(urlSet);
             List<String> enterpriseIdList=new ArrayList<>();
-            List<String> enterpriseIds = upmsApiService.selectEnterpriseIdByUserName(userVo.getLoginName());
-            if(enterpriseIds!=null && !enterpriseIds.isEmpty()){
+            List<String> enterpriseIds = sysUserEnterpriseService.selectEnterpriseIdByUserId(userVo.getId());
+            if(enterpriseIds!=null && enterpriseIds.size()>0){
                 enterpriseIdList.addAll(enterpriseIds);
             }
             if(StringUtils.isNotBlank(userVo.getEnterpriseId())){
@@ -159,9 +170,8 @@ public class ShiroCasRealm extends Pac4jRealm {
             }
             su.setEnterprises(removeDuplicate(enterpriseIdList));
             su.setEnterpriseId(userVo.getEnterpriseId());
-            su.setIsLeader(userVo.getIsLeader());
-            su.setUserJob(userVo.getUserJob());
-            su.setUserType(userVo.getUserType());
+            su.setDepartmentId(userVo.getDepartmentId());
+            su.setJobId(userVo.getJobId());
             return su;
         }
     }

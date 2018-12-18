@@ -69,7 +69,6 @@ public class PageUtils<T> implements Serializable {
         //防止SQL注入（因为asc、order是通过拼接SQL实现排序的，会有SQL注入风险）
         String asc = SQLFilter.sqlInject((String) params.get("asc"));
         String desc = SQLFilter.sqlInject((String) params.get("desc"));
-        System.out.println("page:" + page + " limit:" + limit);
         //mybatis-plus分页
         this.page = new Page<>(page, limit);
 

@@ -32,10 +32,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TokenLoginController extends BaseController {
 
 //	@SuppressWarnings("rawtypes")
-//	@Autowired
+//	@Reference
 //	private JwtGenerator generator;
 //
-//	@Autowired
+//	@Reference
 //	private CasRestFormClient casRestFormClient;
 //
 //	@Value("${sso.cas.serviceUrl}")

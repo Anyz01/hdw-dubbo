@@ -1,9 +1,10 @@
 package com.hdw.upms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hdw.sys.entity.SysResource;
+import com.hdw.upms.entity.SysResource;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 资源表
@@ -37,6 +38,8 @@ public interface ISysResourceService extends IService<SysResource> {
      */
     List<SysResource> selectNotButtonList();
 
+
+    List<SysResource> selectResourceList(Map<String,Object> params);
 
 }
 

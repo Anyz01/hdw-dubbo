@@ -2,7 +2,7 @@ package com.hdw.upms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hdw.common.result.PageUtils;
-import com.hdw.sys.entity.SysFile;
+import com.hdw.upms.entity.SysFile;
 
 import java.util.List;
 import java.util.Map;

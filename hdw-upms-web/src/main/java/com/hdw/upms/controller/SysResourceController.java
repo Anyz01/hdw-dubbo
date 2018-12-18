@@ -1,23 +1,21 @@
 package com.hdw.upms.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.exception.GlobalException;
 import com.hdw.common.result.ResultMap;
 import com.hdw.common.util.Constant;
-import com.hdw.sys.entity.SysResource;
-import com.hdw.sys.service.ISysResourceService;
-import com.hdw.sys.service.ISysUserService;
-import com.hdw.sys.shiro.ShiroKit;
+import com.hdw.upms.entity.SysResource;
+import com.hdw.upms.service.ISysResourceService;
+import com.hdw.upms.service.ISysUserService;
+import com.hdw.upms.shiro.ShiroKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Description 资源表
@@ -28,9 +26,9 @@ import java.util.Set;
 @RestController
 @RequestMapping("sys/menu")
 public class SysResourceController extends BaseController {
-    @Autowired
+    @Reference
     private ISysResourceService sysResourceService;
-    @Autowired
+    @Reference
     private ISysUserService sysUserService;
 
 
@@ -53,9 +51,8 @@ public class SysResourceController extends BaseController {
     @GetMapping("/list")
     @RequiresPermissions("sys/menu/list")
     public List<SysResource> list(){
-        QueryWrapper<SysResource> wrapper=new QueryWrapper<>();
-        wrapper.orderByAsc(true,"seq");
-        List<SysResource> menuList = sysResourceService.list(wrapper);
+       Map<String,Object> params=new HashMap<>();
+        List<SysResource> menuList = sysResourceService.selectResourceList(params);
         for(SysResource sysResource : menuList){
             SysResource parentMenuEntity =sysResourceService.getById(sysResource.getParentId());
             if(parentMenuEntity != null){

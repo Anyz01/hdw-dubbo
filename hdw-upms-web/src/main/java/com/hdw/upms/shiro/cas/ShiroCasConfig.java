@@ -9,6 +9,7 @@ import io.buji.pac4j.filter.LogoutFilter;
 import io.buji.pac4j.filter.SecurityFilter;
 import io.buji.pac4j.subject.Pac4jSubjectFactory;
 import org.apache.shiro.codec.Base64;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.mgt.SubjectFactory;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
@@ -185,7 +186,7 @@ public class ShiroCasConfig {
         simpleCookie.setMaxAge(60 * 60 * 1 * 1);
         //设置Cookie名字，默认为JSESSIONID
         simpleCookie.setName("session-z-id");
-        simpleCookie.setPath("/TailingPond");
+        simpleCookie.setPath("/hdw");
         simpleCookie.setHttpOnly(true);
         return simpleCookie;
     }

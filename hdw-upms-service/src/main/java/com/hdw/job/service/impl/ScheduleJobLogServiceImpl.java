@@ -8,7 +8,7 @@ import com.hdw.job.entity.ScheduleJobLogEntity;
 import com.hdw.job.mapper.ScheduleJobLogMapper;
 import com.hdw.job.service.ScheduleJobLogService;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Service;
+import com.alibaba.dubbo.config.annotation.Service;
 
 import java.util.List;
 import java.util.Map;

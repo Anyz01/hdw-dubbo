@@ -7,10 +7,12 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.hdw.common.csrf.CsrfInterceptor;
 import com.hdw.common.interceptor.FileUploadTypeInterceptor;
 import org.apache.commons.codec.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.*;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -29,10 +31,11 @@ import java.util.TimeZone;
  */
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
-
-
     @Autowired
     private FileUploadTypeInterceptor fileUploadTypeInterceptor;
+
+    @Autowired
+    private CsrfInterceptor csrfInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -73,6 +76,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         // 注册自定义拦截器，添加拦截路径和排除拦截路径
         // 添加文件上传类型拦截器
         registry.addInterceptor(fileUploadTypeInterceptor).addPathPatterns("/**");
+        //registry.addInterceptor(csrfInterceptor).addPathPatterns("/login");
 
         super.addInterceptors(registry);
     }

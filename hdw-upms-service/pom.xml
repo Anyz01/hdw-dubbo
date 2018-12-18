@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.hdw</groupId>
         <artifactId>hdw-dubbo</artifactId>
-        <version>1.0.0</version>
+        <version>1.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>hdw-upms-service</artifactId>
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.hdw</groupId>
             <artifactId>hdw-upms-api</artifactId>
-            <version>1.0.0</version>
+            <version>1.2.0</version>
             <type>jar</type>
         </dependency>
 

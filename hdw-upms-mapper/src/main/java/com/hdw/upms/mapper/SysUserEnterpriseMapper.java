@@ -1,7 +1,7 @@
 package com.hdw.upms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.hdw.sys.entity.SysUserEnterprise;
+import com.hdw.upms.entity.SysUserEnterprise;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;

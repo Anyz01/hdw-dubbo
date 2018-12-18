@@ -2,7 +2,7 @@ package com.hdw.upms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hdw.common.result.TreeNode;
-import com.hdw.sys.entity.SysDic;
+import com.hdw.upms.entity.SysDic;
 
 import java.util.List;
 import java.util.Map;
