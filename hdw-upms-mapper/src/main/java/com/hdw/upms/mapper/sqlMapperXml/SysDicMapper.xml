@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hdw.upms.mapper.SysDicMapper">
+<mapper namespace="com.hdw.sys.mapper.SysDicMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap"
-		type="com.hdw.upms.entity.SysDic">
-		<id column="id" property="id" />
-		<result column="parent_id" property="parentId" />
-		<result column="var_code" property="varCode" />
-		<result column="var_name" property="varName" />
-		<result column="create_time" property="createTime" />
-		<result column="update_time" property="updateTime" />
-		<result column="create_user" property="createUser" />
-		<result column="update_user" property="updateUser" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap"
+               type="com.hdw.sys.entity.SysDic">
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="var_code" property="varCode"/>
+        <result column="var_name" property="varName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+    </resultMap>
 
-	<!-- 通用查询结果列 -->
-	<sql id="Base_Column_List">
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
 		id, parent_id AS parentId, var_code AS varCode, var_name AS
 		varName,
 		create_time AS createTime, update_time AS updateTime,
@@ -24,88 +24,72 @@
 		createUser, update_user AS updateUser
 	</sql>
 
+    <select id="selectTreeGrid" resultType="map">
+        SELECT
+        t.id,
+        t.parent_id AS parentId,
+        t.var_code AS varCode,
+        t.var_name AS varName,
+        date_format(t.create_time,'%Y-%m-%d %H:%i:%s') AS createTime,
+        date_format(t.update_time,'%Y-%m-%d %H:%i:%s') AS updateTime,
+        t.create_user AS createUser,
+        t.update_user AS updateUser
+        FROM
+        t_sys_dic t
+        <where>
+            <if test="id!=null">
+                t.id=#{id}
+            </if>
+            <if test="pid!=null">
+                and t.parent_id=#{pid}
+            </if>
+            <if test="varName!=null and varName !=''">
+                and t.var_name like '%${varName}%'
+            </if>
+            <if test="varCode!=null and varCode !=''">
+                and t.var_code like '%${varCode}%'
+            </if>
+        </where>
+    </select>
 
-	<select id="selectSysDicPage" resultType="SysDic">
-		SELECT
-		<include refid="Base_Column_List" />
-		FROM
-		t_sys_dic t
-		<where>
-			<if test="id!=null">
-				t.id=#{id}
-			</if>
-			<if test="pid!=null">
-				and t.parent_id=#{pid}
-			</if>
-			<if test="varName!=null and varName !=''">
-				and t.var_name like '%${varName}%'
-			</if>
-			<if test="varCode!=null and varCode !=''">
-				and t.var_code like '%${varCode}%'
-			</if>
-		</where>
-	</select>
+    <select id="selectTree"
+            resultType="com.hdw.common.result.TreeNode" parameterType="map">
+        SELECT
+        t.id AS id,
+        t.parent_id AS paentId,
+        t. var_name as name
+        FROM
+        t_sys_dic t
+        <where>
+            <if test="id!=null">
+                t.id=#{id}
+            </if>
+            <if test="parentId!=null">
+                and t.parent_id=#{parentId}
+            </if>
+            <if test="varName!=null and varName !=''">
+                and t.var_name like '%${varName}%'
+            </if>
+            <if test="varCode!=null and varCode !=''">
+                and t.var_code like '%${varCode}%'
+            </if>
+        </where>
+    </select>
 
-	<select id="selectTreeGrid" resultType="map">
-		SELECT
-		t.id,
-		t.parent_id AS parentId,
-		t.var_code AS varCode,
-		t.var_name AS varName,
-		date_format(t.create_time,'%Y-%m-%d %H:%i:%s') AS createTime,
-		date_format(t.update_time,'%Y-%m-%d %H:%i:%s') AS updateTime,
-		t.create_user AS createUser,
-		t.update_user AS updateUser
-		FROM
-		t_sys_dic t
-		<where>
-			<if test="id!=null">
-				t.id=#{id}
-			</if>
-			<if test="pid!=null">
-				and t.parent_id=#{pid}
-			</if>
-			<if test="varName!=null and varName !=''">
-				and t.var_name like '%${varName}%'
-			</if>
-			<if test="varCode!=null and varCode !=''">
-				and t.var_code like '%${varCode}%'
-			</if>
-		</where>
-	</select>
 
-	<select id="selectTree"
-		resultType="com.hdw.common.result.ZTreeNode">
-		SELECT
-		t.id AS id,
-		t.parent_id AS PId,
-		t. var_name as name,
-		(
-		CASE
-		WHEN
-		(t.parent_id = 0 OR t.parent_id IS NULL) THEN
-		'true'
-		ELSE
-		'false'
-		END
-		) AS
-		isOpen
-		FROM
-		t_sys_dic t
-		<where>
-			<if test="id!=null">
-				t.id=#{id}
-			</if>
-			<if test="pid!=null">
-				and t.parent_id=#{pid}
-			</if>
-			<if test="varName!=null and varName !=''">
-				and t.var_name like '%${varName}%'
-			</if>
-			<if test="varCode!=null and varCode !=''">
-				and t.var_code like '%${varCode}%'
-			</if>
-		</where>
-	</select>
+    <select id="selectTreeByParentId" parameterType="map" resultType="map">
+        select t.id,t.parent_id as paerntId,t.var_name as varName,t.var_code as varCode from t_sys_dic t
+        <where>
+            <if test="ids!=null ">
+                t.id in
+                <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="parentId!=null">
+                t.parent_id=#{parentId}
+            </if>
+        </where>
+    </select>
 
 </mapper>

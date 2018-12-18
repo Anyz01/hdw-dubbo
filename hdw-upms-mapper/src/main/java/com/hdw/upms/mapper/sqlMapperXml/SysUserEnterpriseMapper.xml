@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hdw.sys.mapper.SysUserEnterpriseMapper">
+
+	<!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hdw.sys.entity.SysUserEnterprise" >
+        <result column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="enterprise_id" property="enterpriseId" />
+    </resultMap>
+
+    <delete id="deleteBatchByUserIds">
+        delete from t_sys_user_enterprise where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBatchByEnterpriseIds">
+        delete from t_sys_user_enterprise where enterprise_id in
+        <foreach item="enterpriseId" collection="array" open="(" separator="," close=")">
+            #{enterpriseId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,37 +1,37 @@
 package com.hdw.upms.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hdw.common.result.PageUtils;
+import com.hdw.sys.entity.SysLog;
+import com.hdw.sys.mapper.SysLogMapper;
+import com.hdw.sys.service.ISysLogService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import com.alibaba.dubbo.config.annotation.Service;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.baomidou.mybatisplus.toolkit.StringUtils;
-import com.hdw.common.result.PageInfo;
-import com.hdw.upms.entity.SysLog;
-import com.hdw.upms.mapper.SysLogMapper;
-import com.hdw.upms.service.ISysLogService;
-
+import java.util.Map;
 
 /**
- * SysLog 表数据服务层接口实现类
+ * 系统日志表
+ *
+ * @author TuMinglong
+ * @date 2018-12-11 11:35:15
  */
 @Service
 public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> implements ISysLogService {
 
-    @Autowired
-    private SysLogMapper sysLogMapper;
+    @Override
+    public PageUtils selectDataGrid(Map<String, Object> params){
+        Page<SysLog> page = new PageUtils<SysLog>(params).getPage();
+        IPage<SysLog> iPage = this.baseMapper.selectSysLogPage(page, params);
+        return new PageUtils<Map<String, Object>>(iPage);
+    }
 
     @Override
-    public PageInfo selectDataGrid(PageInfo pageInfo) {
-        Page<SysLog> page = new Page<SysLog>(pageInfo.getNowpage(), pageInfo.getSize());
-        String orderField = StringUtils.camelToUnderline(pageInfo.getSort());
-        page.setOrderByField(orderField);
-        page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
-        List<SysLog> list = sysLogMapper.selectLogPage(page, pageInfo.getCondition());
-        pageInfo.setRows(list);
-        pageInfo.setTotal(page.getTotal());
-        return pageInfo;
+    public List<SysLog> selectSysLogList(Map<String, Object> par){
+
+        return this.baseMapper.selectSysLogList(par);
     }
+
 }

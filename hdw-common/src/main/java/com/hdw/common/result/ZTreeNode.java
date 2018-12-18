@@ -1,21 +1,16 @@
 package com.hdw.common.result;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import java.io.Serializable;
+
 /**
- * @author TuMinglong
  * @Description jquery ztree 插件的节点
- * @date
+ * @Author TuMinglong
+ * @Date 2018/12/13 18:37
  */
 public class ZTreeNode implements Serializable {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
 
     private Long id;    //节点id
 

@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hdw.upms.mapper.SysUserRoleMapper">
 
-   	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.hdw.upms.entity.SysUserRole">
-		<id column="id" property="id" />
-		<result column="user_id" property="userId" />
-		<result column="role_id" property="roleId" />
-	</resultMap>
+<mapper namespace="com.hdw.sys.mapper.SysUserRoleMapper">
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, user_id AS userId, role_id AS roleId
-    </sql>
+	<!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hdw.sys.entity.SysUserRole" >
+        <result column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="role_id" property="roleId" />
+    </resultMap>
 
-    <select id="selectByUserId" resultType="SysUserRole" parameterType="java.lang.Long">
-        select
-        <include refid="Base_Column_List"/>
-        from t_sys_user_role
-        where user_id = #{userId}
-    </select>
+    <delete id="deleteBatchByUserIds">
+        delete from t_sys_user_role where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBatchByRoleIds">
+        delete from t_sys_user_role where role_id in
+        <foreach item="roleId" collection="array" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </delete>
+
+
 
 </mapper>

@@ -1,25 +1,19 @@
 package com.hdw.upms.service;
 
-import com.hdw.common.result.PageInfo;
-import com.hdw.common.result.ZTreeNode;
-import com.hdw.upms.entity.SysDic;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.hdw.common.result.TreeNode;
+import com.hdw.sys.entity.SysDic;
 
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.mybatisplus.service.IService;
-
 /**
- * <p>
- * 数据字典 服务类
- * </p>
+ * 数据字典表
  *
  * @author TuMinglong
- * @since 2018-04-26
+ * @date 2018-12-11 11:35:15
  */
 public interface ISysDicService extends IService<SysDic> {
-
-    PageInfo selectDataGrid(PageInfo pageInfo);
 
     /**
      * 获取变量树表
@@ -35,5 +29,15 @@ public interface ISysDicService extends IService<SysDic> {
      * @param par
      * @return
      */
-    List<ZTreeNode> selectTree(Map<String, Object> par);
+    List<TreeNode> selectTree(Map<String, Object> par);
+
+    /**
+     * 根据父ID获取变量
+     * @param par
+     * @return
+     */
+    List<Map<String, Object>> selectTreeByParentId(Map<String, Object> par);
+
+
 }
+

@@ -1,9 +1,9 @@
 package com.hdw.upms.shiro;
 
+import com.hdw.common.util.JacksonUtils;
+
 import java.io.Serializable;
 import java.util.List;
-
-import com.hdw.common.util.JacksonUtils;
 
 
 /**
@@ -21,11 +21,23 @@ public class ShiroUser implements Serializable {
 
     private String name;
 
+    //是否领导（0-是，1-否）
+    private Integer isLeader;
+
+    //所属职务
+    private String userJob;
+
+    //用户类型（0-超级用户，1-企业用户，2-监管用户）
+    private Integer userType;
+
     //企业Id
-    private Long enterpriseId;
+    private String enterpriseId;
+
+    //角色所拥有的企业ID
+    private List<String> enterprises;
 
     //所属部门Id
-    private Long organizationId;
+    private String organizationId;
 
     private List<String> urlSet;
 
@@ -61,23 +73,20 @@ public class ShiroUser implements Serializable {
         this.name = name;
     }
 
-
-    public Long getEnterpriseId() {
-        return enterpriseId;
+    public List<String> getEnterprises() {
+        return enterprises;
     }
 
-
-    public void setEnterpriseId(Long enterpriseId) {
-        this.enterpriseId = enterpriseId;
+    public void setEnterprises(List<String> enterprises) {
+        this.enterprises = enterprises;
     }
 
-
-    public Long getOrganizationId() {
+    public String getOrganizationId() {
         return organizationId;
     }
 
 
-    public void setOrganizationId(Long organizationId) {
+    public void setOrganizationId(String organizationId) {
         this.organizationId = organizationId;
     }
 
@@ -101,6 +110,37 @@ public class ShiroUser implements Serializable {
         this.roles = roles;
     }
 
+    public String getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(String enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
+
+    public Integer getIsLeader() {
+        return isLeader;
+    }
+
+    public void setIsLeader(Integer isLeader) {
+        this.isLeader = isLeader;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public String getUserJob() {
+        return userJob;
+    }
+
+    public void setUserJob(String userJob) {
+        this.userJob = userJob;
+    }
 
     @Override
     public String toString() {

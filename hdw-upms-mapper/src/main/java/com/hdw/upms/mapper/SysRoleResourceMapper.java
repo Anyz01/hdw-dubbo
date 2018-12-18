@@ -1,26 +1,34 @@
 package com.hdw.upms.mapper;
 
-import java.io.Serializable;
-
-import com.hdw.upms.entity.SysRoleResource;
-import org.apache.ibatis.annotations.Delete;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.hdw.sys.entity.SysRoleResource;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
+import java.util.List;
+
+;
 
 
 /**
- *
- * SysRoleResource 表数据库控制层接口
- *
+ * 角色资源表
+ * 
+ * @author TuMinglong
+ * @date 2018-12-11 11:35:15
  */
 public interface SysRoleResourceMapper extends BaseMapper<SysRoleResource> {
 
-    @Select("SELECT e.id AS id FROM t_sys_role r LEFT JOIN t_sys_role_resource e ON r.id = e.role_id WHERE r.id = #{id}")
-    Long selectIdListByRoleId(@Param("id") Long id);
+    /**
+     * 根据角色查找菜单ID集合
+     * @param roleId
+     * @return
+     */
+    @Select("select t.resource_id from t_sys_role_resource t where t.role_id=#{roleId}")
+    @ResultType(Long.class)
+    List<Long> selectResourceIdListByRoleId(@Param("roleId") Long roleId);
 
-    @Delete("DELETE FROM t_sys_role_resource WHERE resource_id = #{resourceId}")
-    int deleteByResourceId(@Param("resourceId") Serializable resourceId);
+    void deleteBatch(Long[] roleIds);
+
 
 }

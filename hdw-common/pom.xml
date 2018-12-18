@@ -29,13 +29,10 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <!-- thymeleaf begin -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-        <!-- thymeleaf end -->
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -72,6 +69,18 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+
+        <!-- 时间操作组件 begin -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <!-- 时间操作组件 end -->
+
         <!-- httpclient begin -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -104,6 +113,14 @@
         </dependency>
         <!-- jackson end -->
 
+        <!-- fastjson begin -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+        <!-- fastjson end -->
+
         <!-- apache.commons begin -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -131,28 +148,28 @@
         </dependency>
         <!-- apache.commons end -->
 
-        <!-- druid begin -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-        </dependency>
-        <!-- druid end -->
-
         <!-- mybatis-plus begin -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid-spring-boot-starter.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>tomcat-jdbc</artifactId>
-                    <groupId>org.apache.tomcat</groupId>
-                </exclusion>
-            </exclusions>
+            <version>${mybatis-plus-boot-starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>${dynamic-datasource-spring-boot-starter.version}</version>
         </dependency>
         <!-- mybatis-plus end -->
 
@@ -185,6 +202,24 @@
             <artifactId>pinyin4j</artifactId>
         </dependency>
         <!-- pinyin4j end -->
+
+        <!-- zxing begin -->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+        </dependency>
+        <!-- zxing end -->
+
+        <!-- dom4j begin-->
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+        </dependency>
+        <!-- dom4j end -->
 
         <!-- excel begin -->
         <dependency>
@@ -223,24 +258,6 @@
             <artifactId>fontbox</artifactId>
         </dependency>
         <!-- pdfbox end -->
-        
-        <!-- zxing begin -->
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-        </dependency>
-        <!-- zxing end -->
-
-        <!-- dom4j begin-->
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-        </dependency>
-        <!-- dom4j end -->
 
         <!-- hutool begin -->
         <dependency>
@@ -249,13 +266,6 @@
         </dependency>
         <!-- hutool end -->
 
-        <!-- velocity begin -->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity-engine-core</artifactId>
-        </dependency>
-        <!-- velocity end -->
-
         <!-- lombok begin -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -263,6 +273,5 @@
             <scope>compile</scope>
         </dependency>
         <!-- lombok end -->
-
     </dependencies>
 </project>

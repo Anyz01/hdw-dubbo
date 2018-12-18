@@ -1,35 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hdw.upms.mapper.SysLogMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.hdw.upms.entity.SysLog">
-        <id column="id" property="id"/>
-        <result column="login_name" property="loginName"/>
-        <result column="role_name" property="roleName"/>
-        <result column="class_name" property="className"/>
-        <result column="method" property="method"/>
-        <result column="params" property="params"/>
-        <result column="time" property="time"/>
-        <result column="client_ip" property="clientIp"/>
-        <result column="create_time" property="createTime"/>
+<mapper namespace="com.hdw.sys.mapper.SysLogMapper">
+
+	<!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hdw.sys.entity.SysLog" >
+        <result column="id" property="id" />
+        <result column="login_name" property="loginName" />
+        <result column="role_name" property="roleName" />
+        <result column="type" property="type" />
+        <result column="operation" property="operation" />
+        <result column="class_name" property="className" />
+        <result column="method" property="method" />
+        <result column="params" property="params" />
+        <result column="time" property="time" />
+        <result column="client_ip" property="clientIp" />
+        <result column="create_time" property="createTime" />
     </resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, login_name AS loginName, role_name AS roleName, class_name AS className, method, params, time, client_ip AS clientIp, create_time AS createTime
-    </sql>
+    <!-- 多表页面信息查询 -->
+    <select id="selectSysLogPage" parameterType="map"  resultMap="BaseResultMap">
+          SELECT
+            t.id,
+            t.login_name,
+            t.role_name,
+            t.type,
+            t.operation,
+            t.class_name,
+            t.method,
+            t.params,
+            t.time,
+            t.client_ip,
+            t.create_time
+          FROM
+	      t_sys_log t
+	      <where>
+              <if test="params.key!=null and params.key!=''">
+                  t.login_name like concat('%',#{params.key},'%')
+                  or t.method like concat('%',#{params.key},'%')
+              </if>
+              <if test="params.loginName!=null and params.loginName!=''">
+                  t.login_name =#{params.loginName}
+              </if>
+              <if test="params.type!=null and params.type!=''">
+                  t.type =#{params.type}
+              </if>
+              <if test=" params.startTime != null and params.starTime !='' and params.endTime !=null and params.endTime!=''">
+              and (t.create_time between concat(#{params.startTime},'00:00:00') and concat(#{params.endTime},"00:00:00"))
+          </if>
+          </where>
+        order by t.create_time desc
+    </select>
 
-    <select id="selectLogPage" parameterType="map" resultType="com.hdw.upms.entity.SysLog">
-        select
-        <include refid="Base_Column_List"/>
-        from t_sys_log t
+    <!-- 多表信息查询 -->
+    <select id="selectSysLogList" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        t.id,
+        t.login_name,
+        t.role_name,
+        t.type,
+        t.operation,
+        t.class_name,
+        t.method,
+        t.params,
+        t.time,
+        t.client_ip,
+        t.create_time
+        FROM
+        t_sys_log t
         <where>
             <if test="loginName!=null and loginName!=''">
-                t.login_name like '%${loginName}%'
+                t.login_name =#{loginName}
+            </if>
+            <if test="type!=null and type!=''">
+                t.type =#{type}
             </if>
             <if test=" startTime != null and starTime !='' and endTime !=null and endTime!=''">
-                and (t.creat_time between #{startTime} and #{endTime})
+                and (t.create_time between concat(#{startTime},'00:00:00') and concat(#{endTime},"00:00:00"))
             </if>
         </where>
     </select>

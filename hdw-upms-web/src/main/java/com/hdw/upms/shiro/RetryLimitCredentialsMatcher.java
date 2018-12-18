@@ -1,14 +1,13 @@
 package com.hdw.upms.shiro;
 
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,8 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author TuMinglong
  */
 public class RetryLimitCredentialsMatcher extends HashedCredentialsMatcher {
-    private final static Logger logger = LoggerFactory.getLogger(RetryLimitCredentialsMatcher.class);
-
+    private final static Logger logger = LogManager.getLogger(RetryLimitCredentialsMatcher.class);
     private Cache<String, AtomicInteger> passwordRetryCache;
 
     public RetryLimitCredentialsMatcher(CacheManager cacheManager) {
@@ -29,9 +27,11 @@ public class RetryLimitCredentialsMatcher extends HashedCredentialsMatcher {
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
         String username = (String) token.getPrincipal();
+        System.out.println("用户名：" + username);
         // retry count + 1
         AtomicInteger retryCount = passwordRetryCache.get(username);
         if (retryCount == null) {
+            System.out.println("到这里");
             retryCount = new AtomicInteger(0);
             passwordRetryCache.put(username, retryCount);
         }

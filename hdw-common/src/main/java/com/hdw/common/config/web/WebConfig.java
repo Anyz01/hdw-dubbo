@@ -7,16 +7,16 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.hdw.common.csrf.CsrfInterceptor;
 import com.hdw.common.interceptor.FileUploadTypeInterceptor;
-import com.hdw.common.util.Charsets;
+import org.apache.commons.codec.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.*;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -27,11 +27,9 @@ import java.util.TimeZone;
  * @description WEB 初始化相关配置
  * @date 2018年1月24日 下午4:22:28
  */
-@ControllerAdvice
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
-    @Autowired
-    private CsrfInterceptor csrfInterceptor;
+
 
     @Autowired
     private FileUploadTypeInterceptor fileUploadTypeInterceptor;
@@ -54,8 +52,8 @@ public class WebConfig extends WebMvcConfigurationSupport {
         objectMapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);// 忽略 transient 修饰的属性
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // 设置为中国上海时区
-		objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-		objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
         converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
 
@@ -73,8 +71,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册自定义拦截器，添加拦截路径和排除拦截路径
-        // 添加csrf拦截器
-        registry.addInterceptor(csrfInterceptor).addPathPatterns("/login");
         // 添加文件上传类型拦截器
         registry.addInterceptor(fileUploadTypeInterceptor).addPathPatterns("/**");
 
@@ -84,8 +80,9 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
                 .allowCredentials(true)
+                .allowedHeaders("*")
+                .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .maxAge(3600);
     }

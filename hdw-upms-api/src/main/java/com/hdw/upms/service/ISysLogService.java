@@ -1,17 +1,34 @@
 package com.hdw.upms.service;
 
-import com.baomidou.mybatisplus.service.IService;
-import com.hdw.common.result.PageInfo;
-import com.hdw.upms.entity.SysLog;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.hdw.common.result.PageUtils;
+import com.hdw.sys.entity.SysLog;
 
+import java.util.List;
+import java.util.Map;
 
 /**
+ * 系统日志表
+ *
  * @author TuMinglong
- * @Descriptin 日志接口实现层
- * @Date 2018年5月6日 下午8:35:34
+ * @date 2018-12-11 11:35:15
  */
 public interface ISysLogService extends IService<SysLog> {
 
-    PageInfo selectDataGrid(PageInfo pageInfo);
+    /**
+    * 多表页面信息查询
+    * @param params
+    * @return
+    */
+    PageUtils selectDataGrid(Map<String, Object> params);
+
+    /**
+    * 多表信息查询
+    * @param par
+    * @return
+    */
+    List<SysLog> selectSysLogList(Map<String, Object> par);
+
 
 }
+

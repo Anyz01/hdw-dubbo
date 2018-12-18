@@ -20,7 +20,7 @@ public class RedisServiceImpl implements IRedisService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Value("${redis.expire}")
-    private Integer EXPIRE=1800;
+    private Integer EXPIRE;
 
     @Override
     public boolean exists(String key) {

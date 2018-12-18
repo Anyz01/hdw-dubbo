@@ -1,200 +1,186 @@
 package com.hdw.upms.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hdw.common.base.BaseController;
-import com.hdw.common.result.ZTreeNode;
-import com.hdw.upms.entity.SysResource;
-import com.hdw.upms.entity.vo.UserVo;
-import com.hdw.upms.service.ISysResourceService;
-import com.hdw.upms.service.IUpmsApiService;
-import com.hdw.upms.shiro.ShiroKit;
-import com.hdw.upms.shiro.ShiroUser;
-
+import com.hdw.common.exception.GlobalException;
+import com.hdw.common.result.ResultMap;
+import com.hdw.common.util.Constant;
+import com.hdw.sys.entity.SysResource;
+import com.hdw.sys.service.ISysResourceService;
+import com.hdw.sys.service.ISysUserService;
+import com.hdw.sys.shiro.ShiroKit;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.Valid;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
- * @author TuMinglong
- * @description 资源管理
- * @date 2018年3月6日 上午9:43:01
+ * @Description 资源表
+ * @Author TuMinglong
+ * @Date 2018/12/11 14:21
  */
-
-@Api(value = "资源管理接口类" , tags = {"资源管理接口"})
-@Controller
-@RequestMapping("/resource")
+@Api(value = "资源表接口", tags = {"资源表接口"})
+@RestController
+@RequestMapping("sys/menu")
 public class SysResourceController extends BaseController {
+    @Autowired
+    private ISysResourceService sysResourceService;
+    @Autowired
+    private ISysUserService sysUserService;
 
-    @Reference
-    private IUpmsApiService upmsApiService;
-
-    @Reference
-    private ISysResourceService resourceService;
 
     /**
-     * 菜单树
-     *
-     * @return
+     * 导航菜单
      */
-    @ApiOperation(value = "获取菜单树" , notes = "获取菜单树")
-    @GetMapping("/tree")
-    @ResponseBody
-    public Object tree() {
-        ShiroUser shiroUser = ShiroKit.getUser();
-        UserVo userVo = upmsApiService.selectByLoginName(shiroUser.getLoginName());
-        return resourceService.selectTree(userVo);
+    @ApiOperation(value = "导航菜单", notes = "导航菜单")
+    @GetMapping("/nav")
+    public ResultMap nav(){
+        Long userId= ShiroKit.getUser().getId();
+        List<SysResource> menuList = sysResourceService.selectUserResourceListByUserId(userId);
+        Set<String> permissions =sysUserService.selectUserPermissions(userId);
+        return ResultMap.ok().put("menuList", menuList).put("permissions", permissions);
     }
 
     /**
-     * 资源管理页
-     *
-     * @return
+     * 所有菜单列表
      */
-    @GetMapping("/manager")
-    public String manager() {
-        return "system/resource/resource" ;
-    }
-
-    /**
-     * 资源管理列表
-     *
-     * @return
-     */
-    @ApiOperation(value = "获取资源树表" , notes = "获取资源树表")
-    @RequestMapping("/treeGrid")
-    @ResponseBody
-    public Object treeGrid(@RequestParam(required = false) String menuName) {
-        Map<String, Object> par = new HashMap<>();
-        if (StringUtils.isNotBlank(menuName)) {
-            par.put("name" , menuName);
+    @ApiOperation(value = "所有菜单列表", notes = "所有菜单列表")
+    @GetMapping("/list")
+    @RequiresPermissions("sys/menu/list")
+    public List<SysResource> list(){
+        QueryWrapper<SysResource> wrapper=new QueryWrapper<>();
+        wrapper.orderByAsc(true,"seq");
+        List<SysResource> menuList = sysResourceService.list(wrapper);
+        for(SysResource sysResource : menuList){
+            SysResource parentMenuEntity =sysResourceService.getById(sysResource.getParentId());
+            if(parentMenuEntity != null){
+                sysResource.setParentName(parentMenuEntity.getName());
+            }
         }
-        return resourceService.selectTreeGrid(par);
+        return menuList;
     }
 
     /**
-     * 获取菜单列表(选择父级菜单用)
+     * 选择菜单(添加、修改菜单)
      */
-    @ApiOperation(value = "获取菜单列表" , notes = "获取菜单列表")
-    @RequestMapping(value = "/selectMenuTree")
-    @ResponseBody
-    public List<ZTreeNode> selectMenuTreeList() {
-        List<ZTreeNode> roleTreeList = resourceService.selectMenuTree();
-        roleTreeList.add(ZTreeNode.createParent());
-        return roleTreeList;
+    @ApiOperation(value = "选择菜单(添加、修改菜单)", notes = "选择菜单(添加、修改菜单)")
+    @GetMapping("/select")
+    @RequiresPermissions("sys/menu/select")
+    public ResultMap select(){
+        //查询列表数据
+        List<SysResource> menuList = sysResourceService.selectNotButtonList();
+        //添加顶级菜单
+        SysResource root = new SysResource();
+        root.setId(0L);
+        root.setName("顶级菜单");
+        root.setParentId(0L);
+        root.setOpen(true);
+        menuList.add(root);
+        return ResultMap.ok().put("menuList", menuList);
     }
 
     /**
-     * 添加资源页
-     *
-     * @return
+     * 菜单信息
      */
-    @GetMapping("/addPage")
-    public String addPage() {
-        return "system/resource/resourceAdd" ;
+    @ApiOperation(value = "获取资源表", notes = "获取资源表")
+    @GetMapping("/info/{menuId}")
+    @RequiresPermissions("sys/menu/info")
+    public ResultMap info(@PathVariable("menuId") Long menuId){
+        SysResource sysResource = sysResourceService.getById(menuId);
+        return ResultMap.ok().put("menu", sysResource);
     }
 
     /**
-     * 添加资源
-     *
-     * @param resource
-     * @return
+     * 保存
      */
-    @ApiOperation(value = "添加资源信息" , notes = "添加资源信息")
-    @PostMapping("/add")
-    @ResponseBody
-    public Object add(@Valid SysResource resource) throws RuntimeException {
-        try {
-            resource.setCreateTime(new Date());
-            resource.setUpdateTime(new Date());
-            resourceService.insert(resource);
-            return renderSuccess("添加成功！");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException("添加失败，请联系管理员");
+    @ApiOperation(value = "保存资源表", notes = "保存资源表")
+    @PostMapping("/save")
+    @RequiresPermissions("sys/menu/save")
+    public ResultMap save(@RequestBody SysResource sysResource){
+        //数据校验
+        verifyForm(sysResource);
+        sysResource.setCreateTime(new Date());
+        sysResource.setCreateUser(ShiroKit.getUser().getLoginName());
+        sysResourceService.save(sysResource);
+        return ResultMap.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @ApiOperation(value = "修改资源表", notes = "修改资源表")
+    @PostMapping("/update")
+    @RequiresPermissions("sys/menu/update")
+    public ResultMap update(@RequestBody SysResource sysResource){
+        //数据校验
+        verifyForm(sysResource);
+        sysResource.setUpdateTime(new Date());
+        sysResource.setUpdateUser(ShiroKit.getUser().getLoginName());
+        sysResourceService.updateById(sysResource);
+        return ResultMap.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @ApiOperation(value = "删除资源表", notes = "删除资源表")
+    @PostMapping("/delete/{menuId}")
+    @RequiresPermissions("sys/menu/delete")
+    public ResultMap delete(@PathVariable("menuId") long menuId){
+        if(menuId <= 31){
+            return ResultMap.error("系统菜单，不能删除");
+        }
+        //判断是否有子菜单或按钮
+        List<SysResource> menuList =sysResourceService.selectListByParentId(menuId);
+        if(menuList.size() > 0){
+            return ResultMap.error("请先删除子菜单或按钮");
+        }
+        sysResourceService.removeById(menuId);
+        return ResultMap.ok();
+    }
+
+    /**
+     * 验证参数是否正确
+     */
+    private void verifyForm(SysResource sysResource){
+        if(StringUtils.isBlank(sysResource.getName())){
+            throw new GlobalException("菜单名称不能为空");
+        }
+        if(sysResource.getParentId() == null){
+            throw new GlobalException("上级菜单不能为空");
+        }
+        //菜单
+        if(sysResource.getResourceType() == Constant.MenuType.MENU.getValue()){
+            if(StringUtils.isBlank(sysResource.getUrl())){
+                throw new GlobalException("菜单URL不能为空");
+            }
+        }
+        //上级菜单类型
+        int parentType = Constant.MenuType.CATALOG.getValue();
+        if(sysResource.getParentId() != 0){
+            SysResource parentMenu = sysResourceService.getById(sysResource.getParentId());
+            parentType = parentMenu.getResourceType();
+        }
+        //目录、菜单
+        if(sysResource.getResourceType() == Constant.MenuType.CATALOG.getValue() ||
+                sysResource.getResourceType() == Constant.MenuType.MENU.getValue()){
+            if(parentType != Constant.MenuType.CATALOG.getValue()){
+                throw new GlobalException("上级菜单只能为目录类型");
+            }
+            return ;
         }
 
-    }
-
-    /**
-     * 编辑资源页
-     *
-     * @param model
-     * @param resourceId
-     * @return
-     */
-    @GetMapping("/editPage/{resourceId}")
-    public String editPage(Model model, @PathVariable("resourceId") Long resourceId) {
-        SysResource resource = resourceService.selectById(resourceId);
-        // 获取父级菜单名称
-        SysResource resource2 = resourceService.selectById(resource.getPid());
-        if (resource2 != null) {
-            resource.setPname(resource2.getName());
-        } else {
-            resource.setPname("顶级");
-        }
-
-        model.addAttribute("resource" , resource);
-        return "system/resource/resourceEdit" ;
-    }
-
-    /**
-     * 编辑资源
-     *
-     * @param resource
-     * @return
-     */
-    @ApiOperation(value = "编辑资源信息" , notes = "编辑资源信息")
-
-    @PostMapping("/edit")
-    @ResponseBody
-    public Object edit(@Valid SysResource resource) throws RuntimeException {
-        try {
-            resource.setUpdateTime(new Date());
-            resourceService.updateById(resource);
-            return renderSuccess("编辑成功！");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException("编辑失败，请联系管理员");
-        }
-
-    }
-
-    /**
-     * 删除资源
-     *
-     * @param resourceId
-     * @return
-     */
-    @ApiOperation(value = "删除资源信息" , notes = "删除资源信息")
-    @ApiImplicitParam(name = "resourceId" , value = "资源ID" , dataType = "Long" , required = true)
-    @PostMapping("/delete")
-    @ResponseBody
-    public Object delete(Long resourceId) throws RuntimeException {
-        try {
-            Map<String, Object> par = new HashMap<>();
-            resourceService.deleteById(resourceId);
-            par.put("pid" , resourceId);
-            resourceService.deleteByMap(par);
-            return renderSuccess("删除成功！");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException("删除失败，请联系管理员");
+        //按钮
+        if(sysResource.getResourceType() == Constant.MenuType.BUTTON.getValue()){
+            if(parentType != Constant.MenuType.MENU.getValue()){
+                throw new GlobalException("上级菜单只能为菜单类型");
+            }
+            return ;
         }
     }
-
 }

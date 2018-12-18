@@ -2,10 +2,11 @@ package com.hdw.common.util;
 
 import java.util.UUID;
 
+
 /**
  * @Description 生成UUId或随机数字
  * @Author TuMinglong
- * @Date 2018/5/17 15:44
+ * @Date 2018/12/10 16:48
  */
 public class UUIDGenerator {
 

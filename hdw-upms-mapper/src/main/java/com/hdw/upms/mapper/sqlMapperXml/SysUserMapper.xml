@@ -1,178 +1,272 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hdw.upms.mapper.SysUserMapper">
 
-	<resultMap id="userVoResultMap"
-		type="com.hdw.upms.entity.vo.UserVo">
-		<id column="id" property="id" />
-		<result column="login_name" property="loginName" />
-		<result column="name" property="name" />
-		<result column="password" property="password" />
-		<result column="salt" property="salt" />
-		<result column="sex" property="sex" />
-		<result column="age" property="age" />
-		<result column="phone" property="phone" />
-		<result column="email" property="email" />
-		<result column="user_type" property="userType" />
-		<result column="status" property="status" />
-		<result column="expired" property="expired" />
-		<result column="organization_id" property="organizationId" />
-		<result column="enterprise_id" property="enterpriseId" />
-		<result column="create_time" property="createTime" />
-		<result column="update_time" property="updateTime" />
+<mapper namespace="com.hdw.sys.mapper.SysUserMapper">
 
-		<result column="organizationName" property="organizationName" />
-		<result column="enterpriseName" property="enterpriseName" />
+	<!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hdw.sys.entity.SysUser" >
+        <result column="id" property="id" />
+        <result column="login_name" property="loginName" />
+        <result column="name" property="name" />
+        <result column="password" property="password" />
+        <result column="salt" property="salt" />
+        <result column="sex" property="sex" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="user_type" property="userType" />
+        <result column="status" property="status" />
+        <result column="expired" property="expired" />
+        <result column="enterprise_id" property="enterpriseId" />
+        <result column="department_id" property="departmentId" />
+        <result column="job_id" property="jobId" />
+        <result column="is_leader" property="isLeader" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
 
-		<collection property="rolesList" ofType="RoleVo">
-			<id column="roleId" property="id" />
-			<result column="roleName" property="name" />
-			<result column="description" property="description" />
-			<collection property="permissions" ofType="SysResource">
-				<id column="resourceId" property="id" />
-				<result column="resourceName" property="name" />
-				<result column="url" property="url" />
-			</collection>
-		</collection>
-	</resultMap>
+    <resultMap id="UserVoResultMap" type="com.hdw.sys.entity.vo.UserVo" >
+        <result column="id" property="id" />
+        <result column="login_name" property="loginName" />
+        <result column="name" property="name" />
+        <result column="password" property="password" />
+        <result column="salt" property="salt" />
+        <result column="sex" property="sex" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="user_type" property="userType" />
+        <result column="status" property="status" />
+        <result column="expired" property="expired" />
+        <result column="enterprise_id" property="enterpriseId" />
+        <result column="department_id" property="departmentId" />
+        <result column="job_id" property="jobId" />
+        <result column="is_leader" property="isLeader" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="enterpriseName" property="enterpriseName" />
+        <result column="departmentName" property="departmentName" />
+        <result column="jobName" property="jobName" />
 
-	<!-- 通用查询结果列 -->
-	<sql id="Base_Column_List">
-		id, login_name AS loginName, name, password, salt, sex,
-		age, phone,
-		email, user_type AS userType, status, expired,
-		organization_id AS
-		organizationId, enterprise_id AS enterpriseId,
-		create_time AS
-		createTime, update_time AS updateTime
-	</sql>
+        <collection property="roles" ofType="com.hdw.sys.entity.SysRole">
+            <id column="roleId" property="id"/>
+            <result column="roleName" property="name"/>
+            <result column="roleDescription" property="description"/>
+            <result column="roleSeq" property="seq"/>
+            <result column="roleStatus" property="status"/>
+        </collection>
+    </resultMap>
 
-	<select id="selectByLoginName"  resultMap="userVoResultMap" parameterType="java.lang.String">
+    <!-- 多表页面信息查询 -->
+    <select id="selectSysUserPage" parameterType="map" resultType="map">
+        SELECT DISTINCT
+        t.id,
+        t.login_name AS loginName,
+        t.`name`,
+        t.`password`,
+        t.salt,
+        t.sex,
+        t.phone,
+        t.email,
+        t.user_type AS userType,
+        t.`status`,
+        t.expired,
+        t.enterprise_id AS enterpriseId,
+        t.department_id AS departmentId,
+        t.job_id AS jobId,
+        t.is_leader AS isLeader,
+        t.create_time AS createTime,
+        t.update_time AS updateTine,
+        t.`password` AS userPwd,
+        t3.id AS roleId,
+        t3.`name` AS roleName,
+        t3.description AS roleDescription,
+        t3.seq AS roleSeq,
+        t3.`status` AS roleStatus,
+        t4.enterprise_name AS enterpriseName,
+        t5.department_name AS departmentName,
+        t6.job_name AS jobName,
+        group_concat(t3.`name`) AS rolesList
+        FROM
+        t_sys_user t
+        LEFT JOIN t_sys_user_role t2 ON t.id = t2.user_id
+        LEFT JOIN t_sys_role t3 ON t2.role_id = t3.id
+        LEFT JOIN t_enterprise t4 ON t.enterprise_id = t4.id
+        LEFT JOIN t_enterprise_department t5 ON t.department_id = t5.id
+        LEFT JOIN t_enterprise_job t6 ON t.job_id = t6.id
+        <where>
+            <if test="params.name != null and params.name != '' ">
+                t.login_name like concat('%',#{params.name},'%')
+                or t.name like concat('%',#{params.name},'%')
+            </if>
+            <if test=" params.enterpriseId != null and params.enterpriseId !=''">
+                and t.enterprise_id = #{params.enterpriseId}
+            </if>
+            <if test="params.departmentId != null and params.departmentId !=''">
+                and t.department_id= #{params.departmentId}
+            </if>
+            <if test=" params.startTime != null and params.starTime !='' and params.endTime !=null and params.endTime!=''">
+                and (t.create_time between concat(#{params.startTime},'00:00:00') and concat(#{params.endTime},"00:00:00"))
+            </if>
+        </where>
+        GROUP BY t.id
+    </select>
+
+    <!-- 多表信息查询 -->
+    <select id="selectSysUserList" parameterType="map" resultType="map">
+        SELECT DISTINCT
+        t.id,
+        t.login_name AS loginName,
+        t.`name`,
+        t.`password`,
+        t.salt,
+        t.sex,
+        t.phone,
+        t.email,
+        t.user_type AS userType,
+        t.`status`,
+        t.expired,
+        t.enterprise_id AS enterpriseId,
+        t.department_id AS departmentId,
+        t.job_id AS jobId,
+        t.is_leader AS isLeader,
+        t.create_time AS createTime,
+        t.update_time AS updateTine,
+        t.`password` AS userPwd,
+        t3.id AS roleId,
+        t3.`name` AS roleName,
+        t3.description AS roleDescription,
+        t3.seq AS roleSeq,
+        t3.`status` AS roleStatus,
+        t4.enterprise_name AS enterpriseName,
+        t5.department_name AS departmentName,
+        t6.job_name AS jobName,
+        group_concat(t3.`name`) AS rolesList
+        FROM
+        t_sys_user t
+        LEFT JOIN t_sys_user_role t2 ON t.id = t2.user_id
+        LEFT JOIN t_sys_role t3 ON t2.role_id = t3.id
+        LEFT JOIN t_enterprise t4 ON t.enterprise_id = t4.id
+        LEFT JOIN t_enterprise_department t5 ON t.department_id = t5.id
+        LEFT JOIN t_enterprise_job t6 ON t.job_id = t6.id
+        <where>
+            <if test=" name != null and name != '' ">
+                t.login_name like concat('%',#{name},'%')
+                or t.name like concat('%',#{name},'%')
+            </if>
+            <if test=" enterpriseId != null and enterpriseId !=''">
+                and t.enterprise_id = #{enterpriseId}
+            </if>
+            <if test="departmentId != null and departmentId !=''">
+                and t.department_id= #{departmentId}
+            </if>
+            <if test=" startTime != null and starTime !='' and endTime !=null and endTime!=''">
+                and (t.create_time between concat(#{startTime},'00:00:00') and concat(#{endTime},"00:00:00"))
+            </if>
+        </where>
+        GROUP BY t.id
+    </select>
+
+    <select id="selectByUserId"  resultMap="UserVoResultMap" parameterType="java.lang.Long">
+        SELECT DISTINCT
+        t.id,
+        t.login_name,
+        t.`name`,
+        t.`password`,
+        t.salt,
+        t.sex,
+        t.phone,
+        t.email,
+        t.user_type,
+        t.`status`,
+        t.expired,
+        t.enterprise_id,
+        t.department_id,
+        t.job_id,
+        t.is_leader,
+        t.create_time,
+        t.update_time,
+        t.`password` AS userPwd,
+        t3.id AS roleId,
+        t3.`name` AS roleName,
+        t3.description AS roleDescription,
+        t3.seq AS roleSeq,
+        t3.`status` AS roleStatus,
+        t5.enterprise_name as enterpriseName,
+        t6.department_name as departmentName,
+        t7.job_name as jobName
+        FROM
+        t_sys_user t
+        LEFT JOIN t_sys_user_role t2 ON t.id = t2.user_id
+        LEFT JOIN t_sys_role t3 ON t2.role_id = t3.id
+        LEFT JOIN t_sys_user_token t4 on t.id=t4.user_id
+        LEFT JOIN t_enterprise t5 on t.enterprise_id=t5.id
+        LEFT JOIN t_enterprise_department t6 on t.department_id=t6.id
+        LEFT JOIN t_enterprise_job t7 on t.job_id=t7.id
+        <where>
+            t.id=#{userId}
+        </where>
+    </select>
+
+    <select id="selectByLoginName"  resultMap="UserVoResultMap" parameterType="java.lang.String">
+        SELECT DISTINCT
+        t.id,
+        t.login_name,
+        t.`name`,
+        t.`password`,
+        t.salt,
+        t.sex,
+        t.phone,
+        t.email,
+        t.user_type,
+        t.`status`,
+        t.expired,
+        t.enterprise_id,
+        t.department_id,
+        t.job_id,
+        t.is_leader,
+        t.create_time,
+        t.update_time,
+        t.`password` AS userPwd,
+        t3.id AS roleId,
+        t3.`name` AS roleName,
+        t3.description AS roleDescription,
+        t3.seq AS roleSeq,
+        t3.`status` AS roleStatus,
+        t5.enterprise_name as enterpriseName,
+        t6.department_name as departmentName,
+        t7.job_name as jobName
+        FROM
+        t_sys_user t
+        LEFT JOIN t_sys_user_role t2 ON t.id = t2.user_id
+        LEFT JOIN t_sys_role t3 ON t2.role_id = t3.id
+        LEFT JOIN t_sys_user_token t4 on t.id=t4.user_id
+        LEFT JOIN t_enterprise t5 on t.enterprise_id=t5.id
+        LEFT JOIN t_enterprise_department t6 on t.department_id=t6.id
+        LEFT JOIN t_enterprise_job t7 on t.job_id=t7.id
+        <where>
+            t.login_name=#{loginName}
+        </where>
+    </select>
+
+    <!-- 查询用户的所有菜单ID -->
+    <select id="selectResourceIdListByUserId" resultType="long">
 		SELECT DISTINCT
-		t.id,
-		t.login_name,
-		t.`name`,
-		t.`password`,
-		t.salt,
-		t.sex,
-		t.age,
-		t.phone,
-		t.email,
-		t.user_type,
-		t.`status`,
-		t.expired,
-		t.organization_id,
-		t.enterprise_id,
-		t.create_time,
-		t.update_time,
-		t3.id AS roleId,
-		t3.`name` AS roleName,
-		t3.description,
-		t5.id AS resourceId,
-		t5.`name` AS resourceName,
-		t5.url,
-		t6.`name` AS organizationName,
-		t7.enterprise_name AS enterpriseName
-		FROM
-		t_sys_user t
-		LEFT JOIN t_sys_user_role t2 ON t.id = t2.user_id
-		LEFT JOIN t_sys_role t3 ON t2.role_id = t3.id
-		LEFT JOIN t_sys_role_resource t4 ON t3.id = t4.role_id
-		LEFT JOIN t_sys_resource t5 ON t4.resource_id = t5.id
-		LEFT JOIN t_sys_organization t6 ON t.organization_id = t6.id
-		LEFT JOIN t_sys_enterprise t7 ON t.enterprise_id = t7.id
-		WHERE
-		t.login_name =#{loginName}
+	    rm.resource_id
+        FROM
+	    t_sys_user_role ur
+        LEFT JOIN t_sys_role_resource rm ON ur.role_id = rm.role_id
+        WHERE
+	    ur.user_id = #{userId}
 	</select>
 
-	<select id="selectUserVoById" resultMap="userVoResultMap"
-		parameterType="java.lang.Long">
-		SELECT DISTINCT
-		t.id,
-		t.login_name,
-		t.`name`,
-		t.`password`,
-		t.salt,
-		t.sex,
-		t.age,
-		t.phone,
-		t.email,
-		t.user_type,
-		t.`status`,
-		t.expired,
-		t.organization_id,
-		t.enterprise_id,
-		t.create_time,
-		t.update_time,
-		t3.id AS roleId,
-		t3.`name` AS roleName,
-		t3.description,
-		t5.id AS resourceId,
-		t5.`name` AS resourceName,
-		t5.url,
-		t6.`name` AS organizationName,
-		t7.enterprise_name AS enterpriseName
-		FROM
-		t_sys_user t
-		LEFT JOIN t_sys_user_role t2 ON t.id = t2.user_id
-		LEFT JOIN t_sys_role t3 ON t2.role_id = t3.id
-		LEFT JOIN t_sys_role_resource t4 ON t3.id = t4.role_id
-		LEFT JOIN t_sys_resource t5 ON t4.resource_id = t5.id
-		LEFT JOIN t_sys_organization t6 ON t.organization_id = t6.id
-		LEFT JOIN t_sys_enterprise t7 ON t.enterprise_id = t7.id
-		WHERE
-		t.id =#{id}
-	</select>
-
-	<select id="selectUserPage" resultType="Map">
+    <!-- 查询用户的所有权限 -->
+    <select id="selectPerms" resultType="string">
 		SELECT
-		t.id,
-		t.login_name AS loginName,
-		t.`name`,
-		t.phone,
-		t.`password`,
-		t.sex,
-		t.email,
-		t.age,
-		t.create_time AS createTime,
-		t.update_time AS updateTime,
-		t.user_type AS userType,
-		t.`status`,
-		t.expired,
-		t.organization_id AS
-		organizationId,
-		s.`name` AS organizationName,
-		t.enterprise_id as
-		enterpriseId,
-		e.enterprise_name as enterpriseName,
-		group_concat(o.`name`) AS rolesList
-		FROM
-		t_sys_user t
-		LEFT JOIN
-		t_sys_user_role r ON t.id = r.user_id
-		LEFT JOIN t_sys_role o ON
-		r.role_id = o.id
-		LEFT JOIN t_sys_organization s ON s.id =
-		t.organization_id
-		LEFT JOIN t_sys_enterprise e ON e.id =
-		t.enterprise_id
-		<where>
-			<if test=" name != null and name != '' ">
-				t.login_name like concat('%',#{name},'%')
-				or t.name like concat('%',#{name},'%')
-			</if>
-			<if test=" enterpriseId != null ">
-				and t.enterprise_id = #{enterpriseId}
-			</if>
-			<if test=" organizationId != null ">
-				and t.organization_id = #{organizationId}
-			</if>
-			<if test=" startTime != null and starTime !='' and endTime !=null and endTime!=''">
-               and (t.creat_time between concat(#{startTime},'00:00:00') and concat(#{endTime},"00:00:00"))
-			</if>
-
-		</where>
-		GROUP BY t.id
+        m.url
+        FROM
+            t_sys_user_role ur
+        LEFT JOIN t_sys_role_resource rm ON ur.role_id = rm.role_id
+        LEFT JOIN t_sys_resource m ON rm.resource_id = m.id
+        WHERE
+        ur.user_id = #{userId}
 	</select>
-
 </mapper>

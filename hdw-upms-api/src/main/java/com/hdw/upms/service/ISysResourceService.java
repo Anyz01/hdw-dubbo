@@ -1,57 +1,42 @@
 package com.hdw.upms.service;
 
-import com.baomidou.mybatisplus.service.IService;
-import com.hdw.common.result.MenuNode;
-
-import com.hdw.common.result.ZTreeNode;
-import com.hdw.upms.entity.SysResource;
-import com.hdw.upms.entity.vo.UserVo;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.hdw.sys.entity.SysResource;
 
 import java.util.List;
-import java.util.Map;
-
 
 /**
- * SysResource 表数据服务层接口
+ * 资源表
+ *
+ * @author TuMinglong
+ * @date 2018-12-11 11:35:15
  */
 public interface ISysResourceService extends IService<SysResource> {
 
-    /**
-     * 根据资源树
-     *
-     * @return
-     */
-    List<ZTreeNode> selectTree();
+
+    List<SysResource> selectUserResourceListByUserId(Long userId);
 
     /**
-     * 根据用户获取资源树
-     *
-     * @param userVo 用户
+     * 根据父ID和资源ID集合查找资源集合
+     * @param parentId
+     * @param menuIdList
      * @return
      */
-    List<MenuNode> selectTree(UserVo userVo);
+    List<SysResource> selectListByParentId(Long parentId, List<Long> menuIdList);
 
     /**
-     * 获取资源树表
-     *
-     * @param par
+     * 根据父ID查找资源集合
+     * @param parentId
      * @return
      */
-    List<Map<String, Object>> selectTreeGrid(Map<String, Object> par);
+    List<SysResource> selectListByParentId(Long parentId);
 
     /**
-     * 获取菜单
-     *
+     *  查找非按钮资源集合
      * @return
      */
-    List<MenuNode> selectMenu();
-
-    /**
-     * 菜单树
-     *
-     * @return
-     */
-    List<ZTreeNode> selectMenuTree();
+    List<SysResource> selectNotButtonList();
 
 
 }
+

@@ -7,6 +7,8 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
+import java.util.List;
+
 
 /**
  * @author TuMinglong
@@ -15,12 +17,12 @@ import org.apache.shiro.subject.Subject;
  */
 public class ShiroKit {
 
-    private static final String NAMES_DELIMETER = "," ;
+    private static final String NAMES_DELIMETER = ",";
 
     /**
      * 散列算法
      */
-    public final static String HASH_ALGORITHM_NAME = "MD5" ;
+    public final static String HASH_ALGORITHM_NAME = "MD5";
 
     /**
      * 循环次数
@@ -233,8 +235,16 @@ public class ShiroKit {
             Object principal = getSubject().getPrincipal();
             return principal.toString();
         }
-        return "" ;
+        return "";
     }
 
+    /**
+     * 获取角色关联的企业
+     *
+     * @return
+     */
+    public static List<String> getEnterpriseIdByUser() {
+        return getUser().getEnterprises();
+    }
 
 }

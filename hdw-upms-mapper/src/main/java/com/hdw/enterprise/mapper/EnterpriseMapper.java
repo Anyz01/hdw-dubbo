@@ -1,44 +1,35 @@
 package com.hdw.enterprise.mapper;
 
-import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hdw.enterprise.entity.Enterprise;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
 
-
 /**
- * <p>
-  * 企业信息表 Mapper 接口
- * </p>
- *
+ * 企业信息表
+ * 
  * @author TuMinglong
- * @since 2018-04-26
+ * @date 2018-12-11 13:49:00
  */
 public interface EnterpriseMapper extends BaseMapper<Enterprise> {
 
-	List<Enterprise> selectEnterprisePage(Pagination page, Map<String, Object> params);
+    /**
+    * 多表页面信息查询
+    * @param page
+    * @param params
+    * @return
+    */
+    IPage<Map<String, Object>> selectEnterprisePage(Page page, @Param("params") Map<String, Object> params);
 
-
-	/**
-	 * 根据Id、名称、用户名查询企业信息
-	 * @param par
-	 * @return
-	 */
-	Enterprise selectEnterpriseByMap(Map<String, Object> par);
-
-	/**
-	 * 根据Id、名称、行业、区域、用户名查询企业信息
-	 * @param par
-	 * @return
-	 */
-	List<Enterprise> selectEnterpriseListByMap(Map<String, Object> par);
+    /**
+     * 多表信息查询
+     * @param params
+     * @return
+     */
+    List<Map<String, Object>> selectEnterpriseList(@Param("params") Map<String, Object> params);
 	
-	/**
-	 * 根据多行业查询企业Id
-	 * @param Ids
-	 * @return
-	 */
-	List<Long> selectEnterpriseListByIndustryIds(Map<String, Object> par);
 }

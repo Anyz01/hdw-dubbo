@@ -1,243 +1,117 @@
 package com.hdw.upms.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.base.BaseController;
-import com.hdw.common.result.PageInfo;
-import com.hdw.common.result.Select2Node;
-import com.hdw.common.result.ZTreeNode;
-import com.hdw.upms.entity.SysRole;
-import com.hdw.upms.service.ISysResourceService;
-import com.hdw.upms.service.ISysRoleService;
+import com.hdw.common.result.PageUtils;
+import com.hdw.common.result.ResultMap;
+import com.hdw.common.util.Constant;
+import com.hdw.common.validator.ValidatorUtils;
+import com.hdw.sys.entity.SysRole;
+import com.hdw.sys.service.ISysRoleResourceService;
+import com.hdw.sys.service.ISysRoleService;
+import com.hdw.sys.shiro.ShiroKit;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @description：权限管理
- * @author：TuMinglong @date：2015/10/1 14:51
+ * @Description 角色管理
+ * @Author TuMinglong
+ * @Date 2018/12/13 15:12
  */
-
-@Api(value = "权限管理类" , tags = {"权限管理接口"})
-@Controller
-@RequestMapping("/role")
+@Api(value = "角色管理接口", tags = {" 角色管理接口"})
+@RestController
+@RequestMapping("/sys/role")
 public class SysRoleController extends BaseController {
 
-    @Reference
-    private ISysRoleService roleService;
-
-    @Reference
-    private ISysResourceService resourceService;
+    @Autowired
+    private ISysRoleService sysRoleService;
+    @Autowired
+    private ISysRoleResourceService sysRoleResourceService;
 
     /**
-     * 权限管理页
-     *
-     * @return
+     * 角色列表
      */
-    @GetMapping("/manager")
-    public String manager() {
-        return "system/role/role" ;
+    @GetMapping("/list")
+    @RequiresPermissions("sys/role/list")
+    public ResultMap list(@RequestParam Map<String, Object> params){
+        //如果不是超级管理员，则只查询自己创建的角色列表
+        if(ShiroKit.getUser().getId() != Constant.SUPER_ADMIN){
+            params.put("createUserId", ShiroKit.getUser().getId());
+        }
+        PageUtils page = sysRoleService.selectDataGrid(params);
+        return ResultMap.ok().put("page", page);
     }
 
     /**
      * 角色列表
-     *
-     * @param offset
-     * @param limit
-     * @param sort
-     * @param order
-     * @param name
-     * @param startTime
-     * @param endTime
-     * @param deptId
-     * @return
      */
-    @ApiOperation(value = "获取角色列表" , notes = "获取角色列表")
-    @ApiImplicitParams({@ApiImplicitParam(name = "offset" , value = "页数" , dataType = "int" , required = true),
-            @ApiImplicitParam(name = "limit" , value = "行数" , dataType = "int" , required = true),
-            @ApiImplicitParam(name = "sort" , value = "根据某属性排序" , dataType = "string"),
-            @ApiImplicitParam(name = "order" , value = "升降序" , dataType = "string"),
-            @ApiImplicitParam(name = "roleName" , value = "角色名称" , dataType = "string")})
-    @RequestMapping("/dataGrid")
-    @ResponseBody
-    public Object dataGrid(Integer offset, Integer limit, String sort, String order, String roleName) {
-        PageInfo pageInfo = new PageInfo(offset, limit, sort, order);
-        Map<String, Object> par = new HashMap<>();
-        if (StringUtils.isNotBlank(roleName)) {
-            par.put("name" , roleName);
+    @GetMapping("/select")
+    @RequiresPermissions("sys/role/select")
+    public ResultMap select(){
+        Map<String, Object> map = new HashMap<>();
+        //如果不是超级管理员，则只查询自己所拥有的角色列表
+        if(ShiroKit.getUser().getId() != Constant.SUPER_ADMIN){
+            map.put("createUserId", ShiroKit.getUser().getId());
         }
-        pageInfo.setCondition(par);
-        PageInfo page = roleService.selectDataGrid(pageInfo);
-        System.out.println("到这里前端：" + page.getRows().toString());
-        return page;
+        List<SysRole> list = sysRoleService.selectSysRoleList(map);
+
+        return ResultMap.ok().put("list", list);
     }
 
     /**
-     * 权限树
-     *
-     * @return
+     * 角色信息
      */
-    @ApiOperation(value = "获取权限树" , notes = "获取权限树")
-    @PostMapping("/tree")
-    @ResponseBody
-    public List<Select2Node> tree() {
-        List<Select2Node> trees = roleService.selectTree();
-        return trees;
+    @GetMapping("/info/{roleId}")
+    @RequiresPermissions("sys/role/info")
+    public ResultMap info(@PathVariable("roleId") Long roleId){
+        SysRole role = sysRoleService.getById(roleId);
+        //查询角色对应的菜单
+        List<Long> resourceIdList=sysRoleResourceService.selectResourceIdListByRoleId(roleId);
+        role.setResourceIdList(resourceIdList);
+        return ResultMap.ok().put("role", role);
     }
 
     /**
-     * 用户Id根据获取权限树
-     *
-     * @return
+     * 保存角色
      */
-    @ApiOperation(value = "用户Id根据获取权限树" , notes = "用户Id根据获取权限树")
-    @RequestMapping("/selectTreeByUserId/{userId}")
-    @ResponseBody
-    public List<Select2Node> selectTreeByUserId(@PathVariable("userId") Long userId) {
-        List<Select2Node> trees = roleService.selectTreeByUserId(userId);
-        return trees;
+    @PostMapping("/save")
+    @RequiresPermissions("sys/role/save")
+    public ResultMap save(@RequestBody SysRole role){
+        ValidatorUtils.validateEntity(role);
+        role.setCreateTime(new Date());
+        role.setCreateUserId(ShiroKit.getUser().getId());
+        sysRoleService.saveByVo(role);
+
+        return ResultMap.ok();
     }
 
     /**
-     * 添加角色页
-     *
-     * @param model
-     * @param id
-     * @return
+     * 修改角色
      */
-    @RequestMapping("/addPage")
-    public String addPage() {
-        return "system/role/roleAdd" ;
+    @PostMapping("/update")
+    @RequiresPermissions("sys/role/update")
+    public ResultMap update(@RequestBody SysRole role){
+        ValidatorUtils.validateEntity(role);
+        role.setUpdateTime(new Date());
+        role.setCreateUserId(ShiroKit.getUser().getId());
+        sysRoleService.updateByVo(role);
+
+        return ResultMap.ok();
     }
 
     /**
-     * 编辑角色页
-     *
-     * @param model
-     * @param id
-     * @return
+     * 删除角色
      */
-    @RequestMapping("/editPage/{roleId}")
-    public String editPage(Model model, @PathVariable("roleId") Long roleId) {
-        SysRole role = roleService.selectById(roleId);
-        model.addAttribute("role" , role);
-        return "system/role/roleEdit" ;
+    @PostMapping("/delete")
+    @RequiresPermissions("sys/role/delete")
+    public ResultMap delete(@RequestBody Long[] roleIds){
+        sysRoleService.deleteBatch(roleIds);
+        return ResultMap.ok();
     }
 
-    /**
-     * 编辑角色
-     *
-     * @param role
-     * @return
-     */
-    @ApiOperation(value = "编辑角色" , notes = "编辑角色")
-    @RequiresRoles("admin")
-    @RequestMapping("/edit")
-    @ResponseBody
-    public Object edit(@Valid SysRole role) throws RuntimeException {
-        try {
-            if (role.getId() != null) {
-                role.setUpdateTime(new Date());
-                roleService.updateById(role);
-                return renderSuccess("编辑成功！");
-            } else {
-                Map<String, Object> par = new HashMap<String, Object>();
-                par.put("name" , role.getName());
-                List<SysRole> list = roleService.selectByMap(par);
-                if (list != null && !list.isEmpty()) {
-                    return renderError("角色已存在！");
-                } else {
-                    role.setCreateTime(new Date());
-                    role.setUpdateTime(new Date());
-                    roleService.insert(role);
-                    return renderSuccess("添加成功！");
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("运行异常，请联系管理员");
-        }
-    }
-
-    /**
-     * 删除权限
-     *
-     * @param id
-     * @return
-     */
-    @ApiOperation(value = "删除权限" , notes = "删除权限")
-    @RequestMapping("/delete")
-    @ResponseBody
-    public Object delete(Long roleId) {
-        roleService.deleteById(roleId);
-        return renderSuccess("删除成功！");
-    }
-
-    /**
-     * 授权页面
-     *
-     * @param id
-     * @param model
-     * @return
-     */
-    @GetMapping("/grantPage/{roleId}")
-    public String grantPage(Model model, @PathVariable("roleId") Long roleId) {
-        model.addAttribute("roleId" , roleId);
-        return "system/role/roleGrant" ;
-    }
-
-    /**
-     * 授权页面根据角色查询资源
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping("/findResourceIdListByRoleId/{roleId}")
-    @ResponseBody
-    public List<ZTreeNode> findResourceByRoleId(@PathVariable("roleId") Long roleId) {
-        List<ZTreeNode> list = resourceService.selectTree();
-        List<Long> resources = roleService.selectResourceIdListByRoleId(roleId);
-        List<ZTreeNode> trees = new ArrayList<>();
-        for (ZTreeNode zn : list) {
-            if (resources.contains(zn.getId())) {
-                zn.setChecked(true);
-            }
-            trees.add(zn);
-        }
-        return trees;
-    }
-
-    /**
-     * 授权
-     *
-     * @param id
-     * @param resourceIds
-     * @return
-     */
-    @RequiresRoles("admin")
-    @RequestMapping("/grant")
-    @ResponseBody
-    public Object grant(Long roleId, String resourceIds) throws RuntimeException {
-        try {
-            roleService.updateRoleResource(roleId, resourceIds);
-            return renderSuccess("授权成功！");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException("授权失败,请联系管理员");
-        }
-
-    }
 }

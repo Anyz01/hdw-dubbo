@@ -5,7 +5,6 @@ import com.hdw.upms.shiro.cache.RedisCacheManager;
 import com.hdw.upms.shiro.cache.RedisSessionDAO;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
-import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -31,7 +30,7 @@ import java.util.Map;
  * @date 2018年5月14日下午7:57:14
  */
 @Configuration
-@ConditionalOnProperty(value ={"upms.shiro.status"}, matchIfMissing = false)
+@ConditionalOnProperty(value ={"upms.cas.status"}, matchIfMissing = false)
 public class ShiroConfig {
 
     @Value("${upms.loginUrl}")
@@ -52,12 +51,6 @@ public class ShiroConfig {
         return new RedisCacheManager();
     }
 
-    // 注入异常处理类
-    @Bean
-    public ShiroExceptionResolver shiroExceptionResolver() {
-        return new ShiroExceptionResolver();
-    }
-
     /**
      * ShiroFilterFactoryBean 处理拦截资源文件问题。 注意：单独一个ShiroFilterFactoryBean配置是或报错的，以为在
      * 初始化ShiroFilterFactoryBean的时候需要注入：SecurityManager Filter Chain定义说明
@@ -71,38 +64,33 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
         Map<String, Filter> filtersMap = shiroFilterFactoryBean.getFilters();
-        filtersMap.put("user" , ajaxSessionFilter());
-
-        // 实现自己规则roles,这是为了实现or的效果
-        // RoleFilter roleFilter = new RoleFilter();
-        // filtersMap.put("roles", roleFilter);
         shiroFilterFactoryBean.setFilters(filtersMap);
         // 拦截器
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 
-        filterChainDefinitionMap.put("/logout" , "logout");
+        filterChainDefinitionMap.put("/logout", "logout");
         // 配置记住我或认证通过可以访问的地址
-        filterChainDefinitionMap.put("/index" , "user");
-        filterChainDefinitionMap.put("/" , "user");
+        filterChainDefinitionMap.put("/index", "user");
+        filterChainDefinitionMap.put("/", "user");
         // 开放的静态资源
-        filterChainDefinitionMap.put("/favicon.ico" , "anon");// 网站图标
-        filterChainDefinitionMap.put("/static/**" , "anon");// 配置static文件下资源能被访问
-        filterChainDefinitionMap.put("/css/**" , "anon");
-        filterChainDefinitionMap.put("/font/**" , "anon");
-        filterChainDefinitionMap.put("/img/**" , "anon");
-        filterChainDefinitionMap.put("/js/**" , "anon");
-        filterChainDefinitionMap.put("/plugins/**" , "anon");
-        filterChainDefinitionMap.put("/kaptcha.jpg" , "anon");// 图片验证码(kaptcha框架)
-        filterChainDefinitionMap.put("/xlsFile/**" , "anon");
-        filterChainDefinitionMap.put("/upload/**" , "anon");
-        filterChainDefinitionMap.put("/api/**" , "anon");// API接口
+        filterChainDefinitionMap.put("/favicon.ico", "anon");// 网站图标
+        filterChainDefinitionMap.put("/static/**", "anon");// 配置static文件下资源能被访问
+        filterChainDefinitionMap.put("/css/**", "anon");
+        filterChainDefinitionMap.put("/font/**", "anon");
+        filterChainDefinitionMap.put("/img/**", "anon");
+        filterChainDefinitionMap.put("/js/**", "anon");
+        filterChainDefinitionMap.put("/plugins/**", "anon");
+        filterChainDefinitionMap.put("/kaptcha.jpg", "anon");// 图片验证码(kaptcha框架)
+        filterChainDefinitionMap.put("/xlsFile/**", "anon");
+        filterChainDefinitionMap.put("/upload/**", "anon");
+        filterChainDefinitionMap.put("/api/**", "anon");// API接口
 
         // swagger接口文档
-        filterChainDefinitionMap.put("/v2/api-docs" , "anon");
-        filterChainDefinitionMap.put("/webjars/**" , "anon");
-        filterChainDefinitionMap.put("/swagger-resources/**" , "anon");
-        filterChainDefinitionMap.put("/swagger-ui.html" , "anon");
-        filterChainDefinitionMap.put("/doc.html" , "anon");
+        filterChainDefinitionMap.put("/v2/api-docs", "anon");
+        filterChainDefinitionMap.put("/webjars/**", "anon");
+        filterChainDefinitionMap.put("/swagger-resources/**", "anon");
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMap.put("/doc.html", "anon");
 
         // 其他的
         filterChainDefinitionMap.put("/druid/**", "anon");
@@ -110,9 +98,12 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/ws/**", "anon");
         filterChainDefinitionMap.put("/qr/**", "anon");
         filterChainDefinitionMap.put("/test/**", "anon");
+        filterChainDefinitionMap.put("/notice/sysNews/getNewsInfo", "anon");
+        filterChainDefinitionMap.put("/notice/sysNotice/getNoticeInfo", "anon");
+        filterChainDefinitionMap.put("/notice/sysIsuse/saveMsg", "anon");
 
-        filterChainDefinitionMap.put("/login" , "anon");
-        filterChainDefinitionMap.put("/**" , "authc");
+        filterChainDefinitionMap.put("/login", "anon");
+        filterChainDefinitionMap.put("/**", "authc");
 
         shiroFilterFactoryBean.setLoginUrl(loginUrl);
         // 登录成功后要跳转的链接
@@ -123,17 +114,6 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
-    }
-
-    /**
-     * ajax session超时时处理
-     *
-     * @return
-     */
-    @Bean
-    public ShiroAjaxSessionFilter ajaxSessionFilter() {
-        ShiroAjaxSessionFilter shiroAjaxSessionFilter = new ShiroAjaxSessionFilter();
-        return shiroAjaxSessionFilter;
     }
 
     @Bean
@@ -173,7 +153,7 @@ public class ShiroConfig {
      */
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        HashedCredentialsMatcher hashedCredentialsMatcher = new RetryLimitCredentialsMatcher(redisCacheManager());
         hashedCredentialsMatcher.setHashAlgorithmName("md5");// 散列算法:这里使用MD5算法;
         hashedCredentialsMatcher.setHashIterations(2);// 散列的次数，比如散列两次，相当于md5(md5(""));
         hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);// 表示是否存储散列后的密码为16进制，需要和生成密码时的一样，默认是base64；
@@ -181,41 +161,31 @@ public class ShiroConfig {
     }
 
     /**
-     * 开启shiro aop注解支持. 使用代理方式; 所以需要开启代码支持;
-     *
-     * @param securityManager
-     * @return
-     */
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-        return authorizationAttributeSourceAdvisor;
-    }
-
-    /**
-     * cookie对象;
+     * cookie对象
      *
      * @return
      */
     @Bean
-    public SimpleCookie rememberMeCookie() {
-        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-        simpleCookie.setHttpOnly(true);
-        // 记住我cookie生效时间7天 ,单位秒
+    public SimpleCookie sessionIdCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie();
+        //设置Cookie的过期时间，秒为单位，默认-1表示关闭浏览器时过期Cookie
         simpleCookie.setMaxAge(60 * 60 * 1 * 1);
+        //设置Cookie名字，默认为JSESSIONID
+        simpleCookie.setName("session-z-id");
+        simpleCookie.setPath("/TailingPond");
+        simpleCookie.setHttpOnly(true);
         return simpleCookie;
     }
 
     /**
-     * cookie管理对象;
+     * 记住我cookie对象
      *
      * @return
      */
     @Bean
     public CookieRememberMeManager rememberMeManager() {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-        cookieRememberMeManager.setCookie(rememberMeCookie());
+        cookieRememberMeManager.setCookie(sessionIdCookie());
         cookieRememberMeManager.setCipherKey(Base64.decode("5aaC5qKm5oqA5pyvAAAAAA=="));
         return cookieRememberMeManager;
     }
@@ -229,22 +199,35 @@ public class ShiroConfig {
         sessionManager.setSessionIdUrlRewritingEnabled(false);
         // 删除失效的session
         sessionManager.setDeleteInvalidSessions(true);
-        sessionManager.setSessionValidationSchedulerEnabled(true);
-        sessionManager.setSessionValidationInterval(60 * 60 * 1 * 1 * 1000);
-        sessionManager.setSessionValidationScheduler(getExecutorServiceSessionValidationScheduler());
 
-        sessionManager.getSessionIdCookie().setName("session-z-id");
-        sessionManager.getSessionIdCookie().setPath("/hdw");
-        sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 1 * 1);
-        sessionManager.getSessionIdCookie().setHttpOnly(true);
+        //会话验证
+        sessionManager.setSessionValidationScheduler(getExecutorServiceSessionValidationScheduler());
+        sessionManager.setSessionValidationSchedulerEnabled(true);
+
+        //设置cookie
+        sessionManager.setSessionIdCookie(sessionIdCookie());
+        sessionManager.setSessionIdCookieEnabled(true);
         return sessionManager;
     }
 
     @Bean(name = "sessionValidationScheduler")
     public ExecutorServiceSessionValidationScheduler getExecutorServiceSessionValidationScheduler() {
-        ExecutorServiceSessionValidationScheduler scheduler = new ExecutorServiceSessionValidationScheduler();
-        scheduler.setInterval(900000);
-        return scheduler;
+        ExecutorServiceSessionValidationScheduler sessionValidationScheduler = new ExecutorServiceSessionValidationScheduler();
+        sessionValidationScheduler.setInterval(60 * 60 * 1 * 1 * 1000);
+        return sessionValidationScheduler;
+    }
+
+    /**
+     * 开启shiro aop注解支持. 使用代理方式; 所以需要开启代码支持;
+     *
+     * @param securityManager
+     * @return
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager);
+        return advisor;
     }
 
     @Bean(name = "shiroDialect")

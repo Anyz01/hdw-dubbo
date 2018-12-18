@@ -1,28 +1,21 @@
 package com.hdw.common.result;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.hdw.common.constant.IsMenu;
-
 
 /**
- * @author TuMinglong
- * @Descriptin 菜单的节点
- * @Date 2018年5月6日 上午11:56:22
+ * @Description 菜单的节点
+ * @Author TuMinglong
+ * @Date 2018/12/13 18:37
  */
-@SuppressWarnings("rawtypes")
 public class MenuNode implements Comparable, Serializable {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
 
     /**
      * 节点id

@@ -1,142 +1,108 @@
 package com.hdw.upms.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Service;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.hdw.common.result.PageInfo;
-import com.hdw.common.result.Select2Node;
-import com.hdw.common.util.ArrayUtil;
-import com.hdw.upms.entity.SysRole;
-import com.hdw.upms.entity.SysRoleResource;
-import com.hdw.upms.entity.SysUserRole;
-import com.hdw.upms.mapper.SysRoleMapper;
-import com.hdw.upms.mapper.SysRoleResourceMapper;
-import com.hdw.upms.mapper.SysUserRoleMapper;
-import com.hdw.upms.service.ISysRoleService;
-import org.apache.commons.lang3.StringUtils;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hdw.common.exception.GlobalException;
+import com.hdw.common.result.PageUtils;
+import com.hdw.common.util.Constant;
+import com.hdw.sys.entity.SysRole;
+import com.hdw.sys.entity.vo.RoleVo;
+import com.hdw.sys.mapper.SysRoleMapper;
+import com.hdw.sys.service.ISysRoleResourceService;
+import com.hdw.sys.service.ISysRoleService;
+import com.hdw.sys.service.ISysUserRoleService;
+import com.hdw.sys.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
- * SysRole 表数据服务层接口实现类
+ * 角色表
+ *
+ * @author TuMinglong
+ * @date 2018-12-11 11:35:15
  */
 @Service
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements ISysRoleService {
 
     @Autowired
-    private SysRoleMapper roleMapper;
+    private ISysUserService sysUserService;
     @Autowired
-    private SysUserRoleMapper userRoleMapper;
+    private ISysRoleResourceService roleResourceService;
     @Autowired
-    private SysRoleResourceMapper roleResourceMapper;
+    private ISysUserRoleService userRoleService;
 
-    public List<SysRole> selectAll() {
-        EntityWrapper<SysRole> wrapper = new EntityWrapper<SysRole>();
-        wrapper.orderBy("seq");
-        return roleMapper.selectList(wrapper);
+    @Override
+    public PageUtils selectDataGrid(Map<String, Object> params){
+        Page<SysRole> page = new PageUtils<SysRole>(params).getPage();
+        IPage<SysRole> iPage = this.baseMapper.selectSysRolePage(page, params);
+        return new PageUtils<Map<String, Object>>(iPage);
     }
 
     @Override
-    public PageInfo selectDataGrid(PageInfo pageInfo) {
-        Page<Map<String, Object>> page = new Page<Map<String, Object>>(pageInfo.getNowpage(), pageInfo.getSize());
-        String orderField = com.baomidou.mybatisplus.toolkit.StringUtils.camelToUnderline(pageInfo.getSort());
-        page.setOrderByField(orderField);
-        page.setAsc(pageInfo.getOrder().equalsIgnoreCase("asc"));
-        List<Map<String, Object>> list = roleMapper.selectRolePage(page, pageInfo.getCondition());
-        pageInfo.setRows(list);
-        pageInfo.setTotal(page.getTotal());
-        return pageInfo;
+    public List<SysRole> selectSysRoleList(Map<String, Object> par){
+
+        return this.baseMapper.selectSysRoleList(par);
     }
 
     @Override
-    public List<Select2Node> selectTree() {
-        List<Select2Node> trees = new ArrayList<Select2Node>();
-        List<SysRole> roles = this.selectAll();
-        for (SysRole role : roles) {
-            Select2Node tree = new Select2Node();
-            tree.setId(role.getId());
-            tree.setText(role.getName());
-            trees.add(tree);
+    public RoleVo selectByUserId(Long userId) {
+        return this.baseMapper.selectByUserId(userId);
+    }
+
+    @Override
+    public RoleVo selectByRoleId(Long roleId) {
+        return this.baseMapper.selectByRoleId(roleId);
+    }
+
+    @Override
+    public void saveByVo(SysRole role) {
+        this.save(role);
+        //检查权限是否越权
+        checkPrems(role);
+        //保存角色与菜单关系
+        roleResourceService.saveOrUpdateRoleResource(role.getId(),role.getResourceIdList());
+    }
+
+    @Override
+    public void updateByVo(SysRole role) {
+        this.updateById(role);
+        //检查权限是否越权
+        checkPrems(role);
+        //更新角色与菜单关系
+        roleResourceService.saveOrUpdateRoleResource(role.getId(),role.getResourceIdList());
+
+    }
+
+    @Override
+    public void deleteBatch(Long[] roleIds) {
+        //删除角色
+        this.removeByIds(Arrays.asList(roleIds));
+
+        //删除角色与菜单关联
+        roleResourceService.deleteBatch(roleIds);
+
+        //删除角色与用户关联
+        userRoleService.deleteBatchByRoleIds(roleIds);
+    }
+
+    /**
+     * 检查权限是否越权
+     */
+    private void checkPrems(SysRole role){
+        //如果不是超级管理员，则需要判断角色的权限是否超过自己的权限
+        if(role.getCreateUserId() == Constant.SUPER_ADMIN){
+            return ;
         }
-        return trees;
-    }
-
-    @Override
-    public void updateRoleResource(Long roleId, String resourceIds) {
-        // 先删除后添加,有点爆力
-        SysRoleResource roleResource = new SysRoleResource();
-        roleResource.setRoleId(roleId);
-        roleResourceMapper.delete(new EntityWrapper<SysRoleResource>(roleResource));
-
-        // 如果资源id为空，判断为清空角色资源
-        if (StringUtils.isBlank(resourceIds)) {
-            return;
-        }
-
-        String[] resourceIdArray = resourceIds.split(",");
-        for (String resourceId : resourceIdArray) {
-            roleResource = new SysRoleResource();
-            roleResource.setRoleId(roleId);
-            roleResource.setResourceId(Long.parseLong(resourceId));
-            roleResourceMapper.insert(roleResource);
+        //查询用户所拥有的菜单列表
+        List<Long> resourceIdList=sysUserService.selectResourceIdListByUserId(role.getCreateUserId());
+        //判断是否越权
+        if(!resourceIdList.containsAll(role.getResourceIdList())){
+            throw new GlobalException("新增角色的权限，已超出你的权限范围");
         }
     }
-
-    @Override
-    public List<Long> selectResourceIdListByRoleId(Long id) {
-        return roleMapper.selectResourceIdListByRoleId(id);
-    }
-
-    @SuppressWarnings("unlikely-arg-type")
-    @Override
-    public Map<String, Set<String>> selectResourceMapByUserId(Long userId) {
-        Map<String, Set<String>> resourceMap = new HashMap<String, Set<String>>();
-        List<Long> roleIdList = userRoleMapper.selectRoleIdListByUserId(userId);
-        Set<String> urlSet = new HashSet<String>();
-        Set<String> roles = new HashSet<String>();
-        for (Long roleId : roleIdList) {
-            List<Map<Long, String>> resourceList = roleMapper.selectResourceListByRoleId(roleId);
-            if (resourceList != null) {
-                for (Map<Long, String> map : resourceList) {
-                    if (StringUtils.isNotBlank(map.get("url"))) {
-                        urlSet.add(map.get("url"));
-                    }
-                }
-            }
-            SysRole role = roleMapper.selectById(roleId);
-            if (role != null) {
-                roles.add(role.getName());
-            }
-        }
-        resourceMap.put("urls" , urlSet);
-        resourceMap.put("roles" , roles);
-        return resourceMap;
-    }
-
-    @Override
-    public List<Select2Node> selectTreeByUserId(Long userId) {
-        List<Select2Node> tree = new ArrayList<>();
-        List<SysUserRole> list = userRoleMapper.selectByUserId(userId);
-        if (list != null && !list.isEmpty()) {
-            String[] roleIds = new String[list.size()];
-            for (int i = 0; i < list.size(); i++) {
-                roleIds[i] = list.get(i).getRoleId().toString();
-            }
-
-            for (Select2Node s2n : this.selectTree()) {
-                if (ArrayUtil.isExistenceUseList(roleIds, s2n.getId().toString())) {
-                    s2n.setSelected(true);
-                    tree.add(s2n);
-                } else {
-                    tree.add(s2n);
-                }
-            }
-        } else {
-            tree = this.selectTree();
-        }
-        return tree;
-    }
-
 }

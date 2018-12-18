@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hdw.enterprise.mapper.EnterpriseJobMapper">
+
+	<!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hdw.enterprise.entity.EnterpriseJob" >
+        <result column="id" property="id" />
+        <result column="department_id" property="departmentId" />
+        <result column="job_code" property="jobCode" />
+        <result column="job_name" property="jobName" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="parameter1" property="parameter1" />
+        <result column="parameter2" property="parameter2" />
+        <result column="is_sync" property="isSync" />
+    </resultMap>
+
+    <!-- 多表页面信息查询 -->
+    <select id="selectEnterpriseJobPage" parameterType="map" resultType="map">
+        SELECT DISTINCT
+        t.id,
+        t.department_id AS departmentId,
+        t.job_code AS jobCode,
+        t.job_name AS jobName,
+        t.create_time AS createTime,
+        t.update_time AS updateTime,
+        t.create_user AS createUser,
+        t.update_user AS updateUser,
+        t.parameter1,
+        t.parameter2,
+        t.is_sync AS isSync,
+        t2.department_name as departmentName,
+        t3.id as enterpriseId,
+        t3.enterprise_name as enterpriseName
+        FROM
+        t_enterprise_job t
+        LEFT JOIN t_enterprise_department t2 on t.department_id=t2.id
+        LEFT JOIN t_enterprise t3 on t2.enterprise_id=t3.id
+        LEFT JOIN t_sys_user t4 on t3.id=t4.enterprise_id
+        LEFT JOIN t_sys_user_enterprise t5 on t4.id=t5.user_id
+        <where>
+            <if test="params.id!=null and params.id!=''">
+                t.id=#{params.id}
+            </if>
+            <if test="params.jobCode !=null and params.jobCode!=''">
+                and t.job_code=#{params.jobCode}
+            </if>
+            <if test="params.jobName !=null and params.jobName!=''">
+                and t.job_name like '%${params.jobName}%'
+            </if>
+            <if test="params.departmentId !=null and params.departmentId!=''">
+                and t.department_id=#{params.departmentId}
+            </if>
+            <if test="params.enterpriseId !=null and params.enterpriseId!=''">
+                and t3.id=#{params.enterpriseId}
+            </if>
+            <if test="params.userId !=null and params.userId!=''">
+                and t4.id=#{params.userId}
+            </if>
+        </where>
+        order by t.job_code
+    </select>
+
+    <!-- 多表信息查询 -->
+    <select id="selectEnterpriseJobList" parameterType="map" resultType="map">
+        SELECT DISTINCT
+        t.id,
+        t.department_id AS departmentId,
+        t.job_code AS jobCode,
+        t.job_name AS jobName,
+        t.create_time AS createTime,
+        t.update_time AS updateTime,
+        t.create_user AS createUser,
+        t.update_user AS updateUser,
+        t.parameter1,
+        t.parameter2,
+        t.is_sync AS isSync,
+        t2.department_name as departmentName,
+        t3.enterprise_name as enterpriseName
+        FROM
+        t_enterprise_job t
+        LEFT JOIN t_enterprise_department t2 on t.department_id=t2.id
+        LEFT JOIN t_enterprise t3 on t2.enterprise_id=t3.id
+        LEFT JOIN t_sys_user t4 on t3.id=t4.enterprise_id
+        LEFT JOIN t_sys_user_enterprise t5 on t4.id=t5.user_id
+        <where>
+            <if test="params.id!=null and params.id!=''">
+                t.id=#{params.id}
+            </if>
+            <if test="params.jobCode !=null and params.jobCode!=''">
+                and t.job_code=#{params.jobCode}
+            </if>
+            <if test="params.jobName !=null and params.jobName!=''">
+                and t.job_name like '%${params.jobName}%'
+            </if>
+            <if test="params.enterpriseId !=null and params.enterpriseId!=''">
+                and t3.id=#{params.enterpriseId}
+            </if>
+            <if test="params.userId !=null and params.userId!=''">
+                and t4.id=#{params.userId}
+            </if>
+        </where>
+        order by t.job_code
+    </select>
+
+    <select id="selectTree" parameterType="map" resultType="com.hdw.common.result.TreeNode">
+        SELECT
+        t.id AS id,
+        t.job_name AS name
+        FROM
+        t_app_enterprise_job t
+        LEFT JOIN t_enterprise_department t2 on t.department_id=t2.id
+        LEFT JOIN t_enterprise t3 on t2.enterprise_id=t3.id
+        LEFT JOIN t_sys_user t4 on t3.id=t4.enterprise_id
+        LEFT JOIN t_sys_user_enterprise t5 on t4.id=t5.user_id
+        <where>
+            <if test="enterpriseId!=null and enterpriseId!=''">
+                and t2.enterprise_id=#{enterpriseId}
+            </if>
+            <if test="params.userId !=null and params.userId!=''">
+                and t4.id=#{params.userId}
+            </if>
+        </where>
+        order by t.create_time desc
+    </select>
+
+</mapper>

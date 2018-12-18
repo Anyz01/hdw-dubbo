@@ -1,12 +1,11 @@
 package com.hdw.common.util;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 /**
- * url处理工具类
- *
- * @author TuMinglong
+ * @Description url处理工具类
+ * @Author TuMinglong
+ * @Date 2018/12/10 16:48
  */
 public class URLUtils extends org.springframework.web.util.UriUtils {
 
@@ -24,6 +23,4 @@ public class URLUtils extends org.springframework.web.util.UriUtils {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
-
-
 }

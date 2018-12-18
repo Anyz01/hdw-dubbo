@@ -1,10 +1,12 @@
 
 package com.hdw.common.result;
 
-import com.baomidou.mybatisplus.plugins.Page;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hdw.common.csrf.SQLFilter;
 import com.hdw.common.util.JacksonUtils;
+import com.hdw.common.xss.SQLFilter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -13,7 +15,7 @@ import java.util.Map;
 
 
 /**
- * @Description 分页工具类(用于Vue.js)
+ * @Description 分页工具类(用于Vue.js) 适用于mybatis-plus 3.0版本
  * @Author TuMinglong
  * @Date 2018/6/11 19:41
  */
@@ -22,11 +24,11 @@ public class PageUtils<T> implements Serializable {
     //总记录数
     private long totalCount;
     //每页记录数
-    private int pageSize;
+    private long pageSize;
     //总页数
     private long totalPage;
     //当前页数
-    private int currPage;
+    private long currPage;
     //列表数据
     private List list;
 
@@ -35,16 +37,6 @@ public class PageUtils<T> implements Serializable {
      */
     @JsonIgnore
     private Page<T> page;
-    /**
-     * 当前页码
-     */
-    @JsonIgnore
-    private int nowpage = 1;
-    /**
-     * 每页条数
-     */
-    @JsonIgnore
-    private int pagesize = 10;
 
     public PageUtils() {
         super();
@@ -52,24 +44,8 @@ public class PageUtils<T> implements Serializable {
 
     /**
      * 分页
-     *
-     * @param list       列表数据
-     * @param totalCount 总记录数
-     * @param pageSize   每页记录数
-     * @param currPage   当前页数
      */
-    public PageUtils(List<?> list, int totalCount, int pageSize, int currPage) {
-        this.list = list;
-        this.totalCount = totalCount;
-        this.pageSize = pageSize;
-        this.currPage = currPage;
-        this.totalPage = (int) Math.ceil((double) totalCount / pageSize);
-    }
-
-    /**
-     * 分页
-     */
-    public PageUtils(Page<?> page) {
+    public PageUtils(IPage<?> page) {
         this.list = page.getRecords();
         this.totalCount = page.getTotal();
         this.pageSize = page.getSize();
@@ -78,38 +54,44 @@ public class PageUtils<T> implements Serializable {
     }
 
     public PageUtils(Map<String, Object> params) {
+        //当前页码
+         Long page = 1L;
+        //当前行数
+         Long limit = 10L;
         //分页参数
         if (params.get("page") != null) {
-            nowpage = Integer.parseInt((String) params.get("page"));
+            page =Long.valueOf(String.valueOf(params.get("page")));
         }
         if (params.get("limit") != null) {
-            pagesize = Integer.parseInt((String) params.get("limit"));
+            limit = Long.valueOf(String.valueOf(params.get("limit")));
         }
 
-        //防止SQL注入（因为sidx、order是通过拼接SQL实现排序的，会有SQL注入风险）
-        String sidx = SQLFilter.sqlInject((String) params.get("sidx"));
-        String order = SQLFilter.sqlInject((String) params.get("order"));
-        System.out.println("nowpage:" + nowpage + " pagesize:" + pagesize);
+        //防止SQL注入（因为asc、order是通过拼接SQL实现排序的，会有SQL注入风险）
+        String asc = SQLFilter.sqlInject((String) params.get("asc"));
+        String desc = SQLFilter.sqlInject((String) params.get("desc"));
+        System.out.println("page:" + page + " limit:" + limit);
         //mybatis-plus分页
-        this.page = new Page<>(nowpage, pagesize);
+        this.page = new Page<>(page, limit);
 
         //排序
-        if (StringUtils.isNotBlank(sidx) && StringUtils.isNotBlank(order)) {
-            this.page.setOrderByField(sidx);
-            this.page.setAsc("ASC".equalsIgnoreCase(order));
+        if (StringUtils.isNotBlank(asc) && StringUtils.isNotBlank(desc)) {
+            if(asc.indexOf(",")>-1){
+                String[] ascs=asc.split(",");
+                this.page.setAsc(ascs);
+            }else{
+                this.page.setAsc(new String[]{asc});
+            }
+            if(asc.indexOf(",")>-1){
+                String[] descs=desc.split(",");
+                this.page.setDesc(descs);
+            }else{
+                this.page.setDesc(new String[]{desc});
+            }
         }
     }
 
     public Page<T> getPage() {
         return page;
-    }
-
-    public int getNowpage() {
-        return nowpage;
-    }
-
-    public int getPagesize() {
-        return pagesize;
     }
 
     public long getTotalCount() {
@@ -120,7 +102,7 @@ public class PageUtils<T> implements Serializable {
         this.totalCount = totalCount;
     }
 
-    public int getPageSize() {
+    public long getPageSize() {
         return pageSize;
     }
 
@@ -136,7 +118,7 @@ public class PageUtils<T> implements Serializable {
         this.totalPage = totalPage;
     }
 
-    public int getCurrPage() {
+    public long getCurrPage() {
         return currPage;
     }
 

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hdw.enterprise.mapper.EnterpriseDepartmentMapper">
+
+	<!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hdw.enterprise.entity.EnterpriseDepartment" >
+        <result column="id" property="id" />
+        <result column="parent_id" property="parentId" />
+        <result column="enterprise_id" property="enterpriseId" />
+        <result column="department_code" property="departmentCode" />
+        <result column="department_name" property="departmentName" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="parameter1" property="parameter1" />
+        <result column="parameter2" property="parameter2" />
+        <result column="is_sync" property="isSync" />
+    </resultMap>
+
+    <select id="selectTreeGrid" parameterType="map" resultType="map">
+        SELECT DISTINCT
+        t.id,
+        t.parent_id AS parentId,
+        t.enterprise_id AS enterpriseId,
+        t.department_code AS departmentCode,
+        t.department_name AS departmentName,
+        t.create_time AS createTime,
+        t.update_time AS updateTime,
+        t.create_user AS createUser,
+        t.update_user AS updateUser,
+        t.parameter1,
+        t.parameter2,
+        t.is_sync AS isSync,
+        t2.enterprise_name AS enterpriseName
+        FROM
+        t_enterprise_department t
+        LEFT JOIN t_enterprise t2 ON t.enterprise_id= t2.id
+        LEFT JOIN t_sys_user t3 on t2.id=t3.enterprise_id
+        LEFT JOIN t_sys_user_enterprise t4 on t3.id=t4.user_id
+        <where>
+            <if test="id!=null and id!=''">
+                t.id=#{id}
+            </if>
+            <if test="enterpriseId !=null and enterpriseId!=''">
+                and t.enterprise_id=#{enterpriseId}
+            </if>
+            <if test="departmentCode !=null and departmentCode!=''">
+                and t.department_code=#{departmentCode}
+            </if>
+            <if test="departmentName !=null and departmentName!=''">
+                and t.department_name like '%${departmentName}%'
+            </if>
+            <if test="enterpriseName !=null and enterpriseName!=''">
+                and t2.enterprise_name like '%${enterpriseName}%'
+            </if>
+            <if test="userId !=null and userId!=''">
+                and t3.id=#{userId}
+            </if>
+        </where>
+        order by t.department_code
+    </select>
+
+    <select id="selectTree" parameterType="map" resultType="com.hdw.common.result.TreeNode">
+        SELECT DISTINCT
+        t.id AS id,
+        t.department_name AS name,
+        t.parent_id as parentId
+        FROM
+        t_enterprise_department t
+        LEFT JOIN t_enterprise t2 ON t.enterprise_id = t2.id
+        LEFT JOIN t_sys_user t3 ON t2.id = t3.enterprise_id
+        LEFT JOIN t_sys_user_enterprise t4 ON t3.id = t4.user_id
+        <where>
+            <if test="id!=null and id!=''">
+                t.id=#{id}
+            </if>
+            <if test="enterpriseId !=null and enterpriseId!=''">
+                and t.enterprise_id=#{enterpriseId}
+            </if>
+            <if test="departmentCode !=null and departmentCode!=''">
+                and t.department_code=#{departmentCode}
+            </if>
+            <if test="departmentName !=null and departmentName!=''">
+                and t.department_name like '%${departmentName}%'
+            </if>
+            <if test="enterpriseName !=null and enterpriseName!=''">
+                and t2.enterprise_name like '%${enterpriseName}%'
+            </if>
+            <if test="userId !=null and userId!=''">
+                and t3.id=#{userId}
+            </if>
+        </where>
+        order by t.department_code
+    </select>
+
+</mapper>

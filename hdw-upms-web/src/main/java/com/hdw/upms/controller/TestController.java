@@ -2,7 +2,7 @@ package com.hdw.upms.controller;
 
 import com.hdw.common.base.BaseController;
 import com.hdw.common.result.Result;
-import com.hdw.task.config.AsyncTask;
+import com.hdw.job.task.config.AsyncTask;
 import com.luhuiguo.fastdfs.domain.StorePath;
 import com.luhuiguo.fastdfs.exception.FdfsUnsupportStorePathException;
 import com.luhuiguo.fastdfs.service.FastFileStorageClient;

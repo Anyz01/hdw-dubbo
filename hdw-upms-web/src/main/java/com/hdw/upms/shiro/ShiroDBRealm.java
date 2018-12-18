@@ -20,10 +20,7 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author TuMinglong
@@ -97,7 +94,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
     @Override
     public void onLogout(PrincipalCollection principals) {
         super.clearCachedAuthorizationInfo(principals);
-        logger.error("从session中获取的Login：" + ShiroKit.getUser().getLoginName());
+        logger.info("从session中获取的LoginName：" + ShiroKit.getUser().getLoginName());
         removeUserCache(ShiroKit.getUser());
 
     }
@@ -134,9 +131,9 @@ public class ShiroDBRealm extends AuthorizingRealm {
         } else {
             ShiroUser su = new ShiroUser();
             su.setId(userVo.getId());
+            su.setName(userVo.getName());
             su.setLoginName(userVo.getLoginName());
             su.setOrganizationId(userVo.getOrganizationId());
-            su.setEnterpriseId(userVo.getEnterpriseId());
             List<RoleVo> rvList = userVo.getRolesList();
             List<String> urlSet = new ArrayList<>();
             List<String> roles = new ArrayList<>();
@@ -155,7 +152,35 @@ public class ShiroDBRealm extends AuthorizingRealm {
             }
             su.setRoles(roles);
             su.setUrlSet(urlSet);
+            List<String> enterpriseIdList=new ArrayList<>();
+            List<String> enterpriseIds = upmsApiService.selectEnterpriseIdByUserName(userVo.getLoginName());
+            if(enterpriseIds!=null && !enterpriseIds.isEmpty()){
+                enterpriseIdList.addAll(enterpriseIds);
+            }
+            if(StringUtils.isNotBlank(userVo.getEnterpriseId())){
+                enterpriseIdList.add(userVo.getEnterpriseId());
+            }
+            su.setEnterprises(removeDuplicate(enterpriseIdList));
+            su.setEnterpriseId(userVo.getEnterpriseId());
+            su.setIsLeader(userVo.getIsLeader());
+            su.setUserJob(userVo.getUserJob());
+            su.setUserType(userVo.getUserType());
             return su;
         }
+    }
+
+    /**
+     * list去重复
+     *
+     * @param list
+     * @return
+     */
+    public static List removeDuplicate(List list) {
+        list.removeAll(Collections.singleton(null));
+        list.removeAll(Collections.singleton(""));
+        HashSet h = new HashSet(list);
+        list.clear();
+        list.addAll(h);
+        return list;
     }
 }

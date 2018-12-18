@@ -11,6 +11,8 @@ import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -22,15 +24,13 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 
 public class ShiroCasRealm extends Pac4jRealm {
 
-    private final static Logger logger = LoggerFactory.getLogger(ShiroCasRealm.class);
+    private static final Logger logger = LogManager.getLogger(ShiroCasRealm.class);
 
     @Reference
     private IUpmsApiService upmsApiService;
@@ -55,7 +55,7 @@ public class ShiroCasRealm extends Pac4jRealm {
         String loginName = principal.getProfile().getId();
 
         Session session = SecurityUtils.getSubject().getSession();
-        session.setAttribute("user" , loginName);
+        session.setAttribute("user", loginName);
 
         UserVo userVo = upmsApiService.selectByLoginName(loginName);
         // 账号不存在
@@ -90,7 +90,7 @@ public class ShiroCasRealm extends Pac4jRealm {
     @Override
     public void onLogout(PrincipalCollection principals) {
         super.clearCachedAuthorizationInfo(principals);
-        logger.error("从session中获取的Login：" + ShiroKit.getUser().getLoginName());
+        logger.info("从session中获取的LoginName：" + ShiroKit.getUser().getLoginName());
         removeUserCache(ShiroKit.getUser());
 
     }
@@ -114,6 +114,8 @@ public class ShiroCasRealm extends Pac4jRealm {
         principals.add(loginName, super.getName());
         super.clearCachedAuthenticationInfo(principals);
     }
+
+
     /**
      * 将UserVo赋值给shiroUser
      *
@@ -126,9 +128,9 @@ public class ShiroCasRealm extends Pac4jRealm {
         } else {
             ShiroUser su = new ShiroUser();
             su.setId(userVo.getId());
+            su.setName(userVo.getName());
             su.setLoginName(userVo.getLoginName());
             su.setOrganizationId(userVo.getOrganizationId());
-            su.setEnterpriseId(userVo.getEnterpriseId());
             List<RoleVo> rvList = userVo.getRolesList();
             List<String> urlSet = new ArrayList<>();
             List<String> roles = new ArrayList<>();
@@ -147,7 +149,35 @@ public class ShiroCasRealm extends Pac4jRealm {
             }
             su.setRoles(roles);
             su.setUrlSet(urlSet);
+            List<String> enterpriseIdList=new ArrayList<>();
+            List<String> enterpriseIds = upmsApiService.selectEnterpriseIdByUserName(userVo.getLoginName());
+            if(enterpriseIds!=null && !enterpriseIds.isEmpty()){
+                enterpriseIdList.addAll(enterpriseIds);
+            }
+            if(StringUtils.isNotBlank(userVo.getEnterpriseId())){
+                enterpriseIdList.add(userVo.getEnterpriseId());
+            }
+            su.setEnterprises(removeDuplicate(enterpriseIdList));
+            su.setEnterpriseId(userVo.getEnterpriseId());
+            su.setIsLeader(userVo.getIsLeader());
+            su.setUserJob(userVo.getUserJob());
+            su.setUserType(userVo.getUserType());
             return su;
         }
+    }
+
+    /**
+     * list去重复
+     *
+     * @param list
+     * @return
+     */
+    public static List removeDuplicate(List list) {
+        list.removeAll(Collections.singleton(null));
+        list.removeAll(Collections.singleton(""));
+        HashSet h = new HashSet(list);
+        list.clear();
+        list.addAll(h);
+        return list;
     }
 }

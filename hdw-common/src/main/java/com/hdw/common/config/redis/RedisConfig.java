@@ -61,11 +61,6 @@ public class RedisConfig extends CachingConfigurerSupport {
                 .disableCachingNullValues();
 
         Set<String> cacheNames = new HashSet<String>() {};
-        cacheNames.add("authorizationCache");
-        cacheNames.add("authenticationCache");
-        cacheNames.add("activeSessionCache");
-        cacheNames.add("pac4jAuthorizationCache");
-        cacheNames.add("pac4jAuthenticationCache");
 
         return RedisCacheManager.builder(lettuceConnectionFactory)
                 .cacheDefaults(config)

@@ -28,32 +28,28 @@
             <type>jar</type>
         </dependency>
 
+        <!-- 验证码框架 begin -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+        </dependency>
+        <!-- 验证码框架 end -->
+
         <!-- shiro begin -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
         </dependency>
-        <!-- shiro ehcache (shiro缓存)-->
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-ehcache</artifactId>
-        </dependency>
-
-        <!--验证码框架-->
-        <dependency>
-            <groupId>com.github.penggle</groupId>
-            <artifactId>kaptcha</artifactId>
-        </dependency>
         <!-- shiro end -->
 
-        <!-- thymeleaf模板中shiro标签 begin -->
+        <!-- thymeleaf-extras-shiro begin -->
         <dependency>
             <groupId>com.github.theborakompanioni</groupId>
             <artifactId>thymeleaf-extras-shiro</artifactId>
         </dependency>
-        <!-- thymeleaf模板中shiro标签 end -->
+        <!-- thymeleaf-extras-shiro end -->
 
-        <!--  pac4j -->
+        <!-- pac4j -->
         <dependency>
             <groupId>io.buji</groupId>
             <artifactId>buji-pac4j</artifactId>
@@ -76,22 +72,6 @@
         </dependency>
         <!-- pac4j end -->
 
-        <!-- quartz begin -->
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.mchange</groupId>
-                    <artifactId>c3p0</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz-jobs</artifactId>
-        </dependency>
-        <!-- quartz end -->
 
         <!-- fastdfs begin-->
         <dependency>
