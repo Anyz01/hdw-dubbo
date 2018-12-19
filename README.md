@@ -32,6 +32,10 @@
 ## 技术交流
 - hdw-dubbo技术交流群：948405874
 
+## 系统预览
+![image](https://github.com/tumao2/hdw-dubbo/blob/master/img/QQ%E6%88%AA%E5%9B%BE20181219204905.png)
+
+
 
 ## 说明文档
 项目开发、部署等说明都在[wiki](https://github.com/tumao2/hdw-dubbo/wiki)中。
