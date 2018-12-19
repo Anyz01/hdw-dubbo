@@ -244,7 +244,7 @@ public class ShiroKit {
      * @return
      */
     public static List<String> getEnterpriseIdByUser() {
-        return getUser().getEnterprises();
+        return getUser().getEnterpriseIdList();
     }
 
 }

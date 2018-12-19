@@ -1,7 +1,6 @@
 package com.hdw.upms.controller;
 
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.result.ResultMap;
@@ -11,6 +10,7 @@ import com.hdw.enterprise.service.IEnterpriseService;
 import com.hdw.upms.entity.SysDic;
 import com.hdw.upms.service.ISysDicService;
 import com.hdw.upms.shiro.ShiroKit;
+import com.alibaba.dubbo.config.annotation.Reference;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;

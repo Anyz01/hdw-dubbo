@@ -348,7 +348,7 @@ public abstract class UpLoadController extends BaseController {
      * @param multipartFiles
      * @return
      */
-    public List<Map<String, String>> uploadsToFastDFS2(MultipartFile[] multipartFiles) {
+    public List<Map<String, String>> uploadsToFastDFS(MultipartFile[] multipartFiles) {
         List<Map<String, String>> list = new ArrayList<>();
         if (multipartFiles != null && multipartFiles.length > 0) {
             for (MultipartFile file : multipartFiles) {

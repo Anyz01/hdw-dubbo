@@ -1,6 +1,7 @@
 package com.hdw.upms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.upms.entity.SysRoleResource;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public interface ISysRoleResourceService extends IService<SysRoleResource> {
    void saveOrUpdateRoleResource(Long roleId, List<Long> resourceIdList);
 
    void deleteBatch(Long[] roleIds);
+
+    List<SelectTreeNode> selectResourceNodeListByRoleId(Long roleId);
 
 }
 

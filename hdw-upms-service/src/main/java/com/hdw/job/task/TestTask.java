@@ -1,11 +1,11 @@
 package com.hdw.job.task;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.upms.entity.SysUser;
 import com.hdw.upms.service.ISysUserService;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 @Component("testTask")
 public class TestTask {
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	
-	@Autowired
+
+	@Reference
 	private ISysUserService sysUserService;
 	
 	public void test(String params){

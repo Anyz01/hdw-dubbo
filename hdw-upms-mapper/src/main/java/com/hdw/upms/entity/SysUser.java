@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.common.util.JacksonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -138,6 +139,12 @@ public class SysUser extends Model<SysUser> {
 	 */
 	@TableField(exist = false)
 	private List<String> enterpriseIdList;
+
+	/**
+	 * 监管用户拥有的企业Id列表
+	 */
+	@TableField(exist = false)
+	private List<SelectTreeNode> enterpriseNodeList;
 
 	/**
 	 * 设置：主键id
@@ -366,6 +373,14 @@ public class SysUser extends Model<SysUser> {
 
 	public void setEnterpriseIdList(List<String> enterpriseIdList) {
 		this.enterpriseIdList = enterpriseIdList;
+	}
+
+	public List<SelectTreeNode> getEnterpriseNodeList() {
+		return enterpriseNodeList;
+	}
+
+	public void setEnterpriseNodeList(List<SelectTreeNode> enterpriseNodeList) {
+		this.enterpriseNodeList = enterpriseNodeList;
 	}
 
 	@Override

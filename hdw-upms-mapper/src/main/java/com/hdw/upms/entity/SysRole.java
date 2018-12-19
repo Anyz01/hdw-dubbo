@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.common.util.JacksonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -75,6 +76,12 @@ public class SysRole extends Model<SysRole> {
 	 */
 	@TableField(exist = false)
 	private List<Long> resourceIdList;
+
+	/**
+	 * 角色所拥有的菜单node集合
+	 */
+	@TableField(exist = false)
+	private List<SelectTreeNode> resourceNodeList;
 
 	/**
 	 * 设置：主键id
@@ -175,6 +182,14 @@ public class SysRole extends Model<SysRole> {
 
 	public void setResourceIdList(List<Long> resourceIdList) {
 		this.resourceIdList = resourceIdList;
+	}
+
+	public List<SelectTreeNode> getResourceNodeList() {
+		return resourceNodeList;
+	}
+
+	public void setResourceNodeList(List<SelectTreeNode> resourceNodeList) {
+		this.resourceNodeList = resourceNodeList;
 	}
 
 	@Override

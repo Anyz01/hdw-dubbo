@@ -18,18 +18,19 @@ import java.util.Map;
 public interface SysFileMapper extends BaseMapper<SysFile> {
 
     /**
-    * 多表页面信息查询
-    * @param page
-    * @param params
-    * @return
-    */
-    IPage<Map<String, Object>> selectSysFilePage(Page page, @Param("params") Map<String, Object> params);
-
-    /**
-     * 多表信息查询
+     * 通过tableId和recordId获取相关附件信息
+     *
      * @param params
      * @return
      */
-    List<Map<String, Object>> selectSysFileList(Map<String, Object> params);
+    List<SysFile> selectFileListByTableIdAndRecordId(Map<String, Object> params);
+
+    /**
+     * 获取附件信息页
+     * @param page
+     * @param params
+     * @return
+     */
+    IPage<SysFile> selectSysFilePage(Page page, @Param("params") Map<String, Object> params);
 	
 }

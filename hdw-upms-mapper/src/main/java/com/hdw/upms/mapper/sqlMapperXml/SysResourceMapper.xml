@@ -23,8 +23,14 @@
     <select id="selectResourceList" parameterType="map" resultMap="BaseResultMap">
         select * from t_sys_resource t
         <where>
+            <if test="id!=null and id!=''">
+                t.id=#{id}
+            </if>
             <if test="parentId!=null and parentId!=''">
-                t.parent_id=#{parentId}
+                and t.parent_id=#{parentId}
+            </if>
+            <if test="resourceType!=null and resourceType!=''">
+                and t.resource_type=#{resourceType}
             </if>
         </where>
         order by t.seq asc

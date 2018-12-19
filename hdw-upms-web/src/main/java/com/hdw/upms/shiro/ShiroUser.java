@@ -41,7 +41,7 @@ public class ShiroUser implements Serializable {
     /**
      *  角色管理的企业ID集合
      */
-    private List<String> enterprises;
+    private List<String> enterpriseIdList;
 
     /**
      * 用户拥有的权限集合
@@ -125,12 +125,12 @@ public class ShiroUser implements Serializable {
         this.jobId = jobId;
     }
 
-    public List<String> getEnterprises() {
-        return enterprises;
+    public List<String> getEnterpriseIdList() {
+        return enterpriseIdList;
     }
 
-    public void setEnterprises(List<String> enterprises) {
-        this.enterprises = enterprises;
+    public void setEnterpriseIdList(List<String> enterpriseIdList) {
+        this.enterpriseIdList = enterpriseIdList;
     }
 
     public List<String> getUrlSet() {

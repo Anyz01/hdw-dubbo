@@ -1,6 +1,7 @@
 package com.hdw.upms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.upms.entity.SysRoleResource;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultType;
@@ -29,6 +30,14 @@ public interface SysRoleResourceMapper extends BaseMapper<SysRoleResource> {
     List<Long> selectResourceIdListByRoleId(@Param("roleId") Long roleId);
 
     void deleteBatch(Long[] roleIds);
+
+    /**
+     * 根据角色查找菜单node集合
+     *
+     * @param roleId
+     * @return
+     */
+    List<SelectTreeNode> selectResourceNodeListByRoleId(@Param("roleId") Long roleId);
 
 
 }

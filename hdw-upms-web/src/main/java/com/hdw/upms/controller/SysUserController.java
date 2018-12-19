@@ -1,9 +1,9 @@
 package com.hdw.upms.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.result.PageUtils;
 import com.hdw.common.result.ResultMap;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.common.util.Constant;
 import com.hdw.common.validator.Assert;
 import com.hdw.upms.entity.SysUser;
@@ -14,10 +14,13 @@ import com.hdw.upms.service.ISysUserService;
 import com.hdw.upms.shiro.ShiroKit;
 import com.hdw.upms.shiro.form.PasswordForm;
 import io.swagger.annotations.Api;
+import com.alibaba.dubbo.config.annotation.Reference;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -94,6 +97,8 @@ public class SysUserController extends BaseController {
         user.setRoleIdList(roleIdList);
         List<String> enterpriseIdList = sysUserEnterpriseService.selectEnterpriseIdByUserId(userId);
         user.setEnterpriseIdList(enterpriseIdList);
+        List<SelectTreeNode> enterpriseNodeList = sysUserEnterpriseService.selectEnterpriseNodeListByUserId(userId);
+        user.setEnterpriseNodeList(enterpriseNodeList);
         return ResultMap.ok().put("user", user);
 
     }

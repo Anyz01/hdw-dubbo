@@ -1,6 +1,5 @@
 package com.hdw.upms.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hdw.common.util.Constant;
@@ -9,6 +8,8 @@ import com.hdw.upms.mapper.SysResourceMapper;
 import com.hdw.upms.service.ISysResourceService;
 import com.hdw.upms.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.alibaba.dubbo.config.annotation.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,11 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
 
     @Autowired
     private ISysUserService sysUserService;
+
+    @Override
+    public List<SysResource> selectResourceList(Map<String, Object> params) {
+        return this.baseMapper.selectResourceList(params);
+    }
 
     @Override
     public List<SysResource> selectUserResourceListByUserId(Long userId) {
@@ -70,11 +76,6 @@ public class SysResourceServiceImpl extends ServiceImpl<SysResourceMapper, SysRe
                 .eq("status",0)
                 .orderByAsc(new String[]{"seq"});
         return this.baseMapper.selectList(queryWrapper);
-    }
-
-    @Override
-    public List<SysResource> selectResourceList(Map<String, Object> params) {
-        return this.baseMapper.selectResourceList(params);
     }
 
     /**

@@ -42,7 +42,7 @@
         <!-- fastjson -->
         <fastjson.version>1.2.54</fastjson.version>
 
-        <joda-time.version>2.10</joda-time.version>
+        <joda-time.version>2.10.1</joda-time.version>
 
         <httpclient.version>4.5.3</httpclient.version>
         <!-- commons-io -->
@@ -64,7 +64,7 @@
         <!-- pdfbox -->
         <pdfbox.version>2.0.13</pdfbox.version>
         <!-- hutool -->
-        <hutool.version>4.0.12</hutool.version>
+        <hutool.version>4.3.1</hutool.version>
         <!-- guava -->
         <guava.version>20.0</guava.version>
 

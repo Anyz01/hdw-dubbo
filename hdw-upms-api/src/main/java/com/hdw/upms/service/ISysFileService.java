@@ -16,18 +16,19 @@ import java.util.Map;
 public interface ISysFileService extends IService<SysFile> {
 
     /**
-    * 多表页面信息查询
-    * @param params
-    * @return
-    */
-    PageUtils selectDataGrid(Map<String, Object> params);
+     * 通过tableId和recordId获取相关附件信息
+     *
+     * @param params
+     * @return
+     */
+    List<SysFile> selectFileListByTableIdAndRecordId(Map<String, Object> params);
 
     /**
-    * 多表信息查询
-    * @param par
-    * @return
-    */
-    List<Map<String, Object>> selectSysFileList(Map<String, Object> par);
+     * 获取附件信息页
+     * @param params
+     * @return
+     */
+    PageUtils<SysFile> selectSysFilePage(Map<String, Object> params);
 
 
 }

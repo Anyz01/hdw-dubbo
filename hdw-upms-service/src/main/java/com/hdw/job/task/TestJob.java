@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
  * @Author TuMinglong
  * @Date 2018/5/31 19:18
  */
-@Component
+@Component("testJob")
 public class TestJob {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 

@@ -14,6 +14,6 @@ import java.util.Map;
  */
 public interface SysResourceMapper extends BaseMapper<SysResource> {
 
-    List<SysResource> selectResourceList(Map<String,Object> params);
+    List<SysResource> selectResourceList(Map<String, Object> params);
 
 }

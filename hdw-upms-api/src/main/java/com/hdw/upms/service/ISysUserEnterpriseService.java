@@ -1,6 +1,7 @@
 package com.hdw.upms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.upms.entity.SysUserEnterprise;
 
 import java.util.List;
@@ -33,5 +34,13 @@ public interface ISysUserEnterpriseService extends IService<SysUserEnterprise> {
      * @param enterpriseIds
      */
     void deleteBatchByEnterpriseIds(String[] enterpriseIds);
+
+    /**
+     * 根据用户ID查找监管的企业node
+     *
+     * @param userId
+     * @return
+     */
+    List<SelectTreeNode> selectEnterpriseNodeListByUserId(Long userId);
 }
 

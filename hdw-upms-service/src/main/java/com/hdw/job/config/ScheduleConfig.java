@@ -42,7 +42,7 @@ public class ScheduleConfig {
         //PostgreSQL数据库，需要打开此注释
         //prop.put("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
         factory.setQuartzProperties(prop);
-        factory.setSchedulerName("TailingPondScheduler");
+        factory.setSchedulerName("HdwDubboScheduler");
         //延时启动
         factory.setStartupDelay(30);
         factory.setApplicationContextSchedulerContextKey("applicationContextKey");

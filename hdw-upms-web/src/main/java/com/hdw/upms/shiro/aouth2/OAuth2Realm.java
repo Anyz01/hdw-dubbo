@@ -144,7 +144,7 @@ public class OAuth2Realm extends AuthorizingRealm {
             if(StringUtils.isNotBlank(userVo.getEnterpriseId())){
                 enterpriseIdList.add(userVo.getEnterpriseId());
             }
-            su.setEnterprises(removeDuplicate(enterpriseIdList));
+            su.setEnterpriseIdList(removeDuplicate(enterpriseIdList));
             su.setEnterpriseId(userVo.getEnterpriseId());
             su.setDepartmentId(userVo.getDepartmentId());
             su.setJobId(userVo.getJobId());

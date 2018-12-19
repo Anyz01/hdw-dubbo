@@ -1,6 +1,7 @@
 package com.hdw.upms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.upms.entity.SysUserEnterprise;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultType;
@@ -48,5 +49,17 @@ public interface SysUserEnterpriseMapper extends BaseMapper<SysUserEnterprise> {
      * @param enterpriseIds
      */
     void deleteBatchByEnterpriseIds(String[] enterpriseIds);
+
+
+    /**
+     * 根据监管用户ID查找企业node
+     *
+     * @param userId
+     * @return
+     */
+    @Select("SELECT t.enterprise_id AS id,t3.enterprise_name as label FROM t_sys_user_enterprise t LEFT JOIN t_sys_user t2 ON t.user_id = t2.id LEFT JOIN t_enterprise t3 on t.enterprise_id=t3.id WHERE t2.id = #{userId}")
+    @ResultType(SelectTreeNode.class)
+    List<SelectTreeNode> selectEnterpriseNodeListByUserId(@Param("userId") Long userId);
+
 	
 }

@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public interface ISysResourceService extends IService<SysResource> {
 
+    List<SysResource> selectResourceList(Map<String, Object> params);
+
 
     List<SysResource> selectUserResourceListByUserId(Long userId);
 
@@ -38,8 +40,6 @@ public interface ISysResourceService extends IService<SysResource> {
      */
     List<SysResource> selectNotButtonList();
 
-
-    List<SysResource> selectResourceList(Map<String,Object> params);
 
 }
 

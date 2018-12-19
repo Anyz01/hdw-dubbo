@@ -12,6 +12,7 @@
         <result column="attachment_name" property="attachmentName" />
         <result column="attachment_path" property="attachmentPath" />
         <result column="attachment_type" property="attachmentType" />
+        <result column="save_type" property="saveType"/>
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="create_user" property="createUser" />
@@ -19,15 +20,90 @@
         <result column="is_sync" property="isSync" />
     </resultMap>
 
-    <!-- 多表页面信息查询 -->
-    <select id="selectSysFilePage" parameterType="map" resultType="map">
-
+    <select id="selectSysFilePage" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        t.id,
+        t.table_id,
+        t.record_id,
+        t.attachment_group,
+        t.attachment_name,
+        t.attachment_path,
+        t.attachment_type,
+        t.save_type,
+        t.create_time,
+        t.update_time,
+        t.create_user,
+        t.update_user,
+        t.is_sync
+        FROM
+        t_sys_file t
+        <where>
+            <if test="params.id!=null and params.id!=''">
+                t.id=#{params.id}
+            </if>
+            <if test="params.tableId!=null and params.tableId!=''">
+                and t.table_id=#{params.tableId}
+            </if>
+            <if test="params.recordId!=null and params.recordId!=''">
+                and t.record_id=#{params.recordId}
+            </if>
+            <if test="params.attachmentGroup!=null and params.attachmentGroup!=''">
+                and t.attachment_group=#{params.attachmentGroup}
+            </if>
+            <if test="params.attachmentName!=null and params.attachmentName!=''">
+                and t.attachment_name=#{params.attachmentName}
+            </if>
+            <if test="params.attachmentType!=null and params.attachmentType!=''">
+                and t.attachment_type=#{params.attachmentType}
+            </if>
+            <if test="params.saveType!=null and params.saveType!=''">
+                and t.save_type=#{params.saveType}
+            </if>
+        </where>
+        order by t.create_time desc
     </select>
 
     <!-- 多表信息查询 -->
-    <select id="selectSysFileList" parameterType="map" resultType="map">
-
+    <select id="selectFileListByTableIdAndRecordId" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        t.id,
+        t.table_id,
+        t.record_id,
+        t.attachment_group,
+        t.attachment_name,
+        t.attachment_path,
+        t.attachment_type,
+        t.save_type,
+        t.create_time,
+        t.update_time,
+        t.create_user,
+        t.update_user,
+        t.is_sync
+        FROM
+        t_sys_file t
+        <where>
+            <if test="id!=null and id!=''">
+                t.id=#{id}
+            </if>
+            <if test="tableId!=null and tableId!=''">
+                and t.table_id=#{tableId}
+            </if>
+            <if test="recordId!=null and recordId!=''">
+                and t.record_id=#{recordId}
+            </if>
+            <if test="attachmentGroup!=null and attachmentGroup!=''">
+                and t.attachment_group=#{attachmentGroup}
+            </if>
+            <if test="attachmentName!=null and attachmentName!=''">
+                and t.attachment_name=#{attachmentName}
+            </if>
+            <if test="attachmentType!=null and attachmentType!=''">
+                and t.attachment_type=#{attachmentType}
+            </if>
+            <if test="saveType!=null and saveType!=''">
+                and t.save_type=#{saveType}
+            </if>
+        </where>
+        order by t.create_time desc
     </select>
-
-    
 </mapper>

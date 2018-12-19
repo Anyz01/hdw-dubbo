@@ -2,6 +2,7 @@ package com.hdw.upms.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.upms.entity.SysUserEnterprise;
 import com.hdw.upms.mapper.SysUserEnterpriseMapper;
 import com.hdw.upms.service.ISysUserEnterpriseService;
@@ -56,6 +57,11 @@ public class SysUserEnterpriseServiceImpl extends ServiceImpl<SysUserEnterpriseM
     @Override
     public void deleteBatchByEnterpriseIds(String[] enterpriseIds) {
         this.baseMapper.deleteBatchByEnterpriseIds(enterpriseIds);
+    }
+
+    @Override
+    public List<SelectTreeNode> selectEnterpriseNodeListByUserId(Long userId) {
+        return this.baseMapper.selectEnterpriseNodeListByUserId(userId);
     }
 
 }

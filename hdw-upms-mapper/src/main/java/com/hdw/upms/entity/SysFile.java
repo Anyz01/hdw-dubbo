@@ -61,6 +61,13 @@ public class SysFile extends Model<SysFile> {
     @ApiModelProperty(value = "附件类型(0-word,1-excel,2-pdf,3-jpg,png,4-其他)")
 	@TableField("attachment_type")
 	private Integer attachmentType;
+
+	/**
+	 * 存储类型（0：本地存储，1:fastdfs）
+	 */
+	@ApiModelProperty(value = "存储类型（0：本地存储，1:fastdfs）")
+	@TableField("save_type")
+	private Integer saveType;
 	/**
 	 * 记录创建时间
 	 */
@@ -231,7 +238,15 @@ public class SysFile extends Model<SysFile> {
 		return isSync;
 	}
 
-    @Override
+	public Integer getSaveType() {
+		return saveType;
+	}
+
+	public void setSaveType(Integer saveType) {
+		this.saveType = saveType;
+	}
+
+	@Override
 	protected Serializable pkVal() {
 		return this.id;
 	}

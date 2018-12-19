@@ -1,10 +1,12 @@
 package com.hdw.upms.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.upms.entity.SysRoleResource;
 import com.hdw.upms.mapper.SysRoleResourceMapper;
 import com.hdw.upms.service.ISysRoleResourceService;
+import com.alibaba.dubbo.config.annotation.Service;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,5 +49,10 @@ public class SysRoleResourceServiceImpl extends ServiceImpl<SysRoleResourceMappe
     @Override
     public void deleteBatch(Long[] roleIds) {
         this.baseMapper.deleteBatch(roleIds);
+    }
+
+    @Override
+    public List<SelectTreeNode> selectResourceNodeListByRoleId(Long roleId) {
+        return this.baseMapper.selectResourceNodeListByRoleId(roleId);
     }
 }

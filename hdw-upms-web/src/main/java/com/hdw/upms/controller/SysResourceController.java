@@ -1,9 +1,9 @@
 package com.hdw.upms.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.hdw.common.base.BaseController;
 import com.hdw.common.exception.GlobalException;
 import com.hdw.common.result.ResultMap;
+import com.hdw.common.result.SelectTreeNode;
 import com.hdw.common.util.Constant;
 import com.hdw.upms.entity.SysResource;
 import com.hdw.upms.service.ISysResourceService;
@@ -11,6 +11,7 @@ import com.hdw.upms.service.ISysUserService;
 import com.hdw.upms.shiro.ShiroKit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import com.alibaba.dubbo.config.annotation.Reference;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
@@ -60,25 +61,6 @@ public class SysResourceController extends BaseController {
             }
         }
         return menuList;
-    }
-
-    /**
-     * 选择菜单(添加、修改菜单)
-     */
-    @ApiOperation(value = "选择菜单(添加、修改菜单)", notes = "选择菜单(添加、修改菜单)")
-    @GetMapping("/select")
-    @RequiresPermissions("sys/menu/select")
-    public ResultMap select(){
-        //查询列表数据
-        List<SysResource> menuList = sysResourceService.selectNotButtonList();
-        //添加顶级菜单
-        SysResource root = new SysResource();
-        root.setId(0L);
-        root.setName("顶级菜单");
-        root.setParentId(0L);
-        root.setOpen(true);
-        menuList.add(root);
-        return ResultMap.ok().put("menuList", menuList);
     }
 
     /**
@@ -139,6 +121,78 @@ public class SysResourceController extends BaseController {
         }
         sysResourceService.removeById(menuId);
         return ResultMap.ok();
+    }
+
+    /**
+     * 选择菜单(添加、修改菜单)
+     */
+    @ApiOperation(value = "选择菜单(添加、修改菜单)", notes = "选择菜单(添加、修改菜单)")
+    @GetMapping("/select")
+    @RequiresPermissions("sys/menu/select")
+    public ResultMap select() {
+        //查询列表数据
+        List<SysResource> menuList = sysResourceService.selectNotButtonList();
+        //添加顶级菜单
+        SysResource root = new SysResource();
+        root.setId(0L);
+        root.setName("顶级菜单");
+        root.setParentId(0L);
+        root.setOpen(true);
+        menuList.add(root);
+        return ResultMap.ok().put("menuList", menuList);
+    }
+
+    /**
+     * 选择菜单node(添加、修改菜单)
+     */
+    @ApiOperation(value = "选择菜单(添加、修改菜单)", notes = "选择菜单(添加、修改菜单)")
+    @GetMapping("/selectTreeNode")
+    @RequiresPermissions("sys/menu/select")
+    public ResultMap selectTreeNode() {
+        List<SelectTreeNode> list = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        //查询目录
+        params.put("resourceType", "0");
+        List<SysResource> menuList = sysResourceService.selectResourceList(params);
+        if (!menuList.isEmpty() && menuList.size() > 0) {
+            for (SysResource resource : menuList) {
+                SelectTreeNode selectTreeNode = new SelectTreeNode();
+                selectTreeNode.setId(resource.getId().toString());
+                selectTreeNode.setLabel(resource.getName());
+                List<SelectTreeNode> childList = new ArrayList<>();
+
+                //查询菜单
+                params.clear();
+                params.put("parentId", resource.getId());
+                List<SysResource> menuList2 = sysResourceService.selectResourceList(params);
+                if (!menuList2.isEmpty() && menuList2.size() > 0) {
+                    for (SysResource resource2 : menuList2) {
+                        SelectTreeNode selectTreeNode2 = new SelectTreeNode();
+                        selectTreeNode2.setId(resource2.getId().toString());
+                        selectTreeNode2.setLabel(resource2.getName());
+                        List<SelectTreeNode> childList2 = new ArrayList<>();
+
+                        //查询方法
+                        params.clear();
+                        params.put("parentId", resource2.getId());
+                        List<SysResource> menuList3 = sysResourceService.selectResourceList(params);
+                        if (!menuList3.isEmpty() && menuList3.size() > 0) {
+                            for (SysResource resource3 : menuList3) {
+                                SelectTreeNode selectTreeNode3 = new SelectTreeNode();
+                                selectTreeNode3.setId(resource3.getId().toString());
+                                selectTreeNode3.setLabel(resource3.getName());
+                                childList2.add(selectTreeNode3);
+                            }
+                        }
+                        selectTreeNode2.setChildren(childList2);
+                        childList.add(selectTreeNode2);
+                    }
+                }
+                selectTreeNode.setChildren(childList);
+                list.add(selectTreeNode);
+            }
+        }
+        return ResultMap.ok().put("menuList", list);
     }
 
     /**

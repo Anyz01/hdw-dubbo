@@ -13,3 +13,5 @@
 密码：12345678
 
 3.启动本新项目需要安装Redis、zookeeper，然后启动Redis 、zookeeper、ActiveMQ
+
+4.前端项目见https://github.com/tumao2/hdw-dubbo-vue
