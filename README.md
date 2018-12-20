@@ -21,7 +21,7 @@
 - 4.等待UpmsServiceApplication完全启动后，启动UpmsWebApplication
 - 5.默认用户
 用户名：admin
-密码：12345678
+密码：123456
 - 6.启动前端
 
 ## 开发计划
