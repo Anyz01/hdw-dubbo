@@ -86,6 +86,7 @@ public class EnterpriseController extends UpLoadController {
             enterprise.setCreateTime(new Date());
             enterprise.setCreateUser(ShiroKit.getUser().getLoginName());
             boolean b = enterpriseService.save(enterprise);
+            saveFile(enterprise.getId());
             if (b) {
                 return ResultMap.ok("添加成功！");
             } else {
@@ -107,6 +108,7 @@ public class EnterpriseController extends UpLoadController {
             enterprise.setUpdateTime(new Date());
             enterprise.setUpdateUser(ShiroKit.getUser().getLoginName());
             boolean b = enterpriseService.updateById(enterprise);
+            saveFile(enterprise.getId());
             if (b) {
                 return ResultMap.ok("修改成功！");
             } else {

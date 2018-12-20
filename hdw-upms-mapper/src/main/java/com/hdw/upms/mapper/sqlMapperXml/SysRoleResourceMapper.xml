@@ -18,58 +18,23 @@
     </delete>
 
     <select id="selectResourceNodeListByRoleId" resultType="com.hdw.common.result.SelectTreeNode">
-        SELECT
+         SELECT
         t2.id,
-        t2.`name` as label
+        t2.`name` AS lebel,
+        t2.parent_id
         FROM
             t_sys_role_resource t
         LEFT JOIN t_sys_resource t2 ON t.resource_id = t2.id
         WHERE
-            t2.resource_type = 2
-        AND t.role_id = #{roleId}
-        UNION
-        SELECT
-            t.id,
-            t.`name` as label
-        FROM
-            t_sys_resource t
-        WHERE
-            t.resource_type = 1
-        AND t.id NOT IN (
-            SELECT
+            t.role_id = #{roleId}
+        AND t2.id NOT IN (
+            SELECT DISTINCT
                 t2.parent_id
             FROM
                 t_sys_role_resource t
             LEFT JOIN t_sys_resource t2 ON t.resource_id = t2.id
             WHERE
-                t2.resource_type = 2
-            AND t.role_id = #{roleId}
+                t.role_id = #{roleId}
         )
-        UNION
-            SELECT
-                t.id,
-                t.`name` as label
-            FROM
-                t_sys_resource t
-            WHERE
-                t.resource_type = 0
-            AND t.id NOT IN (
-                SELECT DISTINCT
-                    t.parent_id
-                FROM
-                    t_sys_resource t
-                WHERE
-                    t.resource_type = 1
-                AND t.id IN (
-                    SELECT DISTINCT
-                        t2.parent_id
-                    FROM
-                        t_sys_role_resource t
-                    LEFT JOIN t_sys_resource t2 ON t.resource_id = t2.id
-                    WHERE
-                        t2.resource_type = 2
-                    AND t.role_id = #{roleId}
-                )
-            )
     </select>
 </mapper>

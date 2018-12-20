@@ -120,23 +120,20 @@ public abstract class UpLoadController extends BaseController {
         Map<String, String> params = new HashedMap();
         String resultPath = "";
         try {
-            File dirFile = null;
+            String savePath = "";
             if (StringUtils.isNotBlank(dir)) {
-                dirFile = new File(fileUploadPrefix + File.separator + dir + File.separator
-                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
+                savePath = fileUploadPrefix + File.separator + dir + File.separator
+                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
             } else {
-                dirFile = new File(fileUploadPrefix + File.separator + "upload" + File.separator
-                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
+                savePath = fileUploadPrefix + File.separator + "upload" + File.separator
+                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
             }
-            if (!dirFile.exists()) {
-                dirFile.mkdirs();
-            }
-
+            // 保存文件
             String realFileName = file.getOriginalFilename();
-            long fileName = System.currentTimeMillis();
-            File targetFile = new File(dirFile.getAbsoluteFile() + File.separator + fileName + realFileName.substring(realFileName.indexOf(".")));
-            if (!targetFile.exists()) {// 文件名不存在 则新建文件，并将文件复制到新建文件中
-                targetFile.createNewFile();
+            Long fileName = System.currentTimeMillis();
+            File targetFile = new File(new File(savePath).getAbsolutePath() + File.separator + fileName + realFileName.substring(realFileName.indexOf(".")));
+            if (!targetFile.getParentFile().exists()) {
+                targetFile.getParentFile().mkdirs();
             }
             file.transferTo(targetFile);
             if (StringUtils.isNotBlank(fileUploadServer)) {
@@ -168,32 +165,28 @@ public abstract class UpLoadController extends BaseController {
         // 创建线程池，一共THREAD_COUNT个线程可以使用
         ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
         try {
-            File dirFile = null;
-            if (StringUtils.isNotBlank(dir)) {
-                dirFile = new File(fileUploadPrefix + File.separator + dir + File.separator
-                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
-            } else {
-                dirFile = new File(fileUploadPrefix + File.separator + "upload" + File.separator
-                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator);
-            }
-            if (!dirFile.exists()) {
-                dirFile.mkdirs();
-            }
             // 判断file数组不能为空并且长度大于0
             if (multipartFiles != null && multipartFiles.length > 0) {
                 // 循环获取file数组中得文件
-                File dirFile2 = dirFile;
                 for (MultipartFile file : multipartFiles) {
                     pool.submit(new Runnable() {
                         @Override
                         public void run() {
                             try {
+                                String savePath = "";
+                                if (StringUtils.isNotBlank(dir)) {
+                                    savePath = fileUploadPrefix + File.separator + dir + File.separator
+                                            + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
+                                } else {
+                                    savePath = fileUploadPrefix + File.separator + "upload" + File.separator
+                                            + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
+                                }
                                 // 保存文件
                                 String realFileName = file.getOriginalFilename();
                                 Long fileName = System.currentTimeMillis();
-                                File targetFile = new File(dirFile2.getAbsoluteFile() + File.separator + fileName + realFileName.substring(realFileName.indexOf(".")));
-                                if (!targetFile.exists()) {// 文件名不存在 则新建文件，并将文件复制到新建文件中
-                                    targetFile.createNewFile();
+                                File targetFile = new File(new File(savePath).getAbsolutePath() + File.separator + fileName + realFileName.substring(realFileName.indexOf(".")));
+                                if (!targetFile.getParentFile().exists()) {
+                                    targetFile.getParentFile().mkdirs();
                                 }
                                 file.transferTo(targetFile);
 
