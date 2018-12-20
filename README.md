@@ -25,6 +25,21 @@
 密码：123456
 - 7.启动前端
 
+## 运行环境
+`jdk8 + tomcat8.5`或以上！
+
+> 生产环境
+
+ clean install -D profileActive=prod -D maven.test.skip=true -f pom.xml
+
+> 测试环境
+
+ clean install -D profileActive=test -D maven.test.skip=true -f pom.xml
+
+> 开发环境
+
+ clean install -D profileActive=dev -D maven.test.skip=true -f pom.xml
+
 ## 开发计划
 - elasticsearch集成
 - activeMQ 、WebSocket消息推送
