@@ -69,11 +69,6 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
-
         <!-- 时间操作组件 begin -->
         <dependency>
             <groupId>joda-time</groupId>

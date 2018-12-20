@@ -17,12 +17,13 @@
 ## 运行项目
 - 1.安装Redis、zookeeper 、ActiveMQ
 - 2.启动Redis 、zookeeper、ActiveMQ
-- 3.启动UpmsServiceApplication
-- 4.等待UpmsServiceApplication完全启动后，启动UpmsWebApplication
-- 5.默认用户
+- 3.启动MonitorApplication
+- 4.启动UpmsServiceApplication
+- 5.等待UpmsServiceApplication完全启动后，启动UpmsWebApplication
+- 6.默认用户
 用户名：admin
 密码：123456
-- 6.启动前端
+- 7.启动前端
 
 ## 开发计划
 - elasticsearch集成

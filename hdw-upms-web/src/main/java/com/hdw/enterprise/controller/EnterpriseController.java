@@ -82,6 +82,7 @@ public class EnterpriseController extends UpLoadController {
     @RequiresPermissions("enterprise/enterprise/save")
     public Object save(@Valid @RequestBody Enterprise enterprise) {
         try {
+            enterprise.setId(UUIDGenerator.getOrderNo());
             enterprise.setCreateTime(new Date());
             enterprise.setCreateUser(ShiroKit.getUser().getLoginName());
             boolean b = enterpriseService.save(enterprise);

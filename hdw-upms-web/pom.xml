@@ -72,13 +72,17 @@
         </dependency>
         <!-- pac4j end -->
 
-
         <!-- fastdfs begin-->
         <dependency>
             <groupId>com.luhuiguo</groupId>
             <artifactId>fastdfs-spring-boot-starter</artifactId>
         </dependency>
         <!-- fastdfs end-->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
 
         <!-- ActiveMQ begin -->
         <dependency>

@@ -180,14 +180,29 @@ public class ShiroConfig {
     }
 
     /**
-     * 记住我cookie对象
+     * cookie对象;
+     *
+     * @return
+     */
+    @Bean
+    public SimpleCookie rememberMeCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        // 记住我cookie生效时间1小时 ,单位秒
+        simpleCookie.setMaxAge(60 * 60 * 1 * 1);
+        simpleCookie.setPath("/RiskCollect");
+        simpleCookie.setHttpOnly(true);
+        return simpleCookie;
+    }
+
+    /**
+     * cookie管理对象;
      *
      * @return
      */
     @Bean
     public CookieRememberMeManager rememberMeManager() {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-        cookieRememberMeManager.setCookie(sessionIdCookie());
+        cookieRememberMeManager.setCookie(rememberMeCookie());
         cookieRememberMeManager.setCipherKey(Base64.decode("5aaC5qKm5oqA5pyvAAAAAA=="));
         return cookieRememberMeManager;
     }
@@ -207,8 +222,11 @@ public class ShiroConfig {
         sessionManager.setSessionValidationSchedulerEnabled(true);
 
         //设置cookie
-        sessionManager.setSessionIdCookie(sessionIdCookie());
         sessionManager.setSessionIdCookieEnabled(true);
+        sessionManager.getSessionIdCookie().setName("session-z-id");
+        sessionManager.getSessionIdCookie().setPath("/RiskCollect");
+        sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 1 * 1);
+        sessionManager.getSessionIdCookie().setHttpOnly(true);
         return sessionManager;
     }
 

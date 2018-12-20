@@ -1,5 +1,7 @@
 package com.hdw.common.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -11,26 +13,24 @@ import java.util.UUID;
 public class UUIDGenerator {
 
     /**
-     * 获取随机数
-     *
+     * 获取32位随机字符串
      * @return
      */
     public static String getUUID() {
-        UUID uuid = UUID.randomUUID();
-        String str = uuid.toString();
-        // 去掉"-"符号
-        String temp = str.substring(0, 8) + str.substring(9, 13) + str.substring(14, 18) + str.substring(19, 23) + str.substring(24);
-        return temp;
+        return UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
     }
 
     /**
-     * 获取随机字符串
-     *
+     * 获取20位订单ID或者table ID
      * @return
      */
-    public static String getWordName() {
-        int num = (int) Math.round(Math.random() * 90000 + 1);
-        return String.valueOf(num);
+    public static String getOrderNo() {
+        String numStr = "";
+        String trandStr = String.valueOf((Math.random() * 9 + 1) * 1000000);
+        String dataStr = new SimpleDateFormat("yyyyMMddHHMMSS").format(new Date());
+        numStr = trandStr.toString().substring(0, 5);
+        numStr = numStr + dataStr;
+        return numStr;
     }
 
     /**
@@ -40,6 +40,11 @@ public class UUIDGenerator {
      * @return
      */
     public static String getEnterpriseId(String prefix) {
-        return prefix + getUUID().substring(0, 16);
+        String numStr = "";
+        String trandStr = String.valueOf((Math.random() * 9 + 1) * 1000000);
+        String dataStr = new SimpleDateFormat("MMddHHMMSS").format(new Date());
+        numStr = trandStr.toString().substring(0, 5);
+        numStr = numStr + dataStr;
+        return prefix + numStr;
     }
 }

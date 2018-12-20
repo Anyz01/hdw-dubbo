@@ -126,31 +126,29 @@ public class ShiroJwtConfig {
     }
 
     /**
-     * cookie对象
+     * cookie对象;
      *
      * @return
      */
     @Bean
-    public SimpleCookie sessionIdCookie() {
-        SimpleCookie simpleCookie = new SimpleCookie();
-        //设置Cookie的过期时间，秒为单位，默认-1表示关闭浏览器时过期Cookie
+    public SimpleCookie rememberMeCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        // 记住我cookie生效时间1小时 ,单位秒
         simpleCookie.setMaxAge(60 * 60 * 1 * 1);
-        //设置Cookie名字，默认为JSESSIONID
-        simpleCookie.setName("session-z-id");
-        simpleCookie.setPath("/TailingPond");
+        simpleCookie.setPath("/RiskCollect");
         simpleCookie.setHttpOnly(true);
         return simpleCookie;
     }
 
     /**
-     * 记住我cookie对象
+     * cookie管理对象;
      *
      * @return
      */
     @Bean
     public CookieRememberMeManager rememberMeManager() {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-        cookieRememberMeManager.setCookie(sessionIdCookie());
+        cookieRememberMeManager.setCookie(rememberMeCookie());
         cookieRememberMeManager.setCipherKey(Base64.decode("5aaC5qKm5oqA5pyvAAAAAA=="));
         return cookieRememberMeManager;
     }
@@ -170,15 +168,18 @@ public class ShiroJwtConfig {
         sessionManager.setSessionValidationSchedulerEnabled(true);
 
         //设置cookie
-        sessionManager.setSessionIdCookie(sessionIdCookie());
         sessionManager.setSessionIdCookieEnabled(true);
+        sessionManager.getSessionIdCookie().setName("session-z-id");
+        sessionManager.getSessionIdCookie().setPath("/RiskCollect");
+        sessionManager.getSessionIdCookie().setMaxAge(60 * 60 * 1 * 1);
+        sessionManager.getSessionIdCookie().setHttpOnly(true);
         return sessionManager;
     }
 
     @Bean(name = "sessionValidationScheduler")
     public ExecutorServiceSessionValidationScheduler getExecutorServiceSessionValidationScheduler() {
         ExecutorServiceSessionValidationScheduler sessionValidationScheduler = new ExecutorServiceSessionValidationScheduler();
-        sessionValidationScheduler.setInterval(60*60*1*1*1000);
+        sessionValidationScheduler.setInterval(60 * 60 * 1 * 1 * 1000);
         return sessionValidationScheduler;
     }
 
