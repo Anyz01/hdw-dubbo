@@ -392,7 +392,7 @@ public class EnterpriseController extends UpLoadController {
         ShiroUser user = ShiroKit.getUser();
         Object o = uploadFileUrls.get(user.getId().toString());
         if (o == null) {
-            uploadFileUrls.put(user.getId().toString(), new ArrayList<Map<String, String>>());
+            uploadFileUrls.put(user.getId().toString(), new ArrayList<>());
         }
         uploadFileUrls.get(user.getId().toString()).addAll(uploadFileUrl);
     }
