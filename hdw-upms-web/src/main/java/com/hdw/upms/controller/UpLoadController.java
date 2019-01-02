@@ -10,6 +10,7 @@ import com.luhuiguo.fastdfs.exception.FdfsUnsupportStorePathException;
 import com.luhuiguo.fastdfs.service.FastFileStorageClient;
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,10 +37,6 @@ import java.util.concurrent.Executors;
  * @Date 2018年5月8日 上午10:12:45
  */
 public abstract class UpLoadController extends BaseController {
-
-
-    // 控制线程数，最优选择是处理器线程数*3，本机处理器是4线程
-    private final static int THREAD_COUNT = 12;
 
     /**
      * 文件上传路径前缀
@@ -122,8 +119,8 @@ public abstract class UpLoadController extends BaseController {
         try {
             String savePath = "";
             if (StringUtils.isNotBlank(dir)) {
-                savePath = fileUploadPrefix + File.separator + dir + File.separator
-                        + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
+                savePath = fileUploadPrefix + File.separator + "upload" + File.separator
+                        + dir + File.separator + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
             } else {
                 savePath = fileUploadPrefix + File.separator + "upload" + File.separator
                         + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
@@ -135,12 +132,15 @@ public abstract class UpLoadController extends BaseController {
             if (!targetFile.getParentFile().exists()) {
                 targetFile.getParentFile().mkdirs();
             }
-            file.transferTo(targetFile);
+            FileUtils.copyInputStreamToFile(file.getInputStream(), targetFile);// 复制临时文件到指定目录下
             if (StringUtils.isNotBlank(fileUploadServer)) {
-                resultPath = fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/"
+                resultPath = fileUploadServer + "/static/upload/" + dir + "/"
+                        + DateUtil.format(new Date(), "yyyyMMdd") + "/"
                         + fileName + realFileName.substring(realFileName.indexOf("."));
             } else {
-                resultPath = "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf("."));
+                resultPath = "/static/upload/" + dir + "/"
+                        + DateUtil.format(new Date(), "yyyyMMdd") + "/"
+                        + fileName + realFileName.substring(realFileName.indexOf("."));
             }
 
             params.put("fileName", realFileName);
@@ -162,65 +162,73 @@ public abstract class UpLoadController extends BaseController {
      */
     public List<Map<String, String>> uploads(MultipartFile[] multipartFiles, String dir) {
         List<Map<String, String>> list = new ArrayList<>();
-        // 创建线程池，一共THREAD_COUNT个线程可以使用
-        ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
         try {
             // 判断file数组不能为空并且长度大于0
             if (multipartFiles != null && multipartFiles.length > 0) {
                 // 循环获取file数组中得文件
                 for (MultipartFile file : multipartFiles) {
-                    pool.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                String savePath = "";
-                                if (StringUtils.isNotBlank(dir)) {
-                                    savePath = fileUploadPrefix + File.separator + dir + File.separator
-                                            + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
-                                } else {
-                                    savePath = fileUploadPrefix + File.separator + "upload" + File.separator
-                                            + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
-                                }
-                                // 保存文件
-                                String realFileName = file.getOriginalFilename();
-                                Long fileName = System.currentTimeMillis();
-                                File targetFile = new File(new File(savePath).getAbsolutePath() + File.separator + fileName + realFileName.substring(realFileName.indexOf(".")));
-                                if (!targetFile.getParentFile().exists()) {
-                                    targetFile.getParentFile().mkdirs();
-                                }
-                                file.transferTo(targetFile);
-
-                                if (StringUtils.isNotBlank(fileUploadServer)) {
-                                    String resultPath = fileUploadServer + "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd")
-                                            + "/" + fileName + realFileName.substring(realFileName.indexOf("."));
-                                    Map<String, String> params = new HashedMap();
-                                    params.put("fileName", realFileName);
-                                    params.put("filePath", resultPath);
-                                    list.add(params);
-                                } else {
-                                    String resultPath = "/" + dir + "/" + DateUtil.format(new Date(), "yyyyMMdd") + "/" + fileName + realFileName.substring(realFileName.indexOf("."));
-                                    Map<String, String> params = new HashedMap();
-                                    params.put("fileName", realFileName);
-                                    params.put("filePath", resultPath);
-                                    list.add(params);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                logger.error(e.getMessage());
-                            }
-                        }
-                    });
+                    String savePath = "";
+                    if (StringUtils.isNotBlank(dir)) {
+                        savePath = fileUploadPrefix + File.separator + "upload" + File.separator
+                                + dir + File.separator + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
+                    } else {
+                        savePath = fileUploadPrefix + File.separator + "upload" + File.separator
+                                + DateUtil.format(new Date(), "yyyyMMdd") + File.separator;
+                    }
+                    // 保存文件
+                    String realFileName = file.getOriginalFilename();
+                    Long fileName = System.currentTimeMillis();
+                    File targetFile = new File(new File(savePath).getAbsolutePath() + File.separator + fileName + realFileName.substring(realFileName.indexOf(".")));
+                    if (!targetFile.getParentFile().exists()) {
+                        targetFile.getParentFile().mkdirs();
+                    }
+                    FileUtils.copyInputStreamToFile(file.getInputStream(), targetFile);// 复制临时文件到指定目录下
+                    if (StringUtils.isNotBlank(fileUploadServer)) {
+                        String resultPath = fileUploadServer + "/static/upload/" + dir + "/"
+                                + DateUtil.format(new Date(), "yyyyMMdd") + "/"
+                                + fileName + realFileName.substring(realFileName.indexOf("."));
+                        Map<String, String> params = new HashedMap();
+                        params.put("fileName", realFileName);
+                        params.put("filePath", resultPath);
+                        list.add(params);
+                    } else {
+                        String resultPath = "/static/upload/" + dir + "/"
+                                + DateUtil.format(new Date(), "yyyyMMdd") + "/"
+                                + fileName + realFileName.substring(realFileName.indexOf("."));
+                        Map<String, String> params = new HashedMap();
+                        params.put("fileName", realFileName);
+                        params.put("filePath", resultPath);
+                        list.add(params);
+                    }
                 }
-                pool.shutdown();
             }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
         }
         return list;
-
     }
 
+    /**
+     * 从本地删除文件
+     *
+     * @param fileUrl http路径
+     * @return
+     */
+    public Object deleteFileFromLocal(String fileUrl) {
+        if (StringUtils.isBlank(fileUrl)) {
+            return ResultMap.error(1, "文件删除失败");
+        }
+        String temp = fileUrl.substring(fileUrl.indexOf("/static") + 7);
+        System.out.println(fileUploadPrefix + File.separator + temp);
+        File file = new File(fileUploadPrefix + File.separator + temp);
+        if (file.exists() && file.isFile()) {
+            file.delete();
+            return ResultMap.ok("文件删除成功");
+        } else {
+            return ResultMap.error(1, "文件删除失败");
+        }
+    }
 
     /**
      * 上传文件到FastDFS

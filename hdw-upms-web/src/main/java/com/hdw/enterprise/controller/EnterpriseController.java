@@ -302,10 +302,9 @@ public class EnterpriseController extends UpLoadController {
     public Object deleteFileById(@PathVariable("id") String id) {
         try {
             SysFile sysFile = sysFileService.getById(id);
-            String recordId = sysFile.getRecordId();
             if (sysFile != null) {
                 sysFileService.removeById(sysFile.getId());
-                deleteFileFromFastDFS(sysFile.getAttachmentPath());
+                deleteFileFromLocal(sysFile.getAttachmentPath());
             }
             return ResultMap.ok("删除成功");
         } catch (Exception e) {
@@ -318,15 +317,15 @@ public class EnterpriseController extends UpLoadController {
     /**
      * 删除附件(刚上传到后端的附件)
      */
-    @GetMapping("/deleteFileByName/{fileName}")
-    public Object deleteFileByName(@PathVariable("fileName") String fileName) {
+    @GetMapping("/deleteFileByName")
+    public Object deleteFileByName(@RequestParam String fileName) {
         try {
             List<Map<String, String>> list = getUploadFile();
             if (StringUtils.isNotBlank(fileName) && list != null && !list.isEmpty()) {
                 for (Map<String, String> uploadFileUrl : list) {
                     boolean canDel = false;
                     if (uploadFileUrl.get("fileName").equalsIgnoreCase(fileName)) {
-                        // deleteFileFromFastDFS(uploadFileUrl.get("filePath"));
+                        deleteFileFromLocal(uploadFileUrl.get("filePath"));
                         canDel = true;
                         break;
                     }
