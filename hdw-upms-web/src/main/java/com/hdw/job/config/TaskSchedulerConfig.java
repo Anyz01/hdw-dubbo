@@ -18,7 +18,7 @@ public class TaskSchedulerConfig {
         //线程池大小
         scheduler.setPoolSize(10);
         //线程名字前缀
-        scheduler.setThreadNamePrefix("hdw-dubbo-task-thread");
+        scheduler.setThreadNamePrefix("hdw-dubbo-task-thread-");
         return scheduler;
     }
 }
