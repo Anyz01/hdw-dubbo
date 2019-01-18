@@ -3,15 +3,14 @@ package com.hdw.job.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-
 import javax.sql.DataSource;
 import java.util.Properties;
 
 /**
  * @Description 定时任务配置
  * @Author TuMinglong
- * @Date 2018/12/13 10:44
- */
+ * @Date 2019/1/18 15:59
+ **/
 @Configuration
 public class ScheduleConfig {
 
@@ -22,7 +21,7 @@ public class ScheduleConfig {
 
         //quartz参数
         Properties prop = new Properties();
-        prop.put("org.quartz.scheduler.instanceName", "RenrenScheduler");
+        prop.put("org.quartz.scheduler.instanceName", "HDWDubboScheduler");
         prop.put("org.quartz.scheduler.instanceId", "AUTO");
         //线程池配置
         prop.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
@@ -41,8 +40,10 @@ public class ScheduleConfig {
 
         //PostgreSQL数据库，需要打开此注释
         //prop.put("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
+
         factory.setQuartzProperties(prop);
-        factory.setSchedulerName("HdwDubboScheduler");
+
+        factory.setSchedulerName("HDWDubboScheduler");
         //延时启动
         factory.setStartupDelay(30);
         factory.setApplicationContextSchedulerContextKey("applicationContextKey");
@@ -50,6 +51,7 @@ public class ScheduleConfig {
         factory.setOverwriteExistingJobs(true);
         //设置自动启动，默认为true
         factory.setAutoStartup(true);
+
         return factory;
     }
 }
