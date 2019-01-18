@@ -48,7 +48,7 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobMapper, Sched
 	public PageUtils queryPage(Map<String, Object> params) {
         String beanName = (String) params.get("beanName");
 		Page<ScheduleJobEntity> page = new PageUtils<ScheduleJobEntity>(params).getPage();
-        QueryWrapper<ScheduleJobEntity> queryWrapper = new QueryWrapper<ScheduleJobEntity>().like(StringUtils.isNotBlank(beanName), "job_id", beanName);
+        QueryWrapper<ScheduleJobEntity> queryWrapper = new QueryWrapper<ScheduleJobEntity>().like(StringUtils.isNotBlank(beanName), "job_id", beanName).orderByDesc("job_id");
         List<ScheduleJobEntity> list = this.page(page, queryWrapper).getRecords();
 		page.setRecords(list);
 		return new PageUtils<ScheduleJobLogEntity>(page);
